@@ -1,0 +1,1596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ICP Innovation Journey</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .score-bar {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        .score-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .navigation-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            border-top: 2px solid #e5e7eb;
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        .nav-button {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            background: white;
+            color: #667eea;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-button:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .nav-button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .nav-button:disabled:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .game-screen {
+            padding: 20px;
+            min-height: 500px;
+            padding-bottom: 20px;
+            display: none;
+        }
+
+        .game-screen.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .innovation-card {
+            background: linear-gradient(145deg, #f8fafc, #ffffff);
+            border: 1px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(100, 116, 139, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .innovation-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(100, 116, 139, 0.15);
+        }
+
+        .innovation-avatar {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .category-button {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 3px solid transparent;
+            border-radius: 10px;
+            background: linear-gradient(145deg, #667eea, #764ba2);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .category-button.selected {
+            border-color: #fbbf24;
+            background: linear-gradient(145deg, #10b981, #059669);
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .category-button.completed {
+            background: linear-gradient(145deg, #6b7280, #4b5563);
+            border-color: #10b981;
+            opacity: 0.8;
+            position: relative;
+        }
+
+        .category-button.completed::after {
+            content: '✅';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            font-size: 16px;
+        }
+
+        .category-button.completed:hover {
+            background: linear-gradient(145deg, #4b5563, #374151);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .team-card {
+            background: linear-gradient(145deg, #f8fafc, #ffffff);
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(100, 116, 139, 0.1);
+        }
+
+        .team-card:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 4px 12px rgba(100, 116, 139, 0.15);
+        }
+
+        .team-card.selected {
+            border-color: #667eea;
+            background: linear-gradient(145deg, #f0f4ff, #ffffff);
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.2);
+        }
+
+        .process-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .process-step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #6b7280;
+            transition: all 0.3s;
+        }
+
+        .process-step.completed {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            animation: pulse 0.5s;
+        }
+
+        .process-step.current {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .dialog-box {
+            background: #f9fafb;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-style: italic;
+        }
+
+        .continue-button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .continue-button:hover {
+            background: linear-gradient(135deg, #059669, #047857);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+        }
+
+        .feedback {
+            padding: 20px;
+            background: linear-gradient(145deg, #f3f4f6, #ffffff);
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .feedback.success {
+            border: 2px solid #10b981;
+        }
+
+        .feedback.error {
+            border: 2px solid #ef4444;
+        }
+
+        .hint-box {
+            background: #fef3c7;
+            border: 1px solid #fbbf24;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+
+        .story-text {
+            line-height: 1.6;
+            color: #374151;
+            margin: 15px 0;
+        }
+
+        .achievement-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .achievement-popup.show {
+            display: block;
+            animation: zoomIn 0.5s;
+        }
+
+        @keyframes zoomIn {
+            from { transform: translate(-50%, -50%) scale(0); }
+            to { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .achievement-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        .solution-exists {
+            background: #dcfce7;
+            border: 2px solid #10b981;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .no-solution {
+            background: #fef3c7;
+            border: 2px solid #fbbf24;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .requirement-item {
+            padding: 10px;
+            margin: 10px 0;
+            background: #f3f4f6;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .confetti {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            z-index: 10000;
+            pointer-events: none;
+            border-radius: 2px;
+        }
+
+        .confetti-1 { background: #ff6b6b; }
+        .confetti-2 { background: #4ecdc4; }
+        .confetti-3 { background: #45b7d1; }
+        .confetti-4 { background: #96ceb4; }
+        .confetti-5 { background: #feca57; }
+        .confetti-6 { background: #ff9ff3; }
+
+        .cit-dev-image-container {
+            margin: 20px auto;
+            max-width: 350px;
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(145deg, #f8fafc, #ffffff);
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
+            border: 1px solid #e2e8f0;
+        }
+
+        .cit-dev-image {
+            width: 100%;
+            max-width: 280px;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(100, 116, 139, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .cit-dev-image:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(100, 116, 139, 0.2);
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100px) rotateZ(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(calc(100vh + 100px)) rotateZ(360deg);
+                opacity: 0;
+            }
+        }
+
+        .confetti-animate {
+            animation: confetti-fall linear forwards;
+        }
+
+        @media (max-width: 380px) {
+            .game-container {
+                border-radius: 0;
+            }
+            
+            body {
+                padding: 0;
+            }
+
+            .cit-dev-image-container {
+                margin: 15px auto;
+                max-width: 320px;
+                padding: 10px;
+            }
+
+            .cit-dev-image {
+                max-width: 250px;
+                border-radius: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <h1>🚀 Citizen Development</h1>
+            <div class="score-bar">
+                <div class="score-item">
+                    <span>⭐</span>
+                    <span id="score">0</span>
+                </div>
+                <div class="score-item">
+                    <span>💡</span>
+                    <span id="ideas">0</span>
+                </div>
+                <div class="score-item">
+                    <span>🏆</span>
+                    <span id="level">1</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ICP Front Door Screen -->
+        <div id="frontDoorScreen" class="game-screen active">
+            <h2>🏠 Welcome to Citizen Development</h2>
+            
+            <!-- Citizen Development Image -->
+            <div class="cit-dev-image-container">
+                <img src="https://github.com/mky250/Citizen-Dev-Image/blob/main/cit%20dev.png?raw=true" 
+                     alt="Citizen Development Framework" 
+                     class="cit-dev-image"
+                     crossorigin="anonymous"
+                     loading="eager"
+                     onerror="this.style.display='none'; console.error('Image failed to load:', this.src);"
+                     onload="console.log('Image loaded successfully')"/>
+            </div>
+            
+            <div class="story-text">
+                <p><strong>Innovation Central Platform (ICP)</strong> helps you turn ideas into reality!</p>
+                <p style="margin-top: 15px;">We streamline innovation from idea to production, connecting you with the right teams and resources.</p>
+            </div>
+            <div class="hint-box">
+                💡 <strong>ICP Value:</strong> We prevent duplicate efforts, accelerate development, and scale solutions across the organization!
+            </div>
+            <button class="continue-button" onclick="startJourney()">Start Your Innovation Journey</button>
+        </div>
+
+        <!-- Self Discovery Screen -->
+        <div id="selfDiscoveryScreen" class="game-screen">
+            <h2>🔍 Step 1: Self-Discovery</h2>
+            
+            <div class="process-flow">
+                <div class="process-step current">1</div>
+                <div class="process-step">2</div>
+                <div class="process-step">3</div>
+                <div class="process-step">4</div>
+                <div class="process-step">5</div>
+                <div class="process-step">6</div>
+                <div class="process-step">7</div>
+            </div>
+            
+            <div class="story-text">
+                <p>First, let's check if your innovation idea already exists!</p>
+            </div>
+            
+            <div class="innovation-card">
+                <h3>Choose an Innovation to Explore:</h3>
+                <button class="category-button" id="chatbot-btn" onclick="checkIdea('chatbot')">
+                    🤖 AI Customer Service Chatbot
+                </button>
+                <button class="category-button" id="analytics-btn" onclick="checkIdea('analytics')">
+                    📊 Real-time Analytics Dashboard
+                </button>
+                <button class="category-button" id="mobile-btn" onclick="checkIdea('mobile')">
+                    📱 Employee Mobile App
+                </button>
+                <button class="category-button" id="assistant-btn" onclick="checkIdea('assistant')">
+                    🧠 AI Meeting Intelligence Assistant
+                </button>
+            </div>
+
+            <div id="discoveryResult" style="display: none;"></div>
+        </div>
+
+        <!-- LOB Contact Screen -->
+        <div id="lobContactScreen" class="game-screen">
+            <h2>📞 Step 2: Contact Your LOB</h2>
+            
+            <div class="process-flow">
+                <div class="process-step completed">1</div>
+                <div class="process-step current">2</div>
+                <div class="process-step">3</div>
+                <div class="process-step">4</div>
+                <div class="process-step">5</div>
+                <div class="process-step">6</div>
+                <div class="process-step">7</div>
+            </div>
+            
+            <div class="story-text">
+                <p>Great! Your idea is new. Now connect with your Line of Business (LOB) to submit it to ICP.</p>
+            </div>
+            
+            <div class="innovation-card">
+                <h3>Your Innovation:</h3>
+                <p id="selectedIdea" class="story-text"></p>
+            </div>
+
+            <div class="dialog-box">
+                <strong>LOB Innovation Champion:</strong><br>
+                "This looks promising! Let me help you submit this to ICP for triage."
+            </div>
+
+            <button class="continue-button" onclick="submitToICP()">Submit to ICP Pipeline</button>
+        </div>
+
+        <!-- Cit Dev Consult Screen -->
+        <div id="triageScreen" class="game-screen">
+            <h2>⚡ Step 3: Cit Dev Consult</h2>
+            
+            <div class="process-flow">
+                <div class="process-step completed">1</div>
+                <div class="process-step completed">2</div>
+                <div class="process-step current">3</div>
+                <div class="process-step">4</div>
+                <div class="process-step">5</div>
+                <div class="process-step">6</div>
+                <div class="process-step">7</div>
+            </div>
+            
+            <div class="story-text">
+                <p>Citizen Developer consultants review your innovation and assign it to the best team!</p>
+            </div>
+
+            <h3>Available Teams:</h3>
+            <div class="team-card" id="team1">
+                <strong>🦓 ZebraAI</strong><br>
+                <small>Prompt Engineering - Optimizing AI interactions and responses</small>
+            </div>
+            <div class="team-card" id="team2">
+                <strong>🔗 Nexus</strong><br>
+                <small>Workflow Automation - Streamlining processes and integrations</small>
+            </div>
+            <div class="team-card" id="team3">
+                <strong>🤖 Agentic Practice</strong><br>
+                <small>Agent Building - Creating intelligent autonomous systems</small>
+            </div>
+            <div class="team-card" id="team4">
+                <strong>🚀 AI Innovator Community</strong><br>
+                <small>Collaborative AI solutions and experiments</small>
+            </div>
+
+            <button class="continue-button" onclick="assignTeam()">See Team Assignment</button>
+        </div>
+
+        <!-- Incubation Marketplace Screen -->
+        <div id="incubationScreen" class="game-screen">
+            <h2>🌱 Step 4: Incubation Marketplace</h2>
+            <div class="story-text">
+                <p>Welcome to the AI innovator community where citizen developers can impact the business! Before development begins, complete these essential tasks:</p>
+            </div>
+            
+            <div class="process-flow">
+                <div class="process-step completed">1</div>
+                <div class="process-step completed">2</div>
+                <div class="process-step completed">3</div>
+                <div class="process-step current">4</div>
+                <div class="process-step">5</div>
+                <div class="process-step">6</div>
+                <div class="process-step">7</div>
+                <div class="process-step">8</div>
+            </div>
+
+            <div class="innovation-card">
+                <h3>Citizen Developer Tasks:</h3>
+                <div id="incubationTasks">
+                    <div class="requirement-item">
+                        <p id="req1" style="color: #6b7280;">⏳ Adopt an idea</p>
+                    </div>
+                    <div class="requirement-item">
+                        <p id="req2" style="color: #6b7280;">⏳ Project Accountability</p>
+                    </div>
+                    <div class="requirement-item">
+                        <p id="req3" style="color: #6b7280;">⏳ Onboarding</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="onboardingAssignment" style="display: none;" class="feedback success">
+                <h3>🎯 Ready for Development!</h3>
+                <p>You've completed all citizen developer onboarding requirements and are ready to start building!</p>
+            </div>
+
+            <div class="hint-box">
+                💡 <strong>Why Incubation?</strong> The AI Community ensures every citizen developer is properly trained and matched with the right project!
+            </div>
+
+            <button class="continue-button" id="incubationBtn" onclick="progressIncubation()">Complete Next Task</button>
+        </div>
+
+        <!-- Development Screen -->
+        <div id="developmentScreen" class="game-screen">
+            <h2>💻 <span id="devStepNumber">Step 5</span>: Development</h2>
+            <div class="story-text">
+                <p id="teamAssignment"></p>
+            </div>
+            
+            <div class="process-flow" id="devProcessFlow">
+                <div class="process-step completed">1</div>
+                <div class="process-step completed">2</div>
+                <div class="process-step completed">3</div>
+                <div class="process-step completed">4</div>
+                <div class="process-step current">5</div>
+                <div class="process-step">6</div>
+                <div class="process-step">7</div>
+                <div class="process-step">8</div>
+            </div>
+
+            <div class="innovation-card">
+                <h3>Development Progress:</h3>
+                <div id="devProgress">
+                    <p>⏳ Sprint 1: Requirements gathering...</p>
+                </div>
+            </div>
+
+            <button class="continue-button" onclick="progressDevelopment()">Continue Development</button>
+        </div>
+
+        <!-- LT Approval Screen -->
+        <div id="ltApprovalScreen" class="game-screen">
+            <h2>🎯 <span id="ltStepNumber">Step 6</span>: LT Approval</h2>
+            <div class="story-text">
+                <p>Development complete! The Leadership Team reviews your innovation for scaling.</p>
+            </div>
+            
+            <div class="process-flow" id="ltProcessFlow">
+                <div class="process-step completed">1</div>
+                <div class="process-step completed">2</div>
+                <div class="process-step completed">3</div>
+                <div class="process-step completed">4</div>
+                <div class="process-step completed">5</div>
+                <div class="process-step current">6</div>
+                <div class="process-step">7</div>
+                <div class="process-step">8</div>
+            </div>
+
+            <div class="feedback success" style="margin-top: 30px;">
+                <h3>✅ Leadership Approved!</h3>
+                <p class="story-text">
+                    Your innovation has been approved for enterprise-wide scaling. 
+                    The engineering team will now productize your solution for deployment across the organization.
+                </p>
+                <p style="font-size: 12px; color: #6b7280; margin-top: 15px; font-style: italic;">
+                    Note: If an innovation is not approved for immediate scaling, it gets added to the Solution Catalog 
+                    for future reference and potential reactivation.
+                </p>
+            </div>
+
+            <button class="continue-button" onclick="proceedToEngineering()" style="margin-top: 20px;">Scale Out!</button>
+        </div>
+
+        <!-- Engineering Screen -->
+        <div id="engineeringScreen" class="game-screen">
+            <h2>🔧 <span id="engStepNumber">Step 7</span>: Engineering & Productization</h2>
+            <div class="story-text">
+                <p>LT Approved! Engineering team now productizes your solution for enterprise scale.</p>
+            </div>
+            
+            <div class="process-flow" id="engProcessFlow">
+                <div class="process-step completed">1</div>
+                <div class="process-step completed">2</div>
+                <div class="process-step completed">3</div>
+                <div class="process-step completed">4</div>
+                <div class="process-step completed">5</div>
+                <div class="process-step completed">6</div>
+                <div class="process-step current">7</div>
+                <div class="process-step">8</div>
+            </div>
+
+            <div class="innovation-card">
+                <h3>Engineering Tasks:</h3>
+                <div id="engTasks">
+                    <p>✅ Security review completed</p>
+                    <p>✅ Performance optimization done</p>
+                    <p>⏳ Scalability testing in progress...</p>
+                </div>
+            </div>
+
+            <button class="continue-button" onclick="completeEngineering()">Complete Productization</button>
+        </div>
+
+        <!-- Success Screen -->
+        <div id="successScreen" class="game-screen">
+            <h2>🎉 <span id="successStepNumber">Step 8</span>: Innovation Launched!</h2>
+            
+            <div class="process-flow" id="successProcessFlow">
+                <div class="process-step completed">1</div>
+                <div class="process-step completed">2</div>
+                <div class="process-step completed">3</div>
+                <div class="process-step completed">4</div>
+                <div class="process-step completed">5</div>
+                <div class="process-step completed">6</div>
+                <div class="process-step completed">7</div>
+                <div class="process-step completed">8</div>
+            </div>
+            
+            <div class="innovation-avatar">🏆</div>
+            
+            <div class="feedback success">
+                <h3>Congratulations!</h3>
+                <p class="story-text">Your innovation has been successfully scaled across the organization!</p>
+            </div>
+
+            <div class="innovation-card">
+                <h3>Journey Summary:</h3>
+                <p>✅ Self-discovery completed</p>
+                <p>✅ LOB submission successful</p>
+                <p>✅ Cit Dev Consult completed</p>
+                <p>✅ Incubation marketplace passed</p>
+                <p>✅ Development finished</p>
+                <p>✅ Leadership approved</p>
+                <p>✅ Engineering productized</p>
+                <p>✅ Solution scaled out!</p>
+            </div>
+
+            <div class="hint-box">
+                🌟 <strong>ICP Impact:</strong> Your innovation is now helping thousands of employees and customers!
+            </div>
+
+            <div style="margin-top: 20px;">
+                <p><strong>Total Points:</strong> <span id="totalScore">0</span></p>
+                <p><strong>Ideas Processed:</strong> <span id="totalIdeas">0</span></p>
+            </div>
+
+            <button class="continue-button" onclick="playAgain()">Start New Innovation</button>
+        </div>
+    </div>
+
+    <!-- Achievement Popup -->
+    <div id="achievementPopup" class="achievement-popup">
+        <div class="achievement-icon">🏆</div>
+        <h2>Achievement Unlocked!</h2>
+        <p id="achievementName">Innovation Champion</p>
+        <button class="continue-button" onclick="closeAchievement()" style="margin-top: 15px;">Awesome!</button>
+    </div>
+
+    <script>
+        // Game State
+        let gameState = {
+            score: 0,
+            ideas: 0,
+            level: 1,
+            currentIdea: null,
+            currentTeam: null,
+            devStage: 0,
+            incubationStage: 0,
+            currentScreen: 'frontDoorScreen',
+            screenHistory: [],
+            screenFlow: [
+                'frontDoorScreen',
+                'selfDiscoveryScreen',
+                'lobContactScreen',
+                'triageScreen',
+                'incubationScreen',
+                'developmentScreen',
+                'ltApprovalScreen',
+                'engineeringScreen',
+                'successScreen'
+            ],
+            completedInnovations: [],
+            innovations: {
+                chatbot: {
+                    name: "AI Customer Service Chatbot",
+                    exists: true,
+                    completed: false,
+                    solution: {
+                        name: "ServiceBot Pro",
+                        team: "AI Innovation Team",
+                        contact: "ai.innovations@company.com",
+                        status: "Currently in pilot with Customer Service department. 85% query resolution rate."
+                    }
+                },
+                analytics: {
+                    name: "Real-time Analytics Dashboard",
+                    exists: false,
+                    completed: false,
+                    bestTeam: "team3"
+                },
+                mobile: {
+                    name: "Employee Mobile App",
+                    exists: false,
+                    completed: false,
+                    bestTeam: "team2"
+                },
+                assistant: {
+                    name: "AI Meeting Intelligence Assistant",
+                    exists: false,
+                    completed: false,
+                    bestTeam: "team4"
+                }
+            }
+        };
+
+        // Utility Functions
+        function showScreen(screenId, addToHistory = true) {
+            if (addToHistory && gameState.currentScreen) {
+                gameState.screenHistory.push(gameState.currentScreen);
+            }
+            
+            document.querySelectorAll('.game-screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            
+            const targetScreen = document.getElementById(screenId);
+            if (targetScreen) {
+                targetScreen.classList.add('active');
+                gameState.currentScreen = screenId;
+                updateNavigationButtons();
+            }
+        }
+
+        function updateNavigationButtons() {
+            const backBtn = document.getElementById('backBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const homeBtn = document.getElementById('homeBtn');
+            
+            if (backBtn) {
+                backBtn.disabled = gameState.screenHistory.length === 0;
+            }
+            
+            if (nextBtn) {
+                const currentIndex = gameState.screenFlow.indexOf(gameState.currentScreen);
+                const isLastScreen = currentIndex === gameState.screenFlow.length - 1;
+                const isDiscoveryScreen = gameState.currentScreen === 'selfDiscoveryScreen' && !gameState.currentIdea;
+                
+                nextBtn.disabled = isLastScreen || isDiscoveryScreen;
+            }
+            
+            if (homeBtn) {
+                homeBtn.disabled = gameState.currentScreen === 'frontDoorScreen';
+            }
+        }
+
+        function navigateBack() {
+            if (gameState.screenHistory.length > 0) {
+                const previousScreen = gameState.screenHistory.pop();
+                showScreen(previousScreen, false);
+            }
+        }
+
+        function navigateForward() {
+            const currentIndex = gameState.screenFlow.indexOf(gameState.currentScreen);
+            if (currentIndex < gameState.screenFlow.length - 1) {
+                const nextScreen = gameState.screenFlow[currentIndex + 1];
+                
+                if (gameState.currentScreen === 'selfDiscoveryScreen') {
+                    if (gameState.currentIdea && !gameState.innovations[gameState.currentIdea].exists) {
+                        showScreen('lobContactScreen');
+                    }
+                } else {
+                    showScreen(nextScreen);
+                }
+            }
+        }
+
+        function goHome() {
+            gameState.screenHistory = [];
+            gameState.currentIdea = null;
+            gameState.currentTeam = null;
+            gameState.devStage = 0;
+            gameState.incubationStage = 0;
+            resetIncubationRequirements();
+            showScreen('frontDoorScreen', false);
+        }
+
+        function updateScore(points, action) {
+            gameState.score += points;
+            const scoreElement = document.getElementById('score');
+            if (scoreElement) {
+                scoreElement.textContent = gameState.score;
+                scoreElement.style.animation = 'pulse 0.5s';
+                setTimeout(() => {
+                    scoreElement.style.animation = '';
+                }, 500);
+            }
+            
+            if (action) {
+                showScorePopup(`+${points} - ${action}`);
+            }
+            
+            const levelThresholds = [0, 100, 250, 450, 700, 1000, 1400, 1900, 2500];
+            let newLevel = 1;
+            for (let i = 0; i < levelThresholds.length; i++) {
+                if (gameState.score >= levelThresholds[i]) {
+                    newLevel = i + 1;
+                }
+            }
+            
+            if (newLevel > gameState.level) {
+                gameState.level = newLevel;
+                const levelElement = document.getElementById('level');
+                if (levelElement) {
+                    levelElement.textContent = gameState.level;
+                }
+                showAchievement("Level Up!", `Innovation Champion Level ${gameState.level}!`);
+            }
+        }
+
+        function showScorePopup(text) {
+            const popup = document.createElement('div');
+            popup.textContent = text;
+            popup.style.cssText = `
+                position: fixed;
+                top: 80px;
+                right: 20px;
+                background: #10b981;
+                color: white;
+                padding: 8px 15px;
+                border-radius: 20px;
+                font-size: 14px;
+                font-weight: bold;
+                z-index: 1001;
+                animation: slideInFade 2s ease-out forwards;
+                pointer-events: none;
+            `;
+            
+            if (!document.querySelector('#scoreAnimation')) {
+                const style = document.createElement('style');
+                style.id = 'scoreAnimation';
+                style.textContent = `
+                    @keyframes slideInFade {
+                        0% { opacity: 0; transform: translateX(100px); }
+                        20% { opacity: 1; transform: translateX(0); }
+                        80% { opacity: 1; transform: translateX(0); }
+                        100% { opacity: 0; transform: translateY(-20px); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            document.body.appendChild(popup);
+            
+            setTimeout(() => {
+                if (popup.parentNode) {
+                    popup.parentNode.removeChild(popup);
+                }
+            }, 2000);
+        }
+
+        function updateIdeas() {
+            gameState.ideas++;
+            const ideasElement = document.getElementById('ideas');
+            if (ideasElement) {
+                ideasElement.textContent = gameState.ideas;
+            }
+        }
+
+        // Game Flow Functions
+        function startJourney() {
+            gameState.currentIdea = null;
+            gameState.currentTeam = null;
+            gameState.devStage = 0;
+            
+            const teams = ['team1', 'team2', 'team3', 'team4'];
+            teams.forEach(team => {
+                const teamElement = document.getElementById(team);
+                if (teamElement) {
+                    teamElement.classList.remove('selected');
+                }
+            });
+            
+            document.querySelectorAll('.category-button').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            updateInnovationButtonStates();
+            
+            const resultDiv = document.getElementById('discoveryResult');
+            if (resultDiv) {
+                resultDiv.style.display = 'none';
+            }
+            
+            const devProgressDiv = document.getElementById('devProgress');
+            if (devProgressDiv) {
+                devProgressDiv.innerHTML = '<p>⏳ Sprint 1: Requirements gathering...</p>';
+            }
+            
+            const engTasksDiv = document.getElementById('engTasks');
+            if (engTasksDiv) {
+                engTasksDiv.innerHTML = `
+                    <p>✅ Security review completed</p>
+                    <p>✅ Performance optimization done</p>
+                    <p>⏳ Scalability testing in progress...</p>
+                `;
+            }
+            
+            resetIncubationRequirements();
+            showScreen('selfDiscoveryScreen');
+            updateScore(10, "Journey Started");
+        }
+
+        function updateInnovationButtonStates() {
+            Object.keys(gameState.innovations).forEach(innovationType => {
+                const button = document.getElementById(`${innovationType}-btn`);
+                const innovation = gameState.innovations[innovationType];
+                
+                if (button) {
+                    if (innovation.completed) {
+                        button.classList.add('completed');
+                    } else {
+                        button.classList.remove('completed');
+                    }
+                }
+            });
+        }
+
+        function checkIdea(ideaType) {
+            const idea = gameState.innovations[ideaType];
+            gameState.currentIdea = ideaType;
+            
+            document.querySelectorAll('.category-button').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+            
+            const resultDiv = document.getElementById('discoveryResult');
+            if (resultDiv) {
+                if (idea.completed) {
+                    resultDiv.innerHTML = `
+                        <div class="feedback success">
+                            <h3>🎉 Innovation Already Completed!</h3>
+                            <p><strong>${idea.name}</strong> has been successfully launched through the innovation journey!</p>
+                            <p style="margin-top: 10px;">🏆 <em>Journey Status: Complete</em></p>
+                        </div>
+                        <button class="continue-button" onclick="reviewCompletedJourney()">Review Journey Steps</button>
+                        <button class="continue-button" onclick="tryAnother()" style="background: linear-gradient(135deg, #6b7280, #4b5563); margin-top: 10px;">Try Another Innovation</button>
+                    `;
+                } else if (idea.exists) {
+                    // Mark existing solutions as completed automatically
+                    idea.completed = true;
+                    gameState.completedInnovations.push(ideaType);
+                    updateInnovationButtonStates(); // Update button appearance
+                    
+                    resultDiv.innerHTML = `
+                        <div class="solution-exists">
+                            <h3>✅ Solution Already Exists!</h3>
+                            <p><strong>Name:</strong> ${idea.solution.name}</p>
+                            <p><strong>Team:</strong> ${idea.solution.team}</p>
+                            <p><strong>Contact:</strong> ${idea.solution.contact}</p>
+                            <p><strong>Status:</strong> ${idea.solution.status}</p>
+                            <p style="margin-top: 15px; font-weight: bold; color: #10b981;">🏆 Marked as Complete!</p>
+                        </div>
+                        <button class="continue-button" onclick="tryAnother()">Try Another Idea</button>
+                    `;
+                    updateScore(15, "Found existing solution");
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="no-solution">
+                            <h3>💡 New Innovation Opportunity!</h3>
+                            <p>No existing solution found. This is a great opportunity to innovate!</p>
+                        </div>
+                        <button class="continue-button" onclick="proceedToLOB()">Proceed to LOB Contact</button>
+                    `;
+                    updateScore(20, "Discovered new opportunity");
+                }
+                resultDiv.style.display = 'block';
+            }
+        }
+
+        function reviewCompletedJourney() {
+            const reviewScreen = document.createElement('div');
+            reviewScreen.id = 'reviewScreen';
+            reviewScreen.className = 'game-screen active';
+            reviewScreen.innerHTML = `
+                <h2>📋 Journey Review: ${gameState.innovations[gameState.currentIdea].name}</h2>
+                
+                <div class="process-flow">
+                    <div class="process-step completed">1</div>
+                    <div class="process-step completed">2</div>
+                    <div class="process-step completed">3</div>
+                    <div class="process-step completed">4</div>
+                    <div class="process-step completed">5</div>
+                    <div class="process-step completed">6</div>
+                    <div class="process-step completed">7</div>
+                    <div class="process-step completed">8</div>
+                </div>
+                
+                <div class="innovation-card">
+                    <h3>🎉 Successfully Completed Journey</h3>
+                    <div style="text-align: left; margin-top: 15px;">
+                        <p>✅ Self-discovery completed</p>
+                        <p>✅ LOB submission successful</p>
+                        <p>✅ Team consultation completed</p>
+                        <p>✅ Incubation requirements met</p>
+                        <p>✅ Development finished</p>
+                        <p>✅ Leadership approval received</p>
+                        <p>✅ Engineering productized</p>
+                        <p>✅ Solution scaled organization-wide</p>
+                    </div>
+                </div>
+                
+                <div class="feedback success">
+                    <h3>🏆 Impact Achieved</h3>
+                    <p>This innovation is now live and helping thousands of employees and customers!</p>
+                </div>
+                
+                <button class="continue-button" onclick="goBackToSelection()">Back to Innovation Selection</button>
+            `;
+            
+            document.querySelectorAll('.game-screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            
+            const existingReview = document.getElementById('reviewScreen');
+            if (existingReview) {
+                existingReview.remove();
+            }
+            
+            document.querySelector('.game-container').appendChild(reviewScreen);
+            gameState.currentScreen = 'reviewScreen';
+            updateNavigationButtons();
+        }
+
+        function goBackToSelection() {
+            const reviewScreen = document.getElementById('reviewScreen');
+            if (reviewScreen) {
+                reviewScreen.remove();
+            }
+            
+            gameState.currentIdea = null;
+            document.querySelectorAll('.category-button').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            const resultDiv = document.getElementById('discoveryResult');
+            if (resultDiv) {
+                resultDiv.style.display = 'none';
+            }
+            
+            showScreen('selfDiscoveryScreen', false);
+        }
+
+        function tryAnother() {
+            const resultDiv = document.getElementById('discoveryResult');
+            if (resultDiv) {
+                resultDiv.style.display = 'none';
+            }
+            gameState.currentIdea = null;
+            
+            document.querySelectorAll('.category-button').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            updateNavigationButtons();
+        }
+
+        function proceedToLOB() {
+            showScreen('lobContactScreen');
+            const ideaElement = document.getElementById('selectedIdea');
+            if (ideaElement && gameState.currentIdea) {
+                ideaElement.textContent = gameState.innovations[gameState.currentIdea].name;
+            }
+            updateScore(10, "LOB contact initiated");
+        }
+
+        function submitToICP() {
+            showScreen('triageScreen');
+            updateScore(25, "Idea submitted to ICP");
+            updateIdeas();
+        }
+
+        function assignTeam() {
+            const teams = ['team1', 'team2', 'team3', 'team4'];
+            
+            if (gameState.currentIdea) {
+                const bestTeam = gameState.innovations[gameState.currentIdea].bestTeam || 'team4';
+                gameState.currentTeam = bestTeam;
+                
+                teams.forEach(team => {
+                    const teamElement = document.getElementById(team);
+                    if (teamElement) {
+                        teamElement.classList.remove('selected');
+                    }
+                });
+                
+                const selectedTeam = document.getElementById(bestTeam);
+                if (selectedTeam) {
+                    selectedTeam.classList.add('selected');
+                }
+            }
+            
+            updateScore(30, "Team assigned");
+            
+            setTimeout(() => {
+                const assignmentElement = document.getElementById('teamAssignment');
+                if (assignmentElement) {
+                    const teamNames = {
+                        'team1': 'ZebraAI - Prompt Engineering',
+                        'team2': 'Nexus - Workflow Automation', 
+                        'team3': 'Agentic Practice - Agent Building',
+                        'team4': 'AI Innovator Community'
+                    };
+                    assignmentElement.textContent = `Your innovation has been assigned to: ${teamNames[gameState.currentTeam] || 'AI Innovator Community'}`;
+                }
+                
+                if (gameState.currentTeam === 'team4') {
+                    showScreen('incubationScreen');
+                } else {
+                    showDevelopmentScreen();
+                }
+            }, 2000);
+        }
+
+        function progressIncubation() {
+            gameState.incubationStage++;
+            
+            const requirements = [
+                { id: 'req1', text: '✅ Adopt an idea', points: 15, action: "Idea adopted" },
+                { id: 'req2', text: '✅ Project Accountability', points: 20, action: "Accountability accepted" },
+                { id: 'req3', text: '✅ Onboarding', points: 25, action: "Onboarding completed" }
+            ];
+            
+            if (gameState.incubationStage <= requirements.length) {
+                const currentReq = requirements[gameState.incubationStage - 1];
+                const reqElement = document.getElementById(currentReq.id);
+                if (reqElement) {
+                    reqElement.innerHTML = currentReq.text;
+                    reqElement.style.color = '#ffffff';
+                    reqElement.parentElement.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+                    reqElement.style.fontWeight = 'bold';
+                    reqElement.parentElement.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+                }
+                updateScore(currentReq.points, currentReq.action);
+                
+                if (gameState.incubationStage >= requirements.length) {
+                    const onboardingDiv = document.getElementById('onboardingAssignment');
+                    if (onboardingDiv) {
+                        onboardingDiv.style.display = 'block';
+                    }
+                    
+                    const btn = document.getElementById('incubationBtn');
+                    if (btn) {
+                        btn.textContent = 'Proceed to Development';
+                        btn.onclick = function() {
+                            showDevelopmentScreen();
+                        };
+                    }
+                    
+                    showAchievement("Citizen Developer Ready!", "You've completed all onboarding requirements!");
+                }
+            }
+        }
+
+        function resetIncubationRequirements() {
+            gameState.incubationStage = 0;
+            
+            for (let i = 1; i <= 3; i++) {
+                const reqEl = document.getElementById(`req${i}`);
+                if (reqEl) {
+                    if (i === 1) reqEl.innerHTML = '⏳ Adopt an idea';
+                    if (i === 2) reqEl.innerHTML = '⏳ Project Accountability';
+                    if (i === 3) reqEl.innerHTML = '⏳ Onboarding';
+                    reqEl.style.color = '#6b7280';
+                    reqEl.style.fontWeight = 'normal';
+                    reqEl.parentElement.style.background = '#f3f4f6';
+                    reqEl.parentElement.style.boxShadow = 'none';
+                }
+            }
+            
+            const onboardingDiv = document.getElementById('onboardingAssignment');
+            if (onboardingDiv) {
+                onboardingDiv.style.display = 'none';
+            }
+            
+            const btn = document.getElementById('incubationBtn');
+            if (btn) {
+                btn.textContent = 'Complete Next Task';
+                btn.onclick = progressIncubation;
+            }
+        }
+
+        function showDevelopmentScreen() {
+            showScreen('developmentScreen');
+            
+            if (gameState.currentTeam === 'team4') {
+                // AI Community path - Step 5 with 8 total steps
+                const stepNumElement = document.getElementById('devStepNumber');
+                if (stepNumElement) stepNumElement.textContent = 'Step 5';
+                
+                const processFlow = document.getElementById('devProcessFlow');
+                if (processFlow) {
+                    processFlow.innerHTML = `
+                        <div class="process-step completed">1</div>
+                        <div class="process-step completed">2</div>
+                        <div class="process-step completed">3</div>
+                        <div class="process-step completed">4</div>
+                        <div class="process-step current">5</div>
+                        <div class="process-step">6</div>
+                        <div class="process-step">7</div>
+                        <div class="process-step">8</div>
+                    `;
+                }
+            } else {
+                // Other teams - Step 4 with 7 total steps (skip incubation)
+                const stepNumElement = document.getElementById('devStepNumber');
+                if (stepNumElement) stepNumElement.textContent = 'Step 4';
+                
+                const processFlow = document.getElementById('devProcessFlow');
+                if (processFlow) {
+                    processFlow.innerHTML = `
+                        <div class="process-step completed">1</div>
+                        <div class="process-step completed">2</div>
+                        <div class="process-step completed">3</div>
+                        <div class="process-step current">4</div>
+                        <div class="process-step">5</div>
+                        <div class="process-step">6</div>
+                        <div class="process-step">7</div>
+                    `;
+                }
+            }
+        }
+
+        function progressDevelopment() {
+            gameState.devStage++;
+            const progressDiv = document.getElementById('devProgress');
+            
+            if (progressDiv) {
+                const stages = [
+                    '✅ Sprint 1: Requirements gathering complete',
+                    '✅ Sprint 2: Prototype developed',
+                    '✅ Sprint 3: Testing completed',
+                    '✅ Sprint 4: Ready for productization!'
+                ];
+                
+                if (gameState.devStage < stages.length) {
+                    progressDiv.innerHTML = stages.slice(0, gameState.devStage + 1).map(s => `<p>${s}</p>`).join('');
+                    updateScore(20, `Sprint ${gameState.devStage + 1} completed`);
+                } else {
+                    showLTApprovalScreen();
+                    gameState.devStage = 0;
+                }
+            }
+        }
+
+        function showLTApprovalScreen() {
+            showScreen('ltApprovalScreen');
+            updateScore(40, "Leadership approval");
+            
+            if (gameState.currentTeam === 'team4') {
+                const stepNumElement = document.getElementById('ltStepNumber');
+                if (stepNumElement) stepNumElement.textContent = 'Step 6';
+            } else {
+                const stepNumElement = document.getElementById('ltStepNumber');
+                if (stepNumElement) stepNumElement.textContent = 'Step 5';
+                
+                const processFlow = document.getElementById('ltProcessFlow');
+                if (processFlow) {
+                    processFlow.innerHTML = `
+                        <div class="process-step completed">1</div>
+                        <div class="process-step completed">2</div>
+                        <div class="process-step completed">3</div>
+                        <div class="process-step completed">4</div>
+                        <div class="process-step current">5</div>
+                        <div class="process-step">6</div>
+                        <div class="process-step">7</div>
+                    `;
+                }
+            }
+        }
+
+        function proceedToEngineering() {
+            showEngineeringScreen();
+        }
+
+        function showEngineeringScreen() {
+            showScreen('engineeringScreen');
+            
+            if (gameState.currentTeam === 'team4') {
+                const stepNumElement = document.getElementById('engStepNumber');
+                if (stepNumElement) stepNumElement.textContent = 'Step 7';
+            } else {
+                const stepNumElement = document.getElementById('engStepNumber');
+                if (stepNumElement) stepNumElement.textContent = 'Step 6';
+                
+                const processFlow = document.getElementById('engProcessFlow');
+                if (processFlow) {
+                    processFlow.innerHTML = `
+                        <div class="process-step completed">1</div>
+                        <div class="process-step completed">2</div>
+                        <div class="process-step completed">3</div>
+                        <div class="process-step completed">4</div>
+                        <div class="process-step completed">5</div>
+                        <div class="process-step current">6</div>
+                        <div class="process-step">7</div>
+                    `;
+                }
+            }
+        }
+
+        function completeEngineering() {
+            const tasksDiv = document.getElementById('engTasks');
+            if (tasksDiv) {
+                tasksDiv.innerHTML = `
+                    <p>✅ Security review completed</p>
+                    <p>✅ Performance optimization done</p>
+                    <p>✅ Scalability testing completed</p>
+                    <p>✅ Production deployment ready!</p>
+                `;
+            }
+            updateScore(50, "Engineering completed");
+            
+            setTimeout(() => {
+                showSuccessScreen();
+                
+                if (gameState.ideas === 1) {
+                    showAchievement("Innovation Pioneer!", "You've completed your first innovation journey!");
+                } else if (gameState.ideas === 3) {
+                    showAchievement("Innovation Expert!", "You've completed 3 innovation journeys!");
+                } else if (gameState.ideas === 5) {
+                    showAchievement("Innovation Master!", "You've completed 5 innovation journeys!");
+                }
+            }, 1500);
+        }
+
+        function showSuccessScreen() {
+            showScreen('successScreen');
+            
+            if (gameState.currentIdea) {
+                gameState.innovations[gameState.currentIdea].completed = true;
+                gameState.completedInnovations.push(gameState.currentIdea);
+            }
+            
+            if (gameState.currentTeam === 'team4') {
+                const stepNumElement = document.getElementById('successStepNumber');
+                if (stepNumElement) stepNumElement.textContent = 'Step 8';
+            } else {
+                const stepNumElement = document.getElementById('successStepNumber');
+                if (stepNumElement) stepNumElement.textContent = 'Step 7';
+                
+                const processFlow = document.getElementById('successProcessFlow');
+                if (processFlow) {
+                    processFlow.innerHTML = `
+                        <div class="process-step completed">1</div>
+                        <div class="process-step completed">2</div>
+                        <div class="process-step completed">3</div>
+                        <div class="process-step completed">4</div>
+                        <div class="process-step completed">5</div>
+                        <div class="process-step completed">6</div>
+                        <div class="process-step completed">7</div>
+                    `;
+                }
+            }
+            
+            const totalScoreElement = document.getElementById('totalScore');
+            const totalIdeasElement = document.getElementById('totalIdeas');
+            if (totalScoreElement) totalScoreElement.textContent = gameState.score;
+            if (totalIdeasElement) totalIdeasElement.textContent = gameState.ideas;
+        }
+
+        function playAgain() {
+            gameState.currentIdea = null;
+            gameState.currentTeam = null;
+            gameState.devStage = 0;
+            
+            const teams = ['team1', 'team2', 'team3', 'team4'];
+            teams.forEach(team => {
+                const teamElement = document.getElementById(team);
+                if (teamElement) {
+                    teamElement.classList.remove('selected');
+                }
+            });
+            
+            document.querySelectorAll('.category-button').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            const resultDiv = document.getElementById('discoveryResult');
+            if (resultDiv) {
+                resultDiv.style.display = 'none';
+            }
+            
+            resetIncubationRequirements();
+            showScreen('frontDoorScreen', false);
+        }
+
+        function showAchievement(title, description) {
+            const nameElement = document.getElementById('achievementName');
+            const popupElement = document.getElementById('achievementPopup');
+            
+            if (nameElement) nameElement.textContent = description;
+            if (popupElement) popupElement.classList.add('show');
+            
+            // Trigger confetti celebration
+            createConfetti();
+        }
+
+        function createConfetti() {
+            const confettiCount = 40;
+            const colors = ['confetti-1', 'confetti-2', 'confetti-3', 'confetti-4', 'confetti-5', 'confetti-6'];
+            
+            for (let i = 0; i < confettiCount; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    
+                    // Random color
+                    confetti.classList.add(colors[Math.floor(Math.random() * colors.length)]);
+                    
+                    // Random horizontal position
+                    confetti.style.left = Math.random() * 100 + '%';
+                    
+                    // Random size
+                    const size = Math.random() * 6 + 4; // 4-10px
+                    confetti.style.width = size + 'px';
+                    confetti.style.height = size + 'px';
+                    
+                    // Random duration
+                    const duration = Math.random() * 2 + 2; // 2-4 seconds
+                    confetti.style.animationDuration = duration + 's';
+                    
+                    // Start animation
+                    confetti.classList.add('confetti-animate');
+                    
+                    // Some pieces are circles
+                    if (Math.random() > 0.5) {
+                        confetti.style.borderRadius = '50%';
+                    }
+                    
+                    document.body.appendChild(confetti);
+                    
+                    // Clean up
+                    setTimeout(() => {
+                        if (confetti && confetti.parentNode) {
+                            confetti.parentNode.removeChild(confetti);
+                        }
+                    }, duration * 1000 + 500);
+                }, i * 50); // Stagger the creation
+            }
+        }
+
+        function closeAchievement() {
+            const popupElement = document.getElementById('achievementPopup');
+            if (popupElement) popupElement.classList.remove('show');
+        }
+
+        // Initialize navigation on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            updateNavigationButtons();
+        });
+    </script>
+</body>
+</html>
