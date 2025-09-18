@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ICP Innovation Journey</title>
+    <title>Citizen Developer Innovation Journey</title>
     <style>
         * {
             margin: 0;
@@ -443,6 +443,20 @@
                 max-width: 250px;
                 border-radius: 10px;
             }
+
+            #frontDoorScreen h2 {
+                font-size: 16px;
+                line-height: 1.1;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+
+        @media (max-width: 320px) {
+            #frontDoorScreen h2 {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
@@ -468,21 +482,20 @@
 
         <!-- ICP Front Door Screen -->
         <div id="frontDoorScreen" class="game-screen active">
-            <h2>🏠 Welcome to Citizen Development</h2>
+            <h2>👥 Welcome to Citizen Development</h2>
             
             <!-- Citizen Development Image -->
             <div class="cit-dev-image-container">
-                <img src="https://github.com/mky250/Citizen-Dev-Image/blob/main/cit%20dev.png?raw=true" 
+                <img src="https://github.com/mky250/citizen-dev-app/blob/main/cit%20dev.png?raw=true" 
                      alt="Citizen Development Framework" 
                      class="cit-dev-image"
-                     crossorigin="anonymous"
                      loading="eager"
                      onerror="this.style.display='none'; console.error('Image failed to load:', this.src);"
                      onload="console.log('Image loaded successfully')"/>
             </div>
             
             <div class="story-text">
-                <p><strong>Innovation Central Platform (ICP)</strong> helps you turn ideas into reality!</p>
+                <p><strong>Citizen Development</strong> empowers all CSS team members regardless of role or technical background to contribute ideas, experiment with new technologies, and rapidly build the <strong>next generation</strong> of AI-driven capabilities.</p>
                 <p style="margin-top: 15px;">We streamline innovation from idea to production, connecting you with the right teams and resources.</p>
             </div>
             <div class="hint-box">
