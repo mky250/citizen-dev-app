@@ -519,7 +519,7 @@
             </div>
             
             <div class="story-text">
-                <p>First, let's check if your innovation idea already exists!</p>
+                <p>First, let's check if your innovation idea already exists.</p>
             </div>
             
             <div class="innovation-card">
@@ -615,7 +615,8 @@
         <div id="incubationScreen" class="game-screen">
             <h2>🌱 Step 4: Incubation Marketplace</h2>
             <div class="story-text">
-                <p>Welcome to the AI innovator community where citizen developers can impact the business! Before development begins, complete these essential tasks:</p>
+                <p><strong>Calling All Citizen Developers!</strong></p>
+                <p>Turn innovative idea into a real application. Our Incubation Marketplace is your launchpad. Get matched with a dedicated expert mentor, and gain instant access to powerful starter kits, pre-built templates, and essential SDKs. Follow the simple steps below to onboard and start building your solution today.</p>
             </div>
             
             <div class="process-flow">
@@ -766,7 +767,7 @@
             
             <div class="feedback success">
                 <h3>Congratulations!</h3>
-                <p class="story-text">Your innovation has been successfully scaled across the organization!</p>
+                <p class="story-text">Your innovation has been successfully scaled across the organization.</p>
             </div>
 
             <div class="innovation-card">
@@ -960,7 +961,7 @@
                 if (levelElement) {
                     levelElement.textContent = gameState.level;
                 }
-                showAchievement("Level Up!", `Innovation Champion Level ${gameState.level}!`);
+                showAchievement("Level Up!", `Innovation Champion Level ${gameState.level}`);
             }
         }
 
@@ -1303,7 +1304,7 @@
                         };
                     }
                     
-                    showAchievement("Citizen Developer Ready!", "You've completed all onboarding requirements!");
+                    showAchievement("Citizen Developer Ready!", "You've completed all onboarding requirements");
                 }
             }
         }
@@ -1470,11 +1471,11 @@
                 showSuccessScreen();
                 
                 if (gameState.ideas === 1) {
-                    showAchievement("Innovation Pioneer!", "You've completed your first innovation journey!");
+                    showAchievement("Innovation Pioneer!", "You've completed your first innovation journey");
                 } else if (gameState.ideas === 3) {
-                    showAchievement("Innovation Expert!", "You've completed 3 innovation journeys!");
+                    showAchievement("Innovation Expert!", "You've completed 3 innovation journeys");
                 } else if (gameState.ideas === 5) {
-                    showAchievement("Innovation Master!", "You've completed 5 innovation journeys!");
+                    showAchievement("Innovation Master!", "You've completed 5 innovation journeys");
                 }
             }, 1500);
         }
