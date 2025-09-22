@@ -501,7 +501,7 @@
             <div class="hint-box">
                 💡 <strong>ICP Value:</strong> We prevent duplicate efforts, accelerate development, and scale solutions across the organization!
             </div>
-            <button class="continue-button" onclick="startJourney()">Start Your Innovation Journey</button>
+            <button class="continue-button" onclick="startJourney()">Start Your Guided Journey</button>
         </div>
 
         <!-- Self Discovery Screen -->
@@ -523,15 +523,15 @@
             </div>
             
             <div class="innovation-card">
-                <h3>Choose an Innovation to Explore:</h3>
+                <h3 style="font-size: 0.9em;">Select an Innovation Journey to Explore:</h3>
                 <button class="category-button" id="chatbot-btn" onclick="checkIdea('chatbot')">
                     🤖 AI Customer Service Chatbot
                 </button>
                 <button class="category-button" id="analytics-btn" onclick="checkIdea('analytics')">
-                    📊 Real-time Analytics Dashboard
+                    🚨 Incident Management Automation
                 </button>
                 <button class="category-button" id="mobile-btn" onclick="checkIdea('mobile')">
-                    📱 Employee Mobile App
+                    📄 Case Summarization Analysis
                 </button>
                 <button class="category-button" id="assistant-btn" onclick="checkIdea('assistant')">
                     🧠 AI Meeting Intelligence Assistant
@@ -539,6 +539,12 @@
             </div>
 
             <div id="discoveryResult" style="display: none;"></div>
+            
+            <div id="allCompletedMessage" style="display: none;" class="feedback success">
+                <h3>🎉 Journey Master!</h3>
+                <p>Congratulations! You've successfully completed all available innovation journeys. You've experienced the full citizen development process from idea validation through enterprise scaling.</p>
+                <p style="margin-top: 15px;"><strong>Go here to get started:</strong> <a href="https://aka.ms/AIInnovationFrontDoor" target="_blank" style="color: #667eea; text-decoration: underline;">https://aka.ms/AIInnovationFrontDoor</a></p>
+            </div>
         </div>
 
         <!-- LOB Contact Screen -->
@@ -840,16 +846,16 @@
                     }
                 },
                 analytics: {
-                    name: "Real-time Analytics Dashboard",
-                    exists: false,
-                    completed: false,
-                    bestTeam: "team3"
-                },
-                mobile: {
-                    name: "Employee Mobile App",
+                    name: "Incident Management Automation",
                     exists: false,
                     completed: false,
                     bestTeam: "team2"
+                },
+                mobile: {
+                    name: "Case Summarization Analysis",
+                    exists: false,
+                    completed: false,
+                    bestTeam: "team1"
                 },
                 assistant: {
                     name: "AI Meeting Intelligence Assistant",
@@ -1059,6 +1065,8 @@
         }
 
         function updateInnovationButtonStates() {
+            let allCompleted = true;
+            
             Object.keys(gameState.innovations).forEach(innovationType => {
                 const button = document.getElementById(`${innovationType}-btn`);
                 const innovation = gameState.innovations[innovationType];
@@ -1068,9 +1076,16 @@
                         button.classList.add('completed');
                     } else {
                         button.classList.remove('completed');
+                        allCompleted = false;
                     }
                 }
             });
+            
+            // Show congratulatory message if all innovations are completed
+            const completedMessage = document.getElementById('allCompletedMessage');
+            if (completedMessage) {
+                completedMessage.style.display = allCompleted ? 'block' : 'none';
+            }
         }
 
         function checkIdea(ideaType) {
@@ -1407,6 +1422,20 @@
             if (gameState.currentTeam === 'team4') {
                 const stepNumElement = document.getElementById('ltStepNumber');
                 if (stepNumElement) stepNumElement.textContent = 'Step 6';
+                
+                const processFlow = document.getElementById('ltProcessFlow');
+                if (processFlow) {
+                    processFlow.innerHTML = `
+                        <div class="process-step completed">1</div>
+                        <div class="process-step completed">2</div>
+                        <div class="process-step completed">3</div>
+                        <div class="process-step completed">4</div>
+                        <div class="process-step completed">5</div>
+                        <div class="process-step current">6</div>
+                        <div class="process-step">7</div>
+                        <div class="process-step">8</div>
+                    `;
+                }
             } else {
                 const stepNumElement = document.getElementById('ltStepNumber');
                 if (stepNumElement) stepNumElement.textContent = 'Step 5';
@@ -1436,6 +1465,20 @@
             if (gameState.currentTeam === 'team4') {
                 const stepNumElement = document.getElementById('engStepNumber');
                 if (stepNumElement) stepNumElement.textContent = 'Step 7';
+                
+                const processFlow = document.getElementById('engProcessFlow');
+                if (processFlow) {
+                    processFlow.innerHTML = `
+                        <div class="process-step completed">1</div>
+                        <div class="process-step completed">2</div>
+                        <div class="process-step completed">3</div>
+                        <div class="process-step completed">4</div>
+                        <div class="process-step completed">5</div>
+                        <div class="process-step completed">6</div>
+                        <div class="process-step current">7</div>
+                        <div class="process-step">8</div>
+                    `;
+                }
             } else {
                 const stepNumElement = document.getElementById('engStepNumber');
                 if (stepNumElement) stepNumElement.textContent = 'Step 6';
