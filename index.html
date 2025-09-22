@@ -866,6 +866,29 @@
             }
         };
 
+        // Helper function to determine if current idea needs 8 steps
+        function isEightStepJourney() {
+            return gameState.currentIdea === 'assistant';
+        }
+
+        // Helper function to get progress bar HTML for any step
+        function getProgressBarHTML(currentStep, isEightStep = false) {
+            const totalSteps = isEightStep ? 8 : 7;
+            let html = '';
+            
+            for (let i = 1; i <= totalSteps; i++) {
+                if (i < currentStep) {
+                    html += `<div class="process-step completed">${i}</div>`;
+                } else if (i === currentStep) {
+                    html += `<div class="process-step current">${i}</div>`;
+                } else {
+                    html += `<div class="process-step">${i}</div>`;
+                }
+            }
+            
+            return html;
+        }
+
         // Utility Functions
         function showScreen(screenId, addToHistory = true) {
             if (addToHistory && gameState.currentScreen) {
@@ -1097,6 +1120,35 @@
             });
             event.target.classList.add('selected');
             
+            // Update progress bar dynamically based on selected innovation
+            const selfDiscoveryFlow = document.querySelector('#selfDiscoveryScreen .process-flow');
+            if (selfDiscoveryFlow) {
+                if (ideaType === 'assistant') {
+                    // AI Meeting Intelligence Assistant - 8 steps
+                    selfDiscoveryFlow.innerHTML = `
+                        <div class="process-step current">1</div>
+                        <div class="process-step">2</div>
+                        <div class="process-step">3</div>
+                        <div class="process-step">4</div>
+                        <div class="process-step">5</div>
+                        <div class="process-step">6</div>
+                        <div class="process-step">7</div>
+                        <div class="process-step">8</div>
+                    `;
+                } else {
+                    // All other innovations - 7 steps
+                    selfDiscoveryFlow.innerHTML = `
+                        <div class="process-step current">1</div>
+                        <div class="process-step">2</div>
+                        <div class="process-step">3</div>
+                        <div class="process-step">4</div>
+                        <div class="process-step">5</div>
+                        <div class="process-step">6</div>
+                        <div class="process-step">7</div>
+                    `;
+                }
+            }
+            
             const resultDiv = document.getElementById('discoveryResult');
             if (resultDiv) {
                 if (idea.completed) {
@@ -1233,11 +1285,25 @@
             if (ideaElement && gameState.currentIdea) {
                 ideaElement.textContent = gameState.innovations[gameState.currentIdea].name;
             }
+            
+            // Update progress bar based on innovation type
+            const lobContactFlow = document.querySelector('#lobContactScreen .process-flow');
+            if (lobContactFlow) {
+                lobContactFlow.innerHTML = getProgressBarHTML(2, isEightStepJourney());
+            }
+            
             updateScore(10, "LOB contact initiated");
         }
 
         function submitToICP() {
             showScreen('triageScreen');
+            
+            // Update progress bar based on innovation type
+            const triageFlow = document.querySelector('#triageScreen .process-flow');
+            if (triageFlow) {
+                triageFlow.innerHTML = getProgressBarHTML(3, isEightStepJourney());
+            }
+            
             updateScore(25, "Idea submitted to ICP");
             updateIdeas();
         }
@@ -1259,6 +1325,11 @@
                 const selectedTeam = document.getElementById(bestTeam);
                 if (selectedTeam) {
                     selectedTeam.classList.add('selected');
+                }
+                
+                // Update all previous progress bars if this is team4 (AI Community - 8 steps)
+                if (bestTeam === 'team4') {
+                    updateAllProgressBarsForTeam4();
                 }
             }
             
@@ -1282,6 +1353,53 @@
                     showDevelopmentScreen();
                 }
             }, 2000);
+        }
+
+        function updateAllProgressBarsForTeam4() {
+            // Update Self-Discovery screen progress bar to show 8 steps
+            const selfDiscoveryFlow = document.querySelector('#selfDiscoveryScreen .process-flow');
+            if (selfDiscoveryFlow) {
+                selfDiscoveryFlow.innerHTML = `
+                    <div class="process-step current">1</div>
+                    <div class="process-step">2</div>
+                    <div class="process-step">3</div>
+                    <div class="process-step">4</div>
+                    <div class="process-step">5</div>
+                    <div class="process-step">6</div>
+                    <div class="process-step">7</div>
+                    <div class="process-step">8</div>
+                `;
+            }
+            
+            // Update LOB Contact screen progress bar to show 8 steps
+            const lobContactFlow = document.querySelector('#lobContactScreen .process-flow');
+            if (lobContactFlow) {
+                lobContactFlow.innerHTML = `
+                    <div class="process-step completed">1</div>
+                    <div class="process-step current">2</div>
+                    <div class="process-step">3</div>
+                    <div class="process-step">4</div>
+                    <div class="process-step">5</div>
+                    <div class="process-step">6</div>
+                    <div class="process-step">7</div>
+                    <div class="process-step">8</div>
+                `;
+            }
+            
+            // Update Cit Dev Consult screen progress bar to show 8 steps
+            const triageFlow = document.querySelector('#triageScreen .process-flow');
+            if (triageFlow) {
+                triageFlow.innerHTML = `
+                    <div class="process-step completed">1</div>
+                    <div class="process-step completed">2</div>
+                    <div class="process-step current">3</div>
+                    <div class="process-step">4</div>
+                    <div class="process-step">5</div>
+                    <div class="process-step">6</div>
+                    <div class="process-step">7</div>
+                    <div class="process-step">8</div>
+                `;
+            }
         }
 
         function progressIncubation() {
@@ -1355,40 +1473,23 @@
         function showDevelopmentScreen() {
             showScreen('developmentScreen');
             
-            if (gameState.currentTeam === 'team4') {
-                // AI Community path - Step 5 with 8 total steps
+            if (isEightStepJourney()) {
+                // AI Meeting Intelligence Assistant - Step 5 of 8
                 const stepNumElement = document.getElementById('devStepNumber');
                 if (stepNumElement) stepNumElement.textContent = 'Step 5';
                 
                 const processFlow = document.getElementById('devProcessFlow');
                 if (processFlow) {
-                    processFlow.innerHTML = `
-                        <div class="process-step completed">1</div>
-                        <div class="process-step completed">2</div>
-                        <div class="process-step completed">3</div>
-                        <div class="process-step completed">4</div>
-                        <div class="process-step current">5</div>
-                        <div class="process-step">6</div>
-                        <div class="process-step">7</div>
-                        <div class="process-step">8</div>
-                    `;
+                    processFlow.innerHTML = getProgressBarHTML(5, true);
                 }
             } else {
-                // Other teams - Step 4 with 7 total steps (skip incubation)
+                // Other innovations - Step 4 of 7 (skip incubation)
                 const stepNumElement = document.getElementById('devStepNumber');
                 if (stepNumElement) stepNumElement.textContent = 'Step 4';
                 
                 const processFlow = document.getElementById('devProcessFlow');
                 if (processFlow) {
-                    processFlow.innerHTML = `
-                        <div class="process-step completed">1</div>
-                        <div class="process-step completed">2</div>
-                        <div class="process-step completed">3</div>
-                        <div class="process-step current">4</div>
-                        <div class="process-step">5</div>
-                        <div class="process-step">6</div>
-                        <div class="process-step">7</div>
-                    `;
+                    processFlow.innerHTML = getProgressBarHTML(4, false);
                 }
             }
         }
@@ -1419,38 +1520,23 @@
             showScreen('ltApprovalScreen');
             updateScore(40, "Leadership approval");
             
-            if (gameState.currentTeam === 'team4') {
+            if (isEightStepJourney()) {
+                // AI Meeting Intelligence Assistant - Step 6 of 8
                 const stepNumElement = document.getElementById('ltStepNumber');
                 if (stepNumElement) stepNumElement.textContent = 'Step 6';
                 
                 const processFlow = document.getElementById('ltProcessFlow');
                 if (processFlow) {
-                    processFlow.innerHTML = `
-                        <div class="process-step completed">1</div>
-                        <div class="process-step completed">2</div>
-                        <div class="process-step completed">3</div>
-                        <div class="process-step completed">4</div>
-                        <div class="process-step completed">5</div>
-                        <div class="process-step current">6</div>
-                        <div class="process-step">7</div>
-                        <div class="process-step">8</div>
-                    `;
+                    processFlow.innerHTML = getProgressBarHTML(6, true);
                 }
             } else {
+                // Other innovations - Step 5 of 7
                 const stepNumElement = document.getElementById('ltStepNumber');
                 if (stepNumElement) stepNumElement.textContent = 'Step 5';
                 
                 const processFlow = document.getElementById('ltProcessFlow');
                 if (processFlow) {
-                    processFlow.innerHTML = `
-                        <div class="process-step completed">1</div>
-                        <div class="process-step completed">2</div>
-                        <div class="process-step completed">3</div>
-                        <div class="process-step completed">4</div>
-                        <div class="process-step current">5</div>
-                        <div class="process-step">6</div>
-                        <div class="process-step">7</div>
-                    `;
+                    processFlow.innerHTML = getProgressBarHTML(5, false);
                 }
             }
         }
@@ -1462,38 +1548,23 @@
         function showEngineeringScreen() {
             showScreen('engineeringScreen');
             
-            if (gameState.currentTeam === 'team4') {
+            if (isEightStepJourney()) {
+                // AI Meeting Intelligence Assistant - Step 7 of 8
                 const stepNumElement = document.getElementById('engStepNumber');
                 if (stepNumElement) stepNumElement.textContent = 'Step 7';
                 
                 const processFlow = document.getElementById('engProcessFlow');
                 if (processFlow) {
-                    processFlow.innerHTML = `
-                        <div class="process-step completed">1</div>
-                        <div class="process-step completed">2</div>
-                        <div class="process-step completed">3</div>
-                        <div class="process-step completed">4</div>
-                        <div class="process-step completed">5</div>
-                        <div class="process-step completed">6</div>
-                        <div class="process-step current">7</div>
-                        <div class="process-step">8</div>
-                    `;
+                    processFlow.innerHTML = getProgressBarHTML(7, true);
                 }
             } else {
+                // Other innovations - Step 6 of 7
                 const stepNumElement = document.getElementById('engStepNumber');
                 if (stepNumElement) stepNumElement.textContent = 'Step 6';
                 
                 const processFlow = document.getElementById('engProcessFlow');
                 if (processFlow) {
-                    processFlow.innerHTML = `
-                        <div class="process-step completed">1</div>
-                        <div class="process-step completed">2</div>
-                        <div class="process-step completed">3</div>
-                        <div class="process-step completed">4</div>
-                        <div class="process-step completed">5</div>
-                        <div class="process-step current">6</div>
-                        <div class="process-step">7</div>
-                    `;
+                    processFlow.innerHTML = getProgressBarHTML(6, false);
                 }
             }
         }
@@ -1531,24 +1602,23 @@
                 gameState.completedInnovations.push(gameState.currentIdea);
             }
             
-            if (gameState.currentTeam === 'team4') {
+            if (isEightStepJourney()) {
+                // AI Meeting Intelligence Assistant - Step 8 of 8
                 const stepNumElement = document.getElementById('successStepNumber');
                 if (stepNumElement) stepNumElement.textContent = 'Step 8';
+                
+                const processFlow = document.getElementById('successProcessFlow');
+                if (processFlow) {
+                    processFlow.innerHTML = getProgressBarHTML(8, true);
+                }
             } else {
+                // Other innovations - Step 7 of 7
                 const stepNumElement = document.getElementById('successStepNumber');
                 if (stepNumElement) stepNumElement.textContent = 'Step 7';
                 
                 const processFlow = document.getElementById('successProcessFlow');
                 if (processFlow) {
-                    processFlow.innerHTML = `
-                        <div class="process-step completed">1</div>
-                        <div class="process-step completed">2</div>
-                        <div class="process-step completed">3</div>
-                        <div class="process-step completed">4</div>
-                        <div class="process-step completed">5</div>
-                        <div class="process-step completed">6</div>
-                        <div class="process-step completed">7</div>
-                    `;
+                    processFlow.innerHTML = getProgressBarHTML(7, false);
                 }
             }
             
