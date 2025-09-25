@@ -439,6 +439,10 @@
             <h1>🚀 Visualize your Citizen Development journey!</h1>
             <div class="score-bar">
                 <div class="score-item">
+                    <span>🎓</span>
+                    <span id="level">1</span>
+                </div>
+                <div class="score-item">
                     <span>⭐</span>
                     <span id="score">0</span>
                 </div>
@@ -448,7 +452,7 @@
                 </div>
                 <div class="score-item">
                     <span>🏆</span>
-                    <span id="level">1</span>
+                    <span id="achievements">0</span>
                 </div>
             </div>
         </div>
@@ -726,7 +730,11 @@
                     devStage: 0,
                     incubationStage: 0,
                     currentScreen: 'frontDoorScreen',
-                    completedInnovations: []
+                    completedInnovations: [],
+                    checkedInnovations: [], // Track which innovations have been checked
+                    journeyStarted: false, // Track if journey has been started before
+                    achievements: 0, // Track total achievements earned
+                    earnedAchievements: [] // Track which achievements have been earned
                 };
 
                 this.innovations = {
@@ -779,6 +787,7 @@
                     score: document.getElementById('score'),
                     ideas: document.getElementById('ideas'),
                     level: document.getElementById('level'),
+                    achievements: document.getElementById('achievements'),
                     discoveryResult: document.getElementById('discoveryResult'),
                     selectedIdea: document.getElementById('selectedIdea'),
                     teamAssignment: document.getElementById('teamAssignment'),
@@ -863,7 +872,7 @@
                     if (this.elements.level) {
                         this.elements.level.textContent = this.state.level;
                     }
-                    this.showAchievement("Level Up!", `Innovation Champion Level ${this.state.level}`);
+                    // Removed level-up achievement - only journey completions count
                 }
             }
 
@@ -889,6 +898,22 @@
 
             // Achievement System
             showAchievement(title, description) {
+                // Check if this achievement has already been earned
+                const achievementKey = `${title}_${description}`;
+                if (!this.state.earnedAchievements.includes(achievementKey)) {
+                    this.state.earnedAchievements.push(achievementKey);
+                    this.state.achievements++;
+                    
+                    // Update achievement counter display
+                    if (this.elements.achievements) {
+                        this.elements.achievements.textContent = this.state.achievements;
+                        this.elements.achievements.style.animation = 'pulse 0.5s';
+                        setTimeout(() => {
+                            this.elements.achievements.style.animation = '';
+                        }, 500);
+                    }
+                }
+                
                 if (this.elements.achievementName) {
                     this.elements.achievementName.textContent = description;
                 }
@@ -943,7 +968,13 @@
                 this.resetGameState();
                 this.updateInnovationButtonStates();
                 this.showScreen('selfDiscoveryScreen');
-                this.updateScore(10, "Journey Started");
+                
+                // Only award points for first journey start
+                if (!this.state.journeyStarted) {
+                    this.updateScore(10, "Journey Started");
+                    this.state.journeyStarted = true;
+                }
+                
                 this.renderProcessFlow('selfDiscoveryFlow', 1, 7);
             }
 
@@ -1012,6 +1043,12 @@
             checkIdea(ideaType) {
                 const idea = this.innovations[ideaType];
                 this.state.currentIdea = ideaType;
+                
+                // Check if this is the first time checking this innovation
+                const isFirstCheck = !this.state.checkedInnovations.includes(ideaType);
+                if (isFirstCheck) {
+                    this.state.checkedInnovations.push(ideaType);
+                }
 
                 document.querySelectorAll('.category-button').forEach(btn => {
                     btn.classList.remove('selected');
@@ -1025,17 +1062,28 @@
                 if (this.elements.discoveryResult) {
                     let resultHTML = '';
                     
-                    if (idea.completed) {
-                        resultHTML = this.getCompletedInnovationHTML(idea);
-                    } else if (idea.exists) {
-                        idea.completed = true;
-                        this.state.completedInnovations.push(ideaType);
-                        this.updateInnovationButtonStates();
+                    // Check if it's an existing solution first (should always show this for existing solutions)
+                    if (idea.exists) {
+                        // Mark as completed for button styling only
+                        if (!idea.completed) {
+                            idea.completed = true;
+                            this.state.completedInnovations.push(ideaType);
+                            this.updateInnovationButtonStates();
+                        }
                         resultHTML = this.getExistingSolutionHTML(idea);
-                        this.updateScore(15, "Found existing solution");
+                        // Only award points on first check
+                        if (isFirstCheck) {
+                            this.updateScore(15, "Found existing solution");
+                        }
+                    } else if (idea.completed && !idea.exists) {
+                        // Only show completed message for innovations that went through the full journey
+                        resultHTML = this.getCompletedInnovationHTML(idea);
                     } else {
                         resultHTML = this.getNewInnovationHTML();
-                        this.updateScore(20, "Discovered new opportunity");
+                        // Only award points on first check
+                        if (isFirstCheck) {
+                            this.updateScore(20, "Discovered new opportunity");
+                        }
                     }
                     
                     this.elements.discoveryResult.innerHTML = resultHTML;
@@ -1044,17 +1092,33 @@
             }
 
             getCompletedInnovationHTML(idea) {
+                // Check if there are any unexplored innovations
+                const hasUnexploredInnovations = Object.keys(this.innovations).some(key => 
+                    !this.state.checkedInnovations.includes(key)
+                );
+                
+                const tryAnotherButton = hasUnexploredInnovations ? 
+                    `<button class="continue-button" onclick="game.tryAnother()">Try Another Innovation</button>` : '';
+                
                 return `
                     <div class="feedback success">
                         <h3>🎉 Innovation Already Completed!</h3>
                         <p><strong>${idea.name}</strong> has been successfully launched through the innovation journey!</p>
                         <p style="margin-top: 10px;">🏆 <em>Journey Status: Complete</em></p>
                     </div>
-                    <button class="continue-button" onclick="game.tryAnother()">Try Another Innovation</button>
+                    ${tryAnotherButton}
                 `;
             }
 
             getExistingSolutionHTML(idea) {
+                // Check if there are any unexplored innovations
+                const hasUnexploredInnovations = Object.keys(this.innovations).some(key => 
+                    !this.state.checkedInnovations.includes(key)
+                );
+                
+                const tryAnotherButton = hasUnexploredInnovations ? 
+                    `<button class="continue-button" onclick="game.tryAnother()">Try Another Idea</button>` : '';
+                
                 return `
                     <div class="solution-exists">
                         <h3>✅ Solution Already Exists!</h3>
@@ -1064,7 +1128,7 @@
                         <p><strong>Status:</strong> ${idea.solution.status}</p>
                         <p style="margin-top: 15px; font-weight: bold; color: #10b981;">🏆 Marked as Complete!</p>
                     </div>
-                    <button class="continue-button" onclick="game.tryAnother()">Try Another Idea</button>
+                    ${tryAnotherButton}
                 `;
             }
 
@@ -1173,7 +1237,7 @@
                             btn.onclick = () => this.showDevelopmentScreen();
                         }
 
-                        this.showAchievement("Citizen Developer Ready!", "You've completed all onboarding requirements");
+                        // Removed "Citizen Developer Ready!" achievement
                     }
                 }
             }
@@ -1282,14 +1346,7 @@
 
                 setTimeout(() => {
                     this.showSuccessScreen();
-                    
-                    if (this.state.ideas === 1) {
-                        this.showAchievement("Innovation Pioneer!", "You've completed your first innovation journey");
-                    } else if (this.state.ideas === 3) {
-                        this.showAchievement("Innovation Expert!", "You've completed 3 innovation journeys");
-                    } else if (this.state.ideas === 5) {
-                        this.showAchievement("Innovation Master!", "You've completed 5 innovation journeys");
-                    }
+                    // Removed milestone achievements - only individual journey completions count
                 }, 1500);
             }
 
@@ -1297,6 +1354,10 @@
                 this.showScreen('successScreen');
 
                 if (this.state.currentIdea) {
+                    // Award achievement for completing this specific innovation journey
+                    const innovationName = this.innovations[this.state.currentIdea].name;
+                    this.showAchievement("Journey Complete!", `Completed: ${innovationName}`);
+                    
                     this.innovations[this.state.currentIdea].completed = true;
                     this.state.completedInnovations.push(this.state.currentIdea);
                 }
