@@ -389,6 +389,12 @@
             box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
         }
 
+        /* Touch feedback for mobile */
+        .touch-active {
+            transform: scale(0.98) !important;
+            opacity: 0.9 !important;
+        }
+
         .feedback {
             padding: 20px;
             background: linear-gradient(145deg, #f3f4f6, #ffffff);
@@ -625,38 +631,290 @@
             pointer-events: none;
         }
 
-        @media (max-width: 380px) {
-            .game-container {
-                border-radius: 0;
-            }
-            
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
             body {
                 padding: 0;
             }
 
+            .game-container {
+                border-radius: 0;
+                max-width: 100%;
+                min-height: 100vh;
+            }
+
+            .header {
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 1.2em;
+                line-height: 1.3;
+            }
+
+            .help-button {
+                width: 35px;
+                height: 35px;
+                top: 15px;
+                right: 15px;
+            }
+
+            .journey-tracker {
+                padding: 8px;
+                font-size: 11px;
+            }
+
+            .score-bar {
+                padding: 8px;
+                gap: 5px;
+            }
+
+            .score-item {
+                font-size: 14px;
+            }
+
+            .game-screen {
+                padding: 15px;
+                min-height: calc(100vh - 200px);
+            }
+
+            .innovation-card {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+
+            .category-button {
+                padding: 18px 15px;
+                font-size: 15px;
+                min-height: 56px;
+                touch-action: manipulation;
+            }
+
+            .continue-button {
+                padding: 18px;
+                font-size: 16px;
+                min-height: 56px;
+                touch-action: manipulation;
+            }
+
+            .process-flow {
+                padding: 10px;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .process-step {
+                width: 35px;
+                height: 35px;
+                font-size: 14px;
+                flex-shrink: 0;
+            }
+
+            .team-card {
+                padding: 18px;
+                touch-action: manipulation;
+            }
+
+            .hint-box {
+                padding: 12px;
+                font-size: 13px;
+            }
+
+            .dialog-box {
+                padding: 12px;
+                font-size: 14px;
+            }
+
+            .story-text {
+                font-size: 14px;
+                line-height: 1.5;
+            }
+
+            .instruction-panel {
+                margin: 15px 0;
+                padding: 12px;
+            }
+
+            .instruction-panel h3 {
+                font-size: 13px;
+            }
+
+            .instruction-panel ol {
+                font-size: 12px;
+                padding-left: 18px;
+            }
+
             .cit-dev-image-container {
                 margin: 15px auto;
-                max-width: 320px;
+                max-width: 90%;
                 padding: 10px;
             }
 
             .cit-dev-image {
-                max-width: 250px;
+                max-width: 100%;
                 border-radius: 10px;
             }
 
+            .achievement-popup {
+                width: 90%;
+                max-width: 320px;
+                padding: 20px;
+            }
+
+            .help-content {
+                width: 90%;
+                max-width: 100%;
+                margin: 20px;
+                padding: 20px;
+            }
+
+            .exploration-progress {
+                padding: 0 15px;
+                margin: 15px 0;
+            }
+
+            .hint-banner {
+                margin: 10px 0;
+                padding: 10px;
+                font-size: 13px;
+            }
+
+            .completion-summary {
+                padding: 15px;
+                margin: 15px 0;
+            }
+
+            .completion-summary h3 {
+                font-size: 16px;
+            }
+
+            .completion-summary ul {
+                font-size: 14px;
+                padding-left: 18px;
+            }
+
+            .next-action {
+                padding: 12px;
+                margin: 15px 0;
+            }
+
+            .next-action h4 {
+                font-size: 16px;
+            }
+
+            .requirement-item {
+                padding: 12px;
+                font-size: 14px;
+            }
+
+            /* Ensure tooltips don't show on mobile */
+            .tooltip {
+                display: none !important;
+            }
+
+            /* Improve tap targets */
+            button, .team-card, .category-button {
+                -webkit-tap-highlight-color: rgba(102, 126, 234, 0.2);
+            }
+
+            /* Prevent text selection on buttons */
+            button {
+                -webkit-user-select: none;
+                -webkit-touch-callout: none;
+            }
+
+            /* Innovation descriptions on mobile */
+            .innovation-card p {
+                font-size: 11px !important;
+                margin: 5px 5px 12px 5px !important;
+            }
+
+            /* Ensure modals are properly sized */
+            .help-modal {
+                padding: 10px;
+            }
+
+            /* Adjust font sizes for very small screens */
+            @media (max-width: 360px) {
+                .header h1 {
+                    font-size: 1.1em;
+                }
+                
+                .category-button {
+                    font-size: 14px;
+                    padding: 16px 12px;
+                }
+                
+                .story-text {
+                    font-size: 13px;
+                }
+                
+                .process-step {
+                    width: 32px;
+                    height: 32px;
+                    font-size: 12px;
+                }
+            }
+        }
+
+        @media (max-width: 380px) {
             #frontDoorScreen h2 {
                 font-size: 16px;
-                line-height: 1.1;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
+                line-height: 1.2;
+            }
+            
+            .score-bar {
+                font-size: 12px;
+            }
+            
+            .journey-tracker {
+                font-size: 10px;
             }
         }
 
         @media (max-width: 320px) {
             #frontDoorScreen h2 {
                 font-size: 14px;
+            }
+            
+            .header h1 {
+                font-size: 1em;
+            }
+            
+            .category-button {
+                font-size: 13px;
+                padding: 15px 10px;
+            }
+        }
+
+        /* Landscape mode optimizations */
+        @media (max-height: 600px) and (orientation: landscape) {
+            .header {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.1em;
+            }
+            
+            .score-bar {
+                margin-top: 5px;
+                padding: 5px;
+            }
+            
+            .game-screen {
+                padding: 10px;
+                min-height: calc(100vh - 150px);
+            }
+            
+            .process-flow {
+                margin: 10px 0;
+                padding: 8px;
+            }
+            
+            .cit-dev-image-container {
+                max-width: 250px;
+                margin: 10px auto;
             }
         }
     </style>
@@ -1116,6 +1374,65 @@
                 this.cacheElements();
                 this.renderProcessFlow('selfDiscoveryFlow', 1, 7);
                 this.updateJourneyTracker();
+                this.initMobileOptimizations();
+            }
+
+            initMobileOptimizations() {
+                // Detect if mobile
+                this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+                
+                // Prevent double-tap zoom on buttons
+                let lastTouchEnd = 0;
+                document.addEventListener('touchend', function(event) {
+                    const now = Date.now();
+                    if (now - lastTouchEnd <= 300) {
+                        event.preventDefault();
+                    }
+                    lastTouchEnd = now;
+                }, false);
+                
+                // Add touch feedback class
+                document.addEventListener('touchstart', function(e) {
+                    if (e.target.tagName === 'BUTTON' || e.target.classList.contains('team-card')) {
+                        e.target.classList.add('touch-active');
+                    }
+                });
+                
+                document.addEventListener('touchend', function(e) {
+                    if (e.target.tagName === 'BUTTON' || e.target.classList.contains('team-card')) {
+                        setTimeout(() => {
+                            e.target.classList.remove('touch-active');
+                        }, 100);
+                    }
+                });
+                
+                // Improve scrolling on mobile
+                if (this.isMobile) {
+                    document.body.style.overscrollBehavior = 'none';
+                }
+                
+                // Handle orientation changes
+                window.addEventListener('orientationchange', () => {
+                    setTimeout(() => {
+                        this.adjustForOrientation();
+                    }, 100);
+                });
+                
+                // Initial adjustment
+                this.adjustForOrientation();
+            }
+
+            adjustForOrientation() {
+                const isLandscape = window.innerHeight < window.innerWidth;
+                const container = document.querySelector('.game-container');
+                
+                if (this.isMobile && isLandscape) {
+                    container.style.maxHeight = '100vh';
+                    container.style.overflowY = 'auto';
+                } else {
+                    container.style.maxHeight = '';
+                    container.style.overflowY = '';
+                }
             }
 
             cacheElements() {
