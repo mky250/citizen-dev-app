@@ -38,6 +38,55 @@
             color: white;
             padding: 20px;
             text-align: center;
+            position: relative;
+        }
+
+        .help-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .help-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .journey-tracker {
+            background: #f9fafb;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .journey-tracker span {
+            color: #9ca3af;
+        }
+
+        .journey-tracker span.active {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .journey-tracker span.completed {
+            color: #10b981;
         }
 
         .score-bar {
@@ -53,6 +102,71 @@
             display: flex;
             align-items: center;
             gap: 5px;
+            cursor: help;
+            position: relative;
+        }
+
+        .score-item:hover .tooltip {
+            display: block;
+        }
+
+        .tooltip {
+            display: none;
+            position: absolute;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 11px;
+            white-space: nowrap;
+            z-index: 10;
+        }
+
+        .exploration-progress {
+            text-align: center;
+            margin: 20px 0;
+            padding: 0 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            background: #e5e7eb;
+            height: 8px;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .instruction-panel {
+            background: #f0f9ff;
+            border: 2px solid #0ea5e9;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 20px;
+        }
+
+        .instruction-panel h3 {
+            color: #0c4a6e;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .instruction-panel ol {
+            text-align: left;
+            color: #475569;
+            line-height: 1.8;
+            padding-left: 20px;
+            font-size: 13px;
         }
 
         .game-screen {
@@ -120,6 +234,15 @@
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
+        .category-button.unexplored {
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
+            50% { box-shadow: 0 0 10px 2px rgba(102, 126, 234, 0.4); }
+        }
+
         .category-button.selected {
             border-color: #fbbf24;
             background: linear-gradient(145deg, #10b981, #059669);
@@ -127,10 +250,24 @@
             transform: translateY(-2px);
         }
 
+        .category-button.existing-solution {
+            background: linear-gradient(145deg, #0ea5e9, #0284c7);
+            border-color: #0ea5e9;
+            position: relative;
+        }
+
+        .category-button.existing-solution::after {
+            content: 'ℹ️';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            font-size: 16px;
+        }
+
         .category-button.completed {
-            background: linear-gradient(145deg, #6b7280, #4b5563);
+            background: linear-gradient(145deg, #10b981, #059669);
             border-color: #10b981;
-            opacity: 0.8;
+            opacity: 0.9;
             position: relative;
         }
 
@@ -140,6 +277,23 @@
             top: 8px;
             right: 8px;
             font-size: 16px;
+        }
+
+        .hint-banner {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border: 2px solid #fbbf24;
+            padding: 12px;
+            border-radius: 10px;
+            margin: 15px 0;
+            text-align: center;
+            font-size: 14px;
+            color: #78350f;
+            animation: slideInDown 0.5s ease;
+        }
+
+        @keyframes slideInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .team-card {
@@ -296,8 +450,8 @@
         }
 
         .solution-exists {
-            background: #dcfce7;
-            border: 2px solid #10b981;
+            background: #dbeafe;
+            border: 2px solid #0ea5e9;
             padding: 15px;
             border-radius: 10px;
             margin: 15px 0;
@@ -342,6 +496,80 @@
         .cit-dev-image:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(100, 116, 139, 0.2);
+        }
+
+        .help-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .help-modal.show {
+            display: flex;
+        }
+
+        .help-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 350px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .help-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #6b7280;
+        }
+
+        .help-close:hover {
+            color: #374151;
+        }
+
+        .completion-summary {
+            background: linear-gradient(145deg, #f0fdf4, #dcfce7);
+            border: 2px solid #10b981;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .completion-summary h3 {
+            color: #065f46;
+            margin-bottom: 15px;
+        }
+
+        .completion-summary ul {
+            text-align: left;
+            color: #047857;
+            line-height: 1.8;
+            padding-left: 20px;
+        }
+
+        .next-action {
+            background: #f0f9ff;
+            border: 2px solid #0ea5e9;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .next-action h4 {
+            color: #0c4a6e;
+            margin-bottom: 10px;
         }
 
         .confetti {
@@ -436,25 +664,39 @@
 <body>
     <div class="game-container">
         <div class="header">
+            <button class="help-button" onclick="game.showHelp()">?</button>
             <h1>🚀 Visualize your Citizen Development journey!</h1>
             <div class="score-bar">
                 <div class="score-item">
                     <span>🎓</span>
                     <span id="level">1</span>
+                    <div class="tooltip" id="levelTooltip">Newcomer</div>
                 </div>
                 <div class="score-item">
                     <span>⭐</span>
                     <span id="score">0</span>
+                    <div class="tooltip">Points earned</div>
                 </div>
                 <div class="score-item">
                     <span>💡</span>
                     <span id="ideas">0</span>
+                    <div class="tooltip">Ideas processed</div>
                 </div>
                 <div class="score-item">
                     <span>🏆</span>
                     <span id="achievements">0</span>
+                    <div class="tooltip">Journeys completed</div>
                 </div>
             </div>
+        </div>
+
+        <!-- Journey Tracker -->
+        <div class="journey-tracker" id="journeyTracker">
+            <span id="trackerHome">Home</span>
+            <span>→</span>
+            <span id="trackerDiscovery">Discovery</span>
+            <span>→</span>
+            <span id="trackerJourney">Journey</span>
         </div>
 
         <!-- ICP Front Door Screen -->
@@ -471,13 +713,26 @@
                      onload="console.log('Image loaded successfully')"/>
             </div>
             
+            <!-- How This Works Panel -->
+            <div class="instruction-panel">
+                <h3>How This Works:</h3>
+                <ol>
+                    <li>Explore 4 different innovation examples</li>
+                    <li>See if solutions already exist or need development</li>
+                    <li>Follow the journey from idea to production</li>
+                    <li>Learn the actual ICP process along the way</li>
+                </ol>
+            </div>
+            
             <div class="story-text">
                 <p><strong>Citizen Development</strong> empowers all CSS team members regardless of role or technical background to contribute ideas, experiment with new technologies, and rapidly build the <strong>next generation</strong> of AI-driven capabilities.</p>
                 <p style="margin-top: 15px;">We streamline innovation from idea to production, connecting you with the right teams and resources.</p>
             </div>
+            
             <div class="hint-box">
                 💡 <strong>ICP Value:</strong> We prevent duplicate efforts, accelerate development, and scale solutions across the organization!
             </div>
+            
             <button class="continue-button" onclick="game.startJourney()">Start Your Guided Journey</button>
         </div>
 
@@ -485,10 +740,23 @@
         <div id="selfDiscoveryScreen" class="game-screen">
             <h2>🔍 Step 1: Self-Discovery</h2>
             
+            <!-- Exploration Progress -->
+            <div class="exploration-progress">
+                <p style="color: #6b7280;">Progress: <strong><span id="explorationCount">0</span>/4 innovations explored</strong></p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+                </div>
+            </div>
+            
             <div class="process-flow" id="selfDiscoveryFlow"></div>
             
             <div class="story-text">
                 <p>First, let's check if your innovation idea already exists.</p>
+            </div>
+            
+            <!-- First-time hint -->
+            <div id="firstTimeHint" class="hint-banner" style="display: none;">
+                👆 Click any innovation below to start exploring! Start with the highlighted one.
             </div>
             
             <div class="innovation-card">
@@ -673,39 +941,30 @@
 
         <!-- Success Screen -->
         <div id="successScreen" class="game-screen">
-            <h2>🎉 <span id="successStepNumber">Step 8</span>: Innovation Launched!</h2>
-            
-            <div class="process-flow" id="successProcessFlow"></div>
+            <h2>🎉 Mission Complete!</h2>
             
             <div class="innovation-avatar">🏆</div>
             
-            <div class="feedback success">
-                <h3>Congratulations!</h3>
-                <p class="story-text">Your innovation has been successfully scaled across the organization.</p>
+            <div class="completion-summary">
+                <h3>What You Learned:</h3>
+                <ul>
+                    <li>How to validate if a solution already exists</li>
+                    <li>The ICP submission process through your LOB</li>
+                    <li>How Citizen Dev consultants match ideas to teams</li>
+                    <li>The development and scaling process</li>
+                    <li>How innovations become enterprise solutions</li>
+                </ul>
             </div>
 
-            <div class="innovation-card">
-                <h3>Journey Summary:</h3>
-                <p>✅ Self-discovery completed</p>
-                <p>✅ LOB submission successful</p>
-                <p>✅ Cit Dev Consult completed</p>
-                <p>✅ Incubation marketplace passed</p>
-                <p>✅ Development finished</p>
-                <p>✅ Leadership approved</p>
-                <p>✅ Engineering productized</p>
-                <p>✅ Solution scaled out!</p>
+            <div class="next-action" id="nextActionSection">
+                <!-- Will be populated dynamically -->
             </div>
 
             <div class="hint-box">
                 🌟 <strong>ICP Impact:</strong> Your innovation is now helping thousands of employees and customers!
             </div>
 
-            <div style="margin-top: 20px;">
-                <p><strong>Total Points:</strong> <span id="totalScore">0</span></p>
-                <p><strong>Ideas Processed:</strong> <span id="totalIdeas">0</span></p>
-            </div>
-
-            <button class="continue-button" onclick="game.playAgain()">Start New Innovation</button>
+            <button class="continue-button" onclick="game.exploreMore()">Explore More Innovations</button>
         </div>
     </div>
 
@@ -717,8 +976,37 @@
         <button class="continue-button" onclick="game.closeAchievement()" style="margin-top: 15px;">Awesome!</button>
     </div>
 
+    <!-- Help Modal -->
+    <div id="helpModal" class="help-modal">
+        <div class="help-content">
+            <span class="help-close" onclick="game.closeHelp()">&times;</span>
+            <h2>📚 Help & Guide</h2>
+            <div style="margin-top: 20px;">
+                <h3>What is this tool?</h3>
+                <p style="color: #6b7280; margin: 10px 0;">An interactive guide to understand the Citizen Development innovation process at CSS.</p>
+                
+                <h3 style="margin-top: 20px;">What is ICP?</h3>
+                <p style="color: #6b7280; margin: 10px 0;">Innovation Collaboration Platform - the system that manages innovation ideas from concept to production.</p>
+                
+                <h3 style="margin-top: 20px;">How to use:</h3>
+                <ol style="color: #6b7280; line-height: 1.8; padding-left: 20px;">
+                    <li>Start by exploring any of the 4 innovation examples</li>
+                    <li>Some will show existing solutions, others need development</li>
+                    <li>Follow the complete journey for new innovations</li>
+                    <li>Complete all 4 to master the process!</li>
+                </ol>
+                
+                <h3 style="margin-top: 20px;">Ready to submit a real idea?</h3>
+                <p style="color: #6b7280; margin: 10px 0;">Visit: <a href="https://aka.ms/AIInnovationFrontDoor" target="_blank" style="color: #667eea;">aka.ms/AIInnovationFrontDoor</a></p>
+                
+                <h3 style="margin-top: 20px;">Need help?</h3>
+                <p style="color: #6b7280; margin: 10px 0;">Contact the Citizen Development team</p>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Optimized Game Controller
+        // Optimized Game Controller with Enhanced UX
         class CitizenDevelopmentGame {
             constructor() {
                 this.state = {
@@ -731,10 +1019,33 @@
                     incubationStage: 0,
                     currentScreen: 'frontDoorScreen',
                     completedInnovations: [],
-                    checkedInnovations: [], // Track which innovations have been checked
-                    journeyStarted: false, // Track if journey has been started before
-                    achievements: 0, // Track total achievements earned
-                    earnedAchievements: [] // Track which achievements have been earned
+                    checkedInnovations: [],
+                    journeyStarted: false,
+                    achievements: 0,
+                    earnedAchievements: [],
+                    firstTimeUser: true,
+                    // Track scoring to prevent spam
+                    scoredActions: {
+                        lob: [], // Track which innovations have scored LOB points
+                        icp: [], // Track which innovations have scored ICP submission
+                        team: [], // Track which innovations have scored team assignment
+                        incubation: [], // Track which innovations have scored incubation
+                        development: [], // Track which innovations have scored development sprints
+                        ltApproval: [], // Track which innovations have scored LT approval
+                        engineering: [] // Track which innovations have scored engineering
+                    }
+                };
+
+                this.levelTitles = {
+                    1: "Newcomer",
+                    2: "Explorer",
+                    3: "Practitioner",
+                    4: "Innovator",
+                    5: "Expert",
+                    6: "Master",
+                    7: "Champion",
+                    8: "Visionary",
+                    9: "Legend"
                 };
 
                 this.innovations = {
@@ -780,6 +1091,7 @@
                 this.elements = {};
                 this.cacheElements();
                 this.renderProcessFlow('selfDiscoveryFlow', 1, 7);
+                this.updateJourneyTracker();
             }
 
             cacheElements() {
@@ -787,6 +1099,7 @@
                     score: document.getElementById('score'),
                     ideas: document.getElementById('ideas'),
                     level: document.getElementById('level'),
+                    levelTooltip: document.getElementById('levelTooltip'),
                     achievements: document.getElementById('achievements'),
                     discoveryResult: document.getElementById('discoveryResult'),
                     selectedIdea: document.getElementById('selectedIdea'),
@@ -794,8 +1107,52 @@
                     devProgress: document.getElementById('devProgress'),
                     engTasks: document.getElementById('engTasks'),
                     achievementPopup: document.getElementById('achievementPopup'),
-                    achievementName: document.getElementById('achievementName')
+                    achievementName: document.getElementById('achievementName'),
+                    explorationCount: document.getElementById('explorationCount'),
+                    progressFill: document.getElementById('progressFill'),
+                    firstTimeHint: document.getElementById('firstTimeHint'),
+                    helpModal: document.getElementById('helpModal'),
+                    trackerHome: document.getElementById('trackerHome'),
+                    trackerDiscovery: document.getElementById('trackerDiscovery'),
+                    trackerJourney: document.getElementById('trackerJourney')
                 };
+            }
+
+            // Journey Tracker Management
+            updateJourneyTracker() {
+                const currentScreen = this.state.currentScreen;
+                
+                // Reset all
+                ['trackerHome', 'trackerDiscovery', 'trackerJourney'].forEach(id => {
+                    if (this.elements[id]) {
+                        this.elements[id].className = '';
+                    }
+                });
+
+                // Set active/completed states
+                if (currentScreen === 'frontDoorScreen') {
+                    this.elements.trackerHome.className = 'active';
+                } else if (currentScreen === 'selfDiscoveryScreen') {
+                    this.elements.trackerHome.className = 'completed';
+                    this.elements.trackerDiscovery.className = 'active';
+                } else {
+                    this.elements.trackerHome.className = 'completed';
+                    this.elements.trackerDiscovery.className = 'completed';
+                    this.elements.trackerJourney.className = 'active';
+                }
+            }
+
+            // Help System
+            showHelp() {
+                if (this.elements.helpModal) {
+                    this.elements.helpModal.classList.add('show');
+                }
+            }
+
+            closeHelp() {
+                if (this.elements.helpModal) {
+                    this.elements.helpModal.classList.remove('show');
+                }
             }
 
             // Helper Methods
@@ -836,6 +1193,44 @@
                 if (targetScreen) {
                     targetScreen.classList.add('active');
                     this.state.currentScreen = screenId;
+                    this.updateJourneyTracker();
+                }
+            }
+
+            // Progress Management
+            updateExplorationProgress() {
+                // Count only fully explored innovations
+                let fullyExploredCount = 0;
+                
+                Object.keys(this.innovations).forEach(key => {
+                    const innovation = this.innovations[key];
+                    if (innovation.exists) {
+                        // For existing solutions, just need to be checked
+                        if (this.state.checkedInnovations.includes(key)) {
+                            fullyExploredCount++;
+                        }
+                    } else {
+                        // For new innovations, must be completed (gone through full journey)
+                        if (innovation.completed) {
+                            fullyExploredCount++;
+                        }
+                    }
+                });
+                
+                const percentage = (fullyExploredCount / 4) * 100;
+                
+                if (this.elements.explorationCount) {
+                    this.elements.explorationCount.textContent = fullyExploredCount;
+                }
+                
+                if (this.elements.progressFill) {
+                    this.elements.progressFill.style.width = percentage + '%';
+                }
+
+                // Show "Journey Master" message only when all journeyable innovations have been completed
+                const allCompletedMsg = document.getElementById('allCompletedMessage');
+                if (allCompletedMsg) {
+                    allCompletedMsg.style.display = fullyExploredCount === 4 ? 'block' : 'none';
                 }
             }
 
@@ -872,7 +1267,9 @@
                     if (this.elements.level) {
                         this.elements.level.textContent = this.state.level;
                     }
-                    // Removed level-up achievement - only journey completions count
+                    if (this.elements.levelTooltip) {
+                        this.elements.levelTooltip.textContent = this.levelTitles[this.state.level] || "Legend";
+                    }
                 }
             }
 
@@ -967,7 +1364,17 @@
             startJourney() {
                 this.resetGameState();
                 this.updateInnovationButtonStates();
+                this.highlightNextUnexplored();
                 this.showScreen('selfDiscoveryScreen');
+                
+                // Show first-time hint
+                if (this.state.firstTimeUser && this.elements.firstTimeHint) {
+                    this.elements.firstTimeHint.style.display = 'block';
+                    this.state.firstTimeUser = false;
+                    setTimeout(() => {
+                        this.elements.firstTimeHint.style.display = 'none';
+                    }, 5000);
+                }
                 
                 // Only award points for first journey start
                 if (!this.state.journeyStarted) {
@@ -976,6 +1383,28 @@
                 }
                 
                 this.renderProcessFlow('selfDiscoveryFlow', 1, 7);
+                this.updateExplorationProgress();
+            }
+
+            highlightNextUnexplored() {
+                // Remove all highlights first
+                Object.keys(this.innovations).forEach(key => {
+                    const btn = document.getElementById(`${key}-btn`);
+                    if (btn) {
+                        btn.classList.remove('unexplored');
+                    }
+                });
+
+                // Find and highlight first unexplored
+                for (let key of Object.keys(this.innovations)) {
+                    if (!this.state.checkedInnovations.includes(key)) {
+                        const btn = document.getElementById(`${key}-btn`);
+                        if (btn) {
+                            btn.classList.add('unexplored');
+                        }
+                        break;
+                    }
+                }
             }
 
             resetGameState() {
@@ -1018,26 +1447,24 @@
             }
 
             updateInnovationButtonStates() {
-                let allCompleted = true;
-
                 Object.keys(this.innovations).forEach(type => {
                     const button = document.getElementById(`${type}-btn`);
                     const innovation = this.innovations[type];
 
                     if (button) {
-                        if (innovation.completed) {
+                        // Clear all states
+                        button.classList.remove('completed', 'existing-solution');
+                        
+                        if (innovation.completed && !innovation.exists) {
                             button.classList.add('completed');
-                        } else {
-                            button.classList.remove('completed');
-                            allCompleted = false;
+                        } else if (innovation.exists && this.state.checkedInnovations.includes(type)) {
+                            button.classList.add('existing-solution');
                         }
                     }
                 });
 
-                const completedMessage = document.getElementById('allCompletedMessage');
-                if (completedMessage) {
-                    completedMessage.style.display = allCompleted ? 'block' : 'none';
-                }
+                // Update exploration progress to check for Journey Master
+                this.updateExplorationProgress();
             }
 
             checkIdea(ideaType) {
@@ -1048,6 +1475,11 @@
                 const isFirstCheck = !this.state.checkedInnovations.includes(ideaType);
                 if (isFirstCheck) {
                     this.state.checkedInnovations.push(ideaType);
+                }
+
+                // Hide first-time hint
+                if (this.elements.firstTimeHint) {
+                    this.elements.firstTimeHint.style.display = 'none';
                 }
 
                 document.querySelectorAll('.category-button').forEach(btn => {
@@ -1062,7 +1494,7 @@
                 if (this.elements.discoveryResult) {
                     let resultHTML = '';
                     
-                    // Check if it's an existing solution first (should always show this for existing solutions)
+                    // Check if it's an existing solution first
                     if (idea.exists) {
                         // Mark as completed for button styling only
                         if (!idea.completed) {
@@ -1089,6 +1521,11 @@
                     this.elements.discoveryResult.innerHTML = resultHTML;
                     this.elements.discoveryResult.style.display = 'block';
                 }
+
+                // Update progress and highlight next
+                this.updateExplorationProgress();
+                this.highlightNextUnexplored();
+                this.updateInnovationButtonStates();
             }
 
             getCompletedInnovationHTML(idea) {
@@ -1126,7 +1563,7 @@
                         <p><strong>Team:</strong> ${idea.solution.team}</p>
                         <p><strong>Contact:</strong> ${idea.solution.contact}</p>
                         <p><strong>Status:</strong> ${idea.solution.status}</p>
-                        <p style="margin-top: 15px; font-weight: bold; color: #10b981;">🏆 Marked as Complete!</p>
+                        <p style="margin-top: 15px; font-weight: bold; color: #0ea5e9;">ℹ️ No further action needed</p>
                     </div>
                     ${tryAnotherButton}
                 `;
@@ -1160,14 +1597,23 @@
                     this.elements.selectedIdea.textContent = this.innovations[this.state.currentIdea].name;
                 }
                 
-                this.updateScore(10, "LOB contact initiated");
+                // Only award points once per innovation
+                if (!this.state.scoredActions.lob.includes(this.state.currentIdea)) {
+                    this.updateScore(10, "LOB contact initiated");
+                    this.state.scoredActions.lob.push(this.state.currentIdea);
+                }
             }
 
             submitToICP() {
                 this.showScreen('triageScreen');
                 this.renderProcessFlow('triageFlow', 3);
-                this.updateScore(25, "Idea submitted to ICP");
-                this.updateIdeas();
+                
+                // Only award points and count ideas once per innovation
+                if (!this.state.scoredActions.icp.includes(this.state.currentIdea)) {
+                    this.updateScore(25, "Idea submitted to ICP");
+                    this.updateIdeas();
+                    this.state.scoredActions.icp.push(this.state.currentIdea);
+                }
             }
 
             assignTeam() {
@@ -1183,9 +1629,13 @@
                     if (selectedTeam) {
                         selectedTeam.classList.add('selected');
                     }
-                }
 
-                this.updateScore(30, "Team assigned");
+                    // Only award points once per innovation
+                    if (!this.state.scoredActions.team.includes(this.state.currentIdea)) {
+                        this.updateScore(30, "Team assigned");
+                        this.state.scoredActions.team.push(this.state.currentIdea);
+                    }
+                }
 
                 setTimeout(() => {
                     if (this.elements.teamAssignment) {
@@ -1223,7 +1673,12 @@
                         reqElement.parentElement.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
                     }
                     
-                    this.updateScore(currentReq.points, currentReq.action);
+                    // Only award points once per innovation
+                    const incubationKey = `${this.state.currentIdea}_${this.state.incubationStage}`;
+                    if (!this.state.scoredActions.incubation.includes(incubationKey)) {
+                        this.updateScore(currentReq.points, currentReq.action);
+                        this.state.scoredActions.incubation.push(incubationKey);
+                    }
 
                     if (this.state.incubationStage >= requirements.length) {
                         const onboardingDiv = document.getElementById('onboardingAssignment');
@@ -1236,8 +1691,6 @@
                             btn.textContent = 'Proceed to Development';
                             btn.onclick = () => this.showDevelopmentScreen();
                         }
-
-                        // Removed "Citizen Developer Ready!" achievement
                     }
                 }
             }
@@ -1295,7 +1748,13 @@
                     if (this.state.devStage < stages.length) {
                         this.elements.devProgress.innerHTML = stages.slice(0, this.state.devStage + 1)
                             .map(s => `<p>${s}</p>`).join('');
-                        this.updateScore(20, `Sprint ${this.state.devStage + 1} completed`);
+                        
+                        // Only award points once per sprint per innovation
+                        const devKey = `${this.state.currentIdea}_sprint${this.state.devStage}`;
+                        if (!this.state.scoredActions.development.includes(devKey)) {
+                            this.updateScore(20, `Sprint ${this.state.devStage + 1} completed`);
+                            this.state.scoredActions.development.push(devKey);
+                        }
                     } else {
                         this.showLTApprovalScreen();
                         this.state.devStage = 0;
@@ -1305,7 +1764,12 @@
 
             showLTApprovalScreen() {
                 this.showScreen('ltApprovalScreen');
-                this.updateScore(40, "Leadership approval");
+                
+                // Only award points once per innovation
+                if (!this.state.scoredActions.ltApproval.includes(this.state.currentIdea)) {
+                    this.updateScore(40, "Leadership approval");
+                    this.state.scoredActions.ltApproval.push(this.state.currentIdea);
+                }
 
                 if (this.isEightStepJourney()) {
                     document.getElementById('ltStepNumber').textContent = 'Step 6';
@@ -1342,11 +1806,14 @@
                     `;
                 }
                 
-                this.updateScore(50, "Engineering completed");
+                // Only award points once per innovation
+                if (!this.state.scoredActions.engineering.includes(this.state.currentIdea)) {
+                    this.updateScore(50, "Engineering completed");
+                    this.state.scoredActions.engineering.push(this.state.currentIdea);
+                }
 
                 setTimeout(() => {
                     this.showSuccessScreen();
-                    // Removed milestone achievements - only individual journey completions count
                 }, 1500);
             }
 
@@ -1362,16 +1829,82 @@
                     this.state.completedInnovations.push(this.state.currentIdea);
                 }
 
-                if (this.isEightStepJourney()) {
-                    document.getElementById('successStepNumber').textContent = 'Step 8';
-                    this.renderProcessFlow('successProcessFlow', 8);
-                } else {
-                    document.getElementById('successStepNumber').textContent = 'Step 7';
-                    this.renderProcessFlow('successProcessFlow', 7);
+                // Update next action section
+                const nextActionSection = document.getElementById('nextActionSection');
+                const unexploredCount = 4 - this.state.checkedInnovations.length;
+                
+                // Check if all innovations are fully explored
+                let allFullyExplored = true;
+                Object.keys(this.innovations).forEach(key => {
+                    const innovation = this.innovations[key];
+                    if (innovation.exists) {
+                        // For existing solutions, just need to be checked
+                        if (!this.state.checkedInnovations.includes(key)) {
+                            allFullyExplored = false;
+                        }
+                    } else {
+                        // For new innovations, must be completed (gone through full journey)
+                        if (!innovation.completed) {
+                            allFullyExplored = false;
+                        }
+                    }
+                });
+                
+                if (nextActionSection) {
+                    if (!allFullyExplored) {
+                        // Still have innovations to explore
+                        const nextUnexplored = Object.keys(this.innovations).find(key => {
+                            const innovation = this.innovations[key];
+                            if (innovation.exists) {
+                                return !this.state.checkedInnovations.includes(key);
+                            } else {
+                                return !innovation.completed;
+                            }
+                        });
+                        
+                        const remainingJourneys = Object.keys(this.innovations).filter(key => {
+                            const innovation = this.innovations[key];
+                            if (innovation.exists) {
+                                return !this.state.checkedInnovations.includes(key);
+                            } else {
+                                return !innovation.completed;
+                            }
+                        }).length;
+                        
+                        nextActionSection.innerHTML = `
+                            <h4>What's Next?</h4>
+                            <p><strong>${remainingJourneys} innovation${remainingJourneys > 1 ? 's' : ''} still to explore!</strong></p>
+                            <p style="margin-top: 10px;">Next up: <strong>${this.innovations[nextUnexplored]?.name || 'Continue exploring'}</strong></p>
+                        `;
+                    } else {
+                        // All innovations fully explored - show journey summary
+                        nextActionSection.innerHTML = `
+                            <h4>Journey Summary</h4>
+                            <div style="text-align: left; color: #047857; line-height: 1.8;">
+                                <p>✅ Self-discovery completed</p>
+                                <p>✅ LOB submission successful</p>
+                                <p>✅ Cit Dev Consult completed</p>
+                                ${this.state.currentTeam === 'team4' ? '<p>✅ Incubation marketplace passed</p>' : ''}
+                                <p>✅ Development finished</p>
+                                <p>✅ Leadership approved</p>
+                                <p>✅ Engineering productized</p>
+                                <p>✅ Solution scaled out!</p>
+                            </div>
+                            <p style="margin-top: 15px; text-align: center; color: #0c4a6e;">
+                                <strong>Ready to submit a real idea?</strong><br>
+                                <a href="https://aka.ms/AIInnovationFrontDoor" target="_blank" style="color: #667eea;">Visit the Innovation Front Door</a>
+                            </p>
+                        `;
+                    }
                 }
+            }
 
-                document.getElementById('totalScore').textContent = this.state.score;
-                document.getElementById('totalIdeas').textContent = this.state.ideas;
+            exploreMore() {
+                this.resetGameState();
+                this.showScreen('selfDiscoveryScreen');
+                this.updateInnovationButtonStates();
+                this.highlightNextUnexplored();
+                this.updateExplorationProgress();
             }
 
             playAgain() {
