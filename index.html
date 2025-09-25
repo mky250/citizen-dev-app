@@ -148,7 +148,7 @@
         }
 
         .instruction-panel {
-            background: #f0f9ff;
+            background: linear-gradient(145deg, #f0f9ff, #dbeafe);
             border: 2px solid #0ea5e9;
             padding: 15px;
             border-radius: 10px;
@@ -156,7 +156,7 @@
         }
 
         .instruction-panel h3 {
-            color: #0c4a6e;
+            color: #0284c7;
             margin-bottom: 10px;
             font-size: 14px;
         }
@@ -547,19 +547,19 @@
         }
 
         .completion-summary h3 {
-            color: #065f46;
+            color: #059669;
             margin-bottom: 15px;
         }
 
         .completion-summary ul {
             text-align: left;
-            color: #047857;
+            color: #059669;
             line-height: 1.8;
             padding-left: 20px;
         }
 
         .next-action {
-            background: #f0f9ff;
+            background: linear-gradient(145deg, #f0f9ff, #dbeafe);
             border: 2px solid #0ea5e9;
             padding: 15px;
             border-radius: 10px;
@@ -568,7 +568,7 @@
         }
 
         .next-action h4 {
-            color: #0c4a6e;
+            color: #0284c7;
             margin-bottom: 10px;
         }
 
@@ -713,17 +713,6 @@
                      onload="console.log('Image loaded successfully')"/>
             </div>
             
-            <!-- How This Works Panel -->
-            <div class="instruction-panel">
-                <h3>How This Works:</h3>
-                <ol>
-                    <li>Explore 4 different innovation examples</li>
-                    <li>See if solutions already exist or need development</li>
-                    <li>Follow the journey from idea to production</li>
-                    <li>Learn the actual ICP process along the way</li>
-                </ol>
-            </div>
-            
             <div class="story-text">
                 <p><strong>Citizen Development</strong> empowers all CSS team members regardless of role or technical background to contribute ideas, experiment with new technologies, and rapidly build the <strong>next generation</strong> of AI-driven capabilities.</p>
                 <p style="margin-top: 15px;">We streamline innovation from idea to production, connecting you with the right teams and resources.</p>
@@ -731,6 +720,17 @@
             
             <div class="hint-box">
                 💡 <strong>ICP Value:</strong> We prevent duplicate efforts, accelerate development, and scale solutions across the organization!
+            </div>
+            
+            <!-- How This Works Panel -->
+            <div class="instruction-panel">
+                <h3>How This Works:</h3>
+                <ol>
+                    <li>Explore 4 different innovation examples</li>
+                    <li>See if solutions already exist or need development</li>
+                    <li>Follow the journey from idea to production</li>
+                    <li>Learn the actual process along the way</li>
+                </ol>
             </div>
             
             <button class="continue-button" onclick="game.startJourney()">Start Your Guided Journey</button>
@@ -760,19 +760,39 @@
             </div>
             
             <div class="innovation-card">
-                <h3 style="font-size: 0.9em; color: red;">Select an Innovation Journey Example to Explore:</h3>
-                <button class="category-button" id="chatbot-btn" onclick="game.checkIdea('chatbot')">
-                    🤖 AI Customer Service Chatbot
-                </button>
-                <button class="category-button" id="analytics-btn" onclick="game.checkIdea('analytics')">
-                    🚨 Incident Management Automation
-                </button>
-                <button class="category-button" id="mobile-btn" onclick="game.checkIdea('mobile')">
-                    📄 Case Summarization Analysis
-                </button>
-                <button class="category-button" id="assistant-btn" onclick="game.checkIdea('assistant')">
-                    🧠 AI Meeting Intelligence Assistant
-                </button>
+                <h3 style="font-size: 0.9em; color: #667eea;">Select an Innovation Journey Example to Explore:</h3>
+                <div style="margin-bottom: 20px;">
+                    <button class="category-button" id="chatbot-btn" onclick="game.checkIdea('chatbot')">
+                        🤖 AI Customer Service Chatbot
+                    </button>
+                    <p style="font-size: 12px; color: #6b7280; margin: 5px 10px 15px 10px; line-height: 1.4;">
+                        An intelligent virtual assistant that handles customer inquiries 24/7, reducing support ticket volume by automating responses to common questions.
+                    </p>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <button class="category-button" id="analytics-btn" onclick="game.checkIdea('analytics')">
+                        🚨 Incident Management Automation
+                    </button>
+                    <p style="font-size: 12px; color: #6b7280; margin: 5px 10px 15px 10px; line-height: 1.4;">
+                        Automated system that detects, categorizes, and routes IT incidents to the right teams, reducing response time and improving resolution rates.
+                    </p>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <button class="category-button" id="mobile-btn" onclick="game.checkIdea('mobile')">
+                        📄 Case Summarization Analysis
+                    </button>
+                    <p style="font-size: 12px; color: #6b7280; margin: 5px 10px 15px 10px; line-height: 1.4;">
+                        AI-powered tool that automatically analyzes support cases and generates concise summaries, helping agents quickly understand context and history.
+                    </p>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <button class="category-button" id="assistant-btn" onclick="game.checkIdea('assistant')">
+                        🧠 AI Meeting Intelligence Assistant
+                    </button>
+                    <p style="font-size: 12px; color: #6b7280; margin: 5px 10px 15px 10px; line-height: 1.4;">
+                        Smart assistant that joins meetings, takes notes, extracts action items, and automatically follows up with participants on assigned tasks.
+                    </p>
+                </div>
             </div>
 
             <div id="discoveryResult" style="display: none;"></div>
@@ -1051,6 +1071,7 @@
                 this.innovations = {
                     chatbot: {
                         name: "AI Customer Service Chatbot",
+                        description: "An intelligent virtual assistant that handles customer inquiries 24/7, reducing support ticket volume by automating responses to common questions.",
                         exists: true,
                         completed: false,
                         solution: {
@@ -1062,18 +1083,21 @@
                     },
                     analytics: {
                         name: "Incident Management Automation",
+                        description: "Automated system that detects, categorizes, and routes IT incidents to the right teams, reducing response time and improving resolution rates.",
                         exists: false,
                         completed: false,
                         bestTeam: "team2"
                     },
                     mobile: {
                         name: "Case Summarization Analysis",
+                        description: "AI-powered tool that automatically analyzes support cases and generates concise summaries, helping agents quickly understand context and history.",
                         exists: false,
                         completed: false,
                         bestTeam: "team1"
                     },
                     assistant: {
                         name: "AI Meeting Intelligence Assistant",
+                        description: "Smart assistant that joins meetings, takes notes, extracts action items, and automatically follows up with participants on assigned tasks.",
                         exists: false,
                         completed: false,
                         bestTeam: "team4"
@@ -1880,7 +1904,7 @@
                         // All innovations fully explored - show journey summary
                         nextActionSection.innerHTML = `
                             <h4>Journey Summary</h4>
-                            <div style="text-align: left; color: #047857; line-height: 1.8;">
+                            <div style="text-align: left; color: #059669; line-height: 1.8;">
                                 <p>✅ Self-discovery completed</p>
                                 <p>✅ LOB submission successful</p>
                                 <p>✅ Cit Dev Consult completed</p>
@@ -1890,7 +1914,7 @@
                                 <p>✅ Engineering productized</p>
                                 <p>✅ Solution scaled out!</p>
                             </div>
-                            <p style="margin-top: 15px; text-align: center; color: #0c4a6e;">
+                            <p style="margin-top: 15px; text-align: center; color: #0284c7;">
                                 <strong>Ready to submit a real idea?</strong><br>
                                 <a href="https://aka.ms/AIInnovationFrontDoor" target="_blank" style="color: #667eea;">Visit the Innovation Front Door</a>
                             </p>
