@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Citizen Developer Innovation Journey</title>
+    <title>Citizen Developer Journey</title>
     <style>
         * {
             margin: 0;
@@ -94,7 +94,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 20px;
+            gap: 30px;
             padding: 10px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
@@ -672,11 +672,21 @@
 
             .score-bar {
                 padding: 8px;
-                gap: 5px;
+                gap: 15px;
             }
 
             .score-item {
                 font-size: 14px;
+            }
+
+            @media (max-width: 480px) {
+                .score-bar {
+                    gap: 10px;
+                }
+                
+                .score-item {
+                    font-size: 13px;
+                }
             }
 
             .game-screen {
