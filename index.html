@@ -176,7 +176,7 @@
         .game-screen {
             padding: 20px;
             min-height: 500px;
-            padding-bottom: 60px; /* Extra padding to ensure scroll indicator doesn't overlap content */
+            padding-bottom: 20px;
             display: none;
         }
 
@@ -1275,14 +1275,8 @@
         </div>
     </div>
 
-    <!-- Scroll Indicator -->
-    <div id="scrollIndicator" class="scroll-indicator">
-        <span>Scroll to see more</span>
-        <span class="scroll-arrow">↓</span>
-    </div>
-
-    <!-- Content Fade Indicator -->
-    <div id="contentFade" class="content-fade"></div>
+    <!-- Scroll Progress Bar -->
+    <div id="scrollProgress" class="scroll-progress"></div>
 
     <!-- Achievement Popup -->
     <div id="achievementPopup" class="achievement-popup">
@@ -1419,8 +1413,8 @@
                 // Detect if mobile
                 this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
                 
-                // Initialize scroll indicator
-                this.initScrollIndicator();
+                // Initialize scroll progress bar
+                this.initScrollProgress();
                 
                 // Prevent double-tap zoom on buttons
                 let lastTouchEnd = 0;
@@ -1450,6 +1444,9 @@
                 // Improve scrolling on mobile
                 if (this.isMobile) {
                     document.body.style.overscrollBehavior = 'none';
+                    
+                    // Make scrollbar always visible on mobile
+                    document.documentElement.style.overflowY = 'scroll';
                 }
                 
                 // Handle orientation changes
@@ -1463,64 +1460,35 @@
                 this.adjustForOrientation();
             }
 
-            initScrollIndicator() {
-                const scrollIndicator = document.getElementById('scrollIndicator');
-                const contentFade = document.getElementById('contentFade');
-                const gameContainer = document.querySelector('.game-container');
+            initScrollProgress() {
+                const progressBar = document.getElementById('scrollProgress');
                 
-                // Function to check if content is scrollable
-                const checkScrollable = () => {
-                    const isScrollable = document.body.scrollHeight > window.innerHeight ||
-                                       gameContainer.scrollHeight > gameContainer.clientHeight;
+                const updateScrollProgress = () => {
+                    const windowHeight = window.innerHeight;
+                    const documentHeight = document.documentElement.scrollHeight - windowHeight;
+                    const scrolled = window.scrollY;
+                    const progress = documentHeight > 0 ? scrolled / documentHeight : 0;
                     
-                    if (scrollIndicator) {
-                        if (isScrollable) {
-                            scrollIndicator.classList.remove('hide');
-                            if (contentFade) contentFade.classList.add('show');
-                        } else {
-                            scrollIndicator.classList.add('hide');
-                            if (contentFade) contentFade.classList.remove('show');
-                        }
+                    if (progressBar) {
+                        progressBar.style.transform = `scaleX(${progress})`;
                     }
                 };
-
-                // Function to handle scroll
-                let scrollTimeout;
-                const handleScroll = () => {
-                    if (scrollIndicator) {
-                        // Hide indicator when user starts scrolling
-                        scrollIndicator.classList.add('hide');
-                        
-                        // Clear existing timeout
-                        clearTimeout(scrollTimeout);
-                        
-                        // Show again after user stops scrolling (if not at bottom)
-                        scrollTimeout = setTimeout(() => {
-                            const scrolledToBottom = (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 50;
-                            if (!scrolledToBottom) {
-                                checkScrollable();
-                            }
-                        }, 2000);
-                    }
-                };
-
-                // Add scroll listener
-                window.addEventListener('scroll', handleScroll);
-                document.addEventListener('scroll', handleScroll);
-                gameContainer.addEventListener('scroll', handleScroll);
                 
-                // Check on screen changes
+                // Update on scroll
+                window.addEventListener('scroll', updateScrollProgress);
+                
+                // Update on resize
+                window.addEventListener('resize', updateScrollProgress);
+                
+                // Update on screen change
                 const originalShowScreen = this.showScreen.bind(this);
                 this.showScreen = function(screenId) {
                     originalShowScreen(screenId);
-                    setTimeout(checkScrollable, 100);
+                    setTimeout(updateScrollProgress, 100);
                 };
                 
-                // Check on window resize
-                window.addEventListener('resize', checkScrollable);
-                
-                // Initial check
-                setTimeout(checkScrollable, 500);
+                // Initial update
+                updateScrollProgress();
             }
 
             adjustForOrientation() {
