@@ -176,7 +176,7 @@
         .game-screen {
             padding: 20px;
             min-height: 500px;
-            padding-bottom: 20px;
+            padding-bottom: 60px; /* Extra padding to ensure scroll indicator doesn't overlap content */
             display: none;
         }
 
@@ -1093,12 +1093,12 @@
 
         <!-- LOB Contact Screen -->
         <div id="lobContactScreen" class="game-screen">
-            <h2>📞 Step 2: Contact Your LOB</h2>
+            <h2>📞 Step 2: Contact Your ICP SME</h2>
             
             <div class="process-flow" id="lobContactFlow"></div>
             
             <div class="story-text">
-                <p>Great! Your idea is new. Now connect with your Line of Business (LOB) to submit it to ICP.</p>
+                <p>Great! Your idea is new. Now connect with your ICP Subject Matter Expert (SME) to submit it to ICP.</p>
             </div>
             
             <div class="innovation-card">
@@ -1107,7 +1107,7 @@
             </div>
 
             <div class="dialog-box">
-                <strong>LOB Innovation Champion:</strong><br>
+                <strong>ICP SME Innovation Champion:</strong><br>
                 "This looks promising! Let me help you submit this to ICP for triage."
             </div>
 
@@ -1256,7 +1256,7 @@
                 <h3>What You Learned:</h3>
                 <ul>
                     <li>How to validate if a solution already exists</li>
-                    <li>The ICP submission process through your LOB</li>
+                    <li>The ICP submission process through your ICP SME</li>
                     <li>How Citizen Dev consultants match ideas to teams</li>
                     <li>The development and scaling process</li>
                     <li>How innovations become enterprise solutions</li>
@@ -1274,6 +1274,15 @@
             <button class="continue-button" onclick="game.exploreMore()">Explore More Innovations</button>
         </div>
     </div>
+
+    <!-- Scroll Indicator -->
+    <div id="scrollIndicator" class="scroll-indicator">
+        <span>Scroll to see more</span>
+        <span class="scroll-arrow">↓</span>
+    </div>
+
+    <!-- Content Fade Indicator -->
+    <div id="contentFade" class="content-fade"></div>
 
     <!-- Achievement Popup -->
     <div id="achievementPopup" class="achievement-popup">
@@ -1410,6 +1419,9 @@
                 // Detect if mobile
                 this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
                 
+                // Initialize scroll indicator
+                this.initScrollIndicator();
+                
                 // Prevent double-tap zoom on buttons
                 let lastTouchEnd = 0;
                 document.addEventListener('touchend', function(event) {
@@ -1449,6 +1461,66 @@
                 
                 // Initial adjustment
                 this.adjustForOrientation();
+            }
+
+            initScrollIndicator() {
+                const scrollIndicator = document.getElementById('scrollIndicator');
+                const contentFade = document.getElementById('contentFade');
+                const gameContainer = document.querySelector('.game-container');
+                
+                // Function to check if content is scrollable
+                const checkScrollable = () => {
+                    const isScrollable = document.body.scrollHeight > window.innerHeight ||
+                                       gameContainer.scrollHeight > gameContainer.clientHeight;
+                    
+                    if (scrollIndicator) {
+                        if (isScrollable) {
+                            scrollIndicator.classList.remove('hide');
+                            if (contentFade) contentFade.classList.add('show');
+                        } else {
+                            scrollIndicator.classList.add('hide');
+                            if (contentFade) contentFade.classList.remove('show');
+                        }
+                    }
+                };
+
+                // Function to handle scroll
+                let scrollTimeout;
+                const handleScroll = () => {
+                    if (scrollIndicator) {
+                        // Hide indicator when user starts scrolling
+                        scrollIndicator.classList.add('hide');
+                        
+                        // Clear existing timeout
+                        clearTimeout(scrollTimeout);
+                        
+                        // Show again after user stops scrolling (if not at bottom)
+                        scrollTimeout = setTimeout(() => {
+                            const scrolledToBottom = (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 50;
+                            if (!scrolledToBottom) {
+                                checkScrollable();
+                            }
+                        }, 2000);
+                    }
+                };
+
+                // Add scroll listener
+                window.addEventListener('scroll', handleScroll);
+                document.addEventListener('scroll', handleScroll);
+                gameContainer.addEventListener('scroll', handleScroll);
+                
+                // Check on screen changes
+                const originalShowScreen = this.showScreen.bind(this);
+                this.showScreen = function(screenId) {
+                    originalShowScreen(screenId);
+                    setTimeout(checkScrollable, 100);
+                };
+                
+                // Check on window resize
+                window.addEventListener('resize', checkScrollable);
+                
+                // Initial check
+                setTimeout(checkScrollable, 500);
             }
 
             adjustForOrientation() {
@@ -1946,7 +2018,7 @@
                         <h3>💡 New Innovation Opportunity!</h3>
                         <p>No existing solution found. This is a great opportunity to innovate!</p>
                     </div>
-                    <button class="continue-button" onclick="game.proceedToLOB()">Proceed to LOB Contact</button>
+                    <button class="continue-button" onclick="game.proceedToLOB()">Proceed to ICP SME Contact</button>
                 `;
             }
 
@@ -1970,7 +2042,7 @@
                 
                 // Only award points once per innovation
                 if (!this.state.scoredActions.lob.includes(this.state.currentIdea)) {
-                    this.updateScore(10, "LOB contact initiated");
+                    this.updateScore(10, "ICP SME contact initiated");
                     this.state.scoredActions.lob.push(this.state.currentIdea);
                 }
             }
@@ -2253,7 +2325,7 @@
                             <h4>Journey Summary</h4>
                             <div style="text-align: left; color: #059669; line-height: 1.8;">
                                 <p>✅ Self-discovery completed</p>
-                                <p>✅ LOB submission successful</p>
+                                <p>✅ ICP SME submission successful</p>
                                 <p>✅ Cit Dev Consult completed</p>
                                 ${this.state.currentTeam === 'team4' ? '<p>✅ Incubation marketplace passed</p>' : ''}
                                 <p>✅ Development finished</p>
