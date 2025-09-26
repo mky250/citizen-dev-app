@@ -5,6 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Citizen Developer Journey</title>
     <style>
+        /* CSS Variables for consistent theming */
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary-color: #667eea;
+            --primary-dark: #764ba2;
+            --success-color: #10b981;
+            --success-dark: #059669;
+            --info-color: #0ea5e9;
+            --info-dark: #0284c7;
+            --warning-color: #fbbf24;
+            --warning-light: #fef3c7;
+            --text-primary: #374151;
+            --text-secondary: #6b7280;
+            --bg-light: #f9fafb;
+            --bg-white: #ffffff;
+            --border-light: #e5e7eb;
+            --shadow-sm: 0 2px 8px rgba(100, 116, 139, 0.1);
+            --shadow-md: 0 4px 12px rgba(100, 116, 139, 0.15);
+            --shadow-lg: 0 8px 20px rgba(100, 116, 139, 0.2);
+            --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.2);
+            --transition: all 0.3s ease;
+            --radius-sm: 8px;
+            --radius-md: 10px;
+            --radius-lg: 15px;
+            --radius-xl: 20px;
+        }
+
+        /* Base Styles */
         * {
             margin: 0;
             padding: 0;
@@ -15,7 +43,7 @@
 
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary-gradient);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -23,25 +51,41 @@
             padding: 10px;
         }
 
+        /* Container */
         .game-container {
             width: 100%;
             max-width: 400px;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            background: var(--bg-white);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
             overflow: hidden;
             position: relative;
         }
 
+        /* Header */
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary-gradient);
             color: white;
             padding: 20px;
             text-align: center;
             position: relative;
         }
 
-        .help-button {
+        .header h1 {
+            font-size: 1.3em;
+            line-height: 1.3;
+            margin: 0;
+        }
+
+        /* Buttons Base */
+        .btn {
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: bold;
+        }
+
+        .btn-help {
             position: absolute;
             top: 20px;
             right: 20px;
@@ -52,29 +96,138 @@
             border: 2px solid white;
             color: white;
             font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 10;
         }
 
-        .help-button:hover {
+        .btn-help:hover {
             background: rgba(255, 255, 255, 0.3);
             transform: scale(1.1);
         }
 
+        .btn-continue {
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, var(--success-color), var(--success-dark));
+            color: white;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-continue:hover {
+            background: linear-gradient(135deg, var(--success-dark), #047857);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-category {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 3px solid transparent;
+            border-radius: var(--radius-md);
+            background: var(--primary-gradient);
+            color: white;
+            font-size: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-category:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-category.unexplored {
+            animation: pulse-glow 2s infinite;
+        }
+
+        .btn-category.selected {
+            border-color: var(--warning-color);
+            background: linear-gradient(145deg, var(--success-color), var(--success-dark));
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-category.existing-solution {
+            background: linear-gradient(145deg, var(--info-color), var(--info-dark));
+            border-color: var(--info-color);
+        }
+
+        .btn-category.existing-solution::after,
+        .btn-category.completed::after {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            font-size: 16px;
+        }
+
+        .btn-category.existing-solution::after {
+            content: 'ℹ️';
+        }
+
+        .btn-category.completed {
+            background: linear-gradient(145deg, var(--success-color), var(--success-dark));
+            border-color: var(--success-color);
+            opacity: 0.9;
+        }
+
+        .btn-category.completed::after {
+            content: '✅';
+        }
+
+        /* Cards and Panels */
+        .card {
+            background: linear-gradient(145deg, #f8fafc, var(--bg-white));
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .panel-instruction {
+            background: linear-gradient(145deg, #f0f9ff, #dbeafe);
+            border: 2px solid var(--info-color);
+            padding: 15px;
+            border-radius: var(--radius-md);
+            margin: 15px 20px;
+        }
+
+        .panel-instruction h3 {
+            color: var(--info-dark);
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .panel-instruction ol {
+            text-align: left;
+            color: #475569;
+            line-height: 1.8;
+            padding-left: 20px;
+            font-size: 13px;
+        }
+
+        /* Journey Tracker */
         .journey-tracker {
-            background: #f9fafb;
+            background: var(--bg-light);
             padding: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 8px;
             font-size: 12px;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid var(--border-light);
         }
 
         .journey-tracker span {
@@ -82,14 +235,15 @@
         }
 
         .journey-tracker span.active {
-            color: #667eea;
+            color: var(--primary-color);
             font-weight: bold;
         }
 
         .journey-tracker span.completed {
-            color: #10b981;
+            color: var(--success-color);
         }
 
+        /* Score Bar */
         .score-bar {
             display: flex;
             justify-content: center;
@@ -97,7 +251,7 @@
             gap: 30px;
             padding: 10px;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+            border-radius: var(--radius-md);
             margin-top: 10px;
         }
 
@@ -129,7 +283,8 @@
             z-index: 10;
         }
 
-        .exploration-progress {
+        /* Progress */
+        .progress-container {
             text-align: center;
             margin: 20px 0;
             padding: 0 20px;
@@ -137,7 +292,7 @@
 
         .progress-bar {
             width: 100%;
-            background: #e5e7eb;
+            background: var(--border-light);
             height: 8px;
             border-radius: 4px;
             margin-top: 10px;
@@ -145,34 +300,13 @@
         }
 
         .progress-fill {
-            background: linear-gradient(90deg, #667eea, #764ba2);
+            background: var(--primary-gradient);
             height: 100%;
             border-radius: 4px;
             transition: width 0.3s ease;
         }
 
-        .instruction-panel {
-            background: linear-gradient(145deg, #f0f9ff, #dbeafe);
-            border: 2px solid #0ea5e9;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 15px 20px;
-        }
-
-        .instruction-panel h3 {
-            color: #0284c7;
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
-
-        .instruction-panel ol {
-            text-align: left;
-            color: #475569;
-            line-height: 1.8;
-            padding-left: 20px;
-            font-size: 13px;
-        }
-
+        /* Screens */
         .game-screen {
             padding: 20px;
             min-height: 500px;
@@ -185,142 +319,7 @@
             animation: fadeIn 0.5s;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .innovation-card {
-            background: linear-gradient(145deg, #f8fafc, #ffffff);
-            border: 1px solid #e2e8f0;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 12px rgba(100, 116, 139, 0.1);
-            transition: transform 0.3s;
-        }
-
-        .innovation-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(100, 116, 139, 0.15);
-        }
-
-        .innovation-avatar {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-        }
-
-        .category-button {
-            width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            border: 3px solid transparent;
-            border-radius: 10px;
-            background: linear-gradient(145deg, #667eea, #764ba2);
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .category-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .category-button.unexplored {
-            animation: pulse-glow 2s infinite;
-        }
-
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
-            50% { box-shadow: 0 0 10px 2px rgba(102, 126, 234, 0.4); }
-        }
-
-        .category-button.selected {
-            border-color: #fbbf24;
-            background: linear-gradient(145deg, #10b981, #059669);
-            box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
-            transform: translateY(-2px);
-        }
-
-        .category-button.existing-solution {
-            background: linear-gradient(145deg, #0ea5e9, #0284c7);
-            border-color: #0ea5e9;
-            position: relative;
-        }
-
-        .category-button.existing-solution::after {
-            content: 'ℹ️';
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            font-size: 16px;
-        }
-
-        .category-button.completed {
-            background: linear-gradient(145deg, #10b981, #059669);
-            border-color: #10b981;
-            opacity: 0.9;
-            position: relative;
-        }
-
-        .category-button.completed::after {
-            content: '✅';
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            font-size: 16px;
-        }
-
-        .hint-banner {
-            background: linear-gradient(135deg, #fef3c7, #fde68a);
-            border: 2px solid #fbbf24;
-            padding: 12px;
-            border-radius: 10px;
-            margin: 15px 0;
-            text-align: center;
-            font-size: 14px;
-            color: #78350f;
-            animation: slideInDown 0.5s ease;
-        }
-
-        @keyframes slideInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .team-card {
-            background: linear-gradient(145deg, #f8fafc, #ffffff);
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            padding: 15px;
-            margin: 10px 0;
-            transition: all 0.3s;
-            box-shadow: 0 2px 8px rgba(100, 116, 139, 0.1);
-        }
-
-        .team-card:hover {
-            border-color: #cbd5e1;
-            box-shadow: 0 4px 12px rgba(100, 116, 139, 0.15);
-        }
-
-        .team-card.selected {
-            border-color: #667eea;
-            background: linear-gradient(145deg, #f0f4ff, #ffffff);
-            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.2);
-        }
-
+        /* Process Flow */
         .process-flow {
             display: flex;
             align-items: center;
@@ -328,108 +327,139 @@
             margin: 20px 0;
             padding: 15px;
             background: #f8fafc;
-            border-radius: 10px;
-            border: 1px solid #e2e8f0;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-light);
         }
 
         .process-step {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: #e5e7eb;
+            background: var(--border-light);
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            color: #6b7280;
-            transition: all 0.3s;
+            color: var(--text-secondary);
+            transition: var(--transition);
         }
 
         .process-step.completed {
-            background: linear-gradient(135deg, #10b981, #059669);
+            background: linear-gradient(135deg, var(--success-color), var(--success-dark));
             color: white;
             animation: pulse 0.5s;
         }
 
         .process-step.current {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: var(--primary-gradient);
             color: white;
             animation: pulse 1s infinite;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        .dialog-box {
-            background: #f9fafb;
-            border-left: 4px solid #667eea;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 5px;
-            font-style: italic;
-        }
-
-        .continue-button {
-            width: 100%;
-            padding: 15px;
-            margin-top: 20px;
-            border: none;
-            border-radius: 10px;
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-        }
-
-        .continue-button:hover {
-            background: linear-gradient(135deg, #059669, #047857);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
-        }
-
-        /* Touch feedback for mobile */
-        .touch-active {
-            transform: scale(0.98) !important;
-            opacity: 0.9 !important;
-        }
-
+        /* Feedback Messages */
         .feedback {
             padding: 20px;
-            background: linear-gradient(145deg, #f3f4f6, #ffffff);
-            border-radius: 15px;
+            background: linear-gradient(145deg, #f3f4f6, var(--bg-white));
+            border-radius: var(--radius-lg);
             margin: 20px 0;
             text-align: center;
         }
 
         .feedback.success {
-            border: 2px solid #10b981;
+            border: 2px solid var(--success-color);
         }
 
         .feedback.error {
             border: 2px solid #ef4444;
         }
 
+        /* Solution States */
+        .solution-exists {
+            background: #dbeafe;
+            border: 2px solid var(--info-color);
+            padding: 15px;
+            border-radius: var(--radius-md);
+            margin: 15px 0;
+        }
+
+        .no-solution {
+            background: var(--warning-light);
+            border: 2px solid var(--warning-color);
+            padding: 15px;
+            border-radius: var(--radius-md);
+            margin: 15px 0;
+        }
+
+        /* Hint Boxes */
         .hint-box {
-            background: #fef3c7;
-            border: 1px solid #fbbf24;
+            background: var(--warning-light);
+            border: 1px solid var(--warning-color);
             padding: 10px;
-            border-radius: 8px;
+            border-radius: var(--radius-sm);
             margin: 10px 0;
             font-size: 14px;
         }
 
+        .hint-banner {
+            background: linear-gradient(135deg, var(--warning-light), #fde68a);
+            border: 2px solid var(--warning-color);
+            padding: 12px;
+            border-radius: var(--radius-md);
+            margin: 15px 0;
+            text-align: center;
+            font-size: 14px;
+            color: #78350f;
+            animation: slideInDown 0.5s ease;
+        }
+
+        /* Team Cards */
+        .team-card {
+            background: linear-gradient(145deg, #f8fafc, var(--bg-white));
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 15px;
+            margin: 10px 0;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .team-card:hover {
+            border-color: #cbd5e1;
+            box-shadow: var(--shadow-md);
+        }
+
+        .team-card.selected {
+            border-color: var(--primary-color);
+            background: linear-gradient(145deg, #f0f4ff, var(--bg-white));
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.2);
+        }
+
+        /* Common Text Styles */
         .story-text {
             line-height: 1.6;
-            color: #374151;
+            color: var(--text-primary);
             margin: 15px 0;
         }
 
+        .dialog-box {
+            background: var(--bg-light);
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-style: italic;
+        }
+
+        /* Requirement Items */
+        .requirement-item {
+            padding: 10px;
+            margin: 10px 0;
+            background: #f3f4f6;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+        }
+
+        /* Achievement */
         .achievement-popup {
             position: fixed;
             top: 50%;
@@ -437,8 +467,8 @@
             transform: translate(-50%, -50%);
             background: white;
             padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
             text-align: center;
             z-index: 1000;
             display: none;
@@ -449,65 +479,38 @@
             animation: zoomIn 0.5s;
         }
 
-        @keyframes zoomIn {
-            from { transform: translate(-50%, -50%) scale(0); }
-            to { transform: translate(-50%, -50%) scale(1); }
-        }
-
         .achievement-icon {
             font-size: 60px;
             margin-bottom: 15px;
         }
 
-        .solution-exists {
-            background: #dbeafe;
-            border: 2px solid #0ea5e9;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 15px 0;
-        }
-
-        .no-solution {
-            background: #fef3c7;
-            border: 2px solid #fbbf24;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 15px 0;
-        }
-
-        .requirement-item {
-            padding: 10px;
-            margin: 10px 0;
-            background: #f3f4f6;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-
+        /* Image Container */
         .cit-dev-image-container {
             margin: 20px auto;
             max-width: 350px;
             text-align: center;
             padding: 15px;
-            background: linear-gradient(145deg, #f8fafc, #ffffff);
-            border-radius: 20px;
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
-            border: 1px solid #e2e8f0;
+            background: linear-gradient(145deg, #f8fafc, var(--bg-white));
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-light);
         }
 
         .cit-dev-image {
             width: 100%;
             max-width: 280px;
             height: auto;
-            border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(100, 116, 139, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
         }
 
         .cit-dev-image:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(100, 116, 139, 0.2);
+            box-shadow: var(--shadow-lg);
         }
 
+        /* Modal */
         .help-modal {
             display: none;
             position: fixed;
@@ -528,7 +531,7 @@
         .help-content {
             background: white;
             padding: 30px;
-            border-radius: 20px;
+            border-radius: var(--radius-xl);
             max-width: 350px;
             max-height: 80vh;
             overflow-y: auto;
@@ -541,47 +544,14 @@
             right: 15px;
             font-size: 24px;
             cursor: pointer;
-            color: #6b7280;
+            color: var(--text-secondary);
         }
 
         .help-close:hover {
-            color: #374151;
+            color: var(--text-primary);
         }
 
-        .completion-summary {
-            background: linear-gradient(145deg, #f0fdf4, #dcfce7);
-            border: 2px solid #10b981;
-            padding: 20px;
-            border-radius: 15px;
-            margin: 20px 0;
-        }
-
-        .completion-summary h3 {
-            color: #059669;
-            margin-bottom: 15px;
-        }
-
-        .completion-summary ul {
-            text-align: left;
-            color: #059669;
-            line-height: 1.8;
-            padding-left: 20px;
-        }
-
-        .next-action {
-            background: linear-gradient(145deg, #f0f9ff, #dbeafe);
-            border: 2px solid #0ea5e9;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .next-action h4 {
-            color: #0284c7;
-            margin-bottom: 10px;
-        }
-
+        /* Confetti */
         .confetti {
             position: fixed;
             width: 8px;
@@ -598,6 +568,132 @@
         .confetti-5 { background: #feca57; }
         .confetti-6 { background: #ff9ff3; }
 
+        .confetti-animate {
+            animation: confetti-fall linear forwards;
+        }
+
+        /* Score Popup */
+        .score-popup {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: var(--success-color);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            z-index: 1001;
+            animation: slideInFade 2s ease-out forwards;
+            pointer-events: none;
+        }
+
+        /* Scroll Indicators */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(102, 126, 234, 0.2);
+            z-index: 2001;
+            transform-origin: left;
+            transform: scaleX(0);
+            transition: transform 0.2s ease;
+        }
+
+        .scroll-progress-fill {
+            height: 100%;
+            background: var(--primary-gradient);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+        }
+
+        .scroll-indicator {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            animation: bounce-indicator 2s infinite;
+            transition: opacity 0.3s ease;
+        }
+
+        .scroll-indicator.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .scroll-indicator::before {
+            content: '↓';
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .fade-in-text {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--primary-color);
+            font-size: 12px;
+            font-weight: bold;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 998;
+            transition: opacity 0.3s ease;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 5px 15px;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+
+        .fade-in-text.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .touch-active {
+            transform: scale(0.98) !important;
+            opacity: 0.9 !important;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
+            50% { box-shadow: 0 0 10px 2px rgba(102, 126, 234, 0.4); }
+        }
+
+        @keyframes slideInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes zoomIn {
+            from { transform: translate(-50%, -50%) scale(0); }
+            to { transform: translate(-50%, -50%) scale(1); }
+        }
+
         @keyframes confetti-fall {
             0% {
                 transform: translateY(-100px) rotateZ(0deg);
@@ -609,10 +705,6 @@
             }
         }
 
-        .confetti-animate {
-            animation: confetti-fall linear forwards;
-        }
-
         @keyframes slideInFade {
             0% { opacity: 0; transform: translateX(100px); }
             20% { opacity: 1; transform: translateX(0); }
@@ -620,22 +712,19 @@
             100% { opacity: 0; transform: translateY(-20px); }
         }
 
-        .score-popup {
-            position: fixed;
-            top: 80px;
-            right: 20px;
-            background: #10b981;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: bold;
-            z-index: 1001;
-            animation: slideInFade 2s ease-out forwards;
-            pointer-events: none;
+        @keyframes bounce-indicator {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
         }
 
-        /* Mobile optimizations */
+        /* Responsive Design */
         @media (max-width: 768px) {
             body {
                 padding: 0;
@@ -653,17 +742,14 @@
 
             .header h1 {
                 font-size: 1.2em;
-                line-height: 1.3;
                 padding: 0 45px 0 0;
-                margin: 0;
             }
 
-            .help-button {
+            .btn-help {
                 width: 35px;
                 height: 35px;
                 top: 15px;
                 right: 10px;
-                z-index: 10;
             }
 
             .journey-tracker {
@@ -680,34 +766,24 @@
                 font-size: 14px;
             }
 
-            @media (max-width: 480px) {
-                .score-bar {
-                    gap: 10px;
-                }
-                
-                .score-item {
-                    font-size: 13px;
-                }
-            }
-
             .game-screen {
                 padding: 15px;
                 min-height: calc(100vh - 200px);
             }
 
-            .innovation-card {
+            .card {
                 padding: 15px;
                 margin-bottom: 15px;
             }
 
-            .category-button {
+            .btn-category {
                 padding: 18px 15px;
                 font-size: 15px;
                 min-height: 56px;
                 touch-action: manipulation;
             }
 
-            .continue-button {
+            .btn-continue {
                 padding: 18px;
                 font-size: 16px;
                 min-height: 56px;
@@ -747,16 +823,16 @@
                 line-height: 1.5;
             }
 
-            .instruction-panel {
+            .panel-instruction {
                 margin: 15px 0;
                 padding: 12px;
             }
 
-            .instruction-panel h3 {
+            .panel-instruction h3 {
                 font-size: 13px;
             }
 
-            .instruction-panel ol {
+            .panel-instruction ol {
                 font-size: 12px;
                 padding-left: 18px;
             }
@@ -765,11 +841,6 @@
                 margin: 15px auto;
                 max-width: 90%;
                 padding: 10px;
-            }
-
-            .cit-dev-image {
-                max-width: 100%;
-                border-radius: 10px;
             }
 
             .achievement-popup {
@@ -785,91 +856,82 @@
                 padding: 20px;
             }
 
-            .exploration-progress {
-                padding: 0 15px;
-                margin: 15px 0;
+            .scroll-indicator {
+                bottom: 20px;
+                width: 35px;
+                height: 35px;
             }
 
-            .hint-banner {
-                margin: 10px 0;
-                padding: 10px;
-                font-size: 13px;
+            .scroll-indicator::before {
+                font-size: 18px;
             }
 
-            .completion-summary {
-                padding: 15px;
-                margin: 15px 0;
+            .fade-in-text {
+                bottom: 65px;
+                font-size: 11px;
             }
 
-            .completion-summary h3 {
-                font-size: 16px;
+            .card p {
+                font-size: 11px !important;
+                margin: 5px 5px 12px 5px !important;
             }
 
-            .completion-summary ul {
-                font-size: 14px;
-                padding-left: 18px;
-            }
-
-            .next-action {
-                padding: 12px;
-                margin: 15px 0;
-            }
-
-            .next-action h4 {
-                font-size: 16px;
-            }
-
-            .requirement-item {
-                padding: 12px;
-                font-size: 14px;
-            }
-
-            /* Ensure tooltips don't show on mobile */
             .tooltip {
                 display: none !important;
             }
 
-            /* Improve tap targets */
-            button, .team-card, .category-button {
+            button, .team-card, .btn-category {
                 -webkit-tap-highlight-color: rgba(102, 126, 234, 0.2);
             }
 
-            /* Prevent text selection on buttons */
             button {
                 -webkit-user-select: none;
                 -webkit-touch-callout: none;
             }
 
-            /* Innovation descriptions on mobile */
-            .innovation-card p {
-                font-size: 11px !important;
-                margin: 5px 5px 12px 5px !important;
-            }
-
-            /* Ensure modals are properly sized */
             .help-modal {
                 padding: 10px;
             }
 
-            /* Adjust font sizes for very small screens */
+            @media (max-width: 480px) {
+                .score-bar {
+                    gap: 10px;
+                }
+                
+                .score-item {
+                    font-size: 13px;
+                }
+            }
+
+            @media (max-width: 380px) {
+                #frontDoorScreen h2 {
+                    font-size: 16px;
+                    line-height: 1.2;
+                }
+                
+                .score-bar {
+                    font-size: 12px;
+                }
+                
+                .journey-tracker {
+                    font-size: 10px;
+                }
+            }
+
             @media (max-width: 360px) {
                 .header h1 {
                     font-size: 1.1em;
                     padding: 0 40px 0 0;
                 }
                 
-                .header {
-                    padding: 15px;
-                }
-                
-                .help-button {
+                .btn-help {
                     width: 32px;
                     height: 32px;
                     font-size: 16px;
                     right: 8px;
                 }
                 
-                .category-button {
+                .btn-category {
                     font-size: 14px;
                     padding: 16px 12px;
                 }
@@ -884,39 +946,24 @@
                     font-size: 12px;
                 }
             }
-        }
 
-        @media (max-width: 380px) {
-            #frontDoorScreen h2 {
-                font-size: 16px;
-                line-height: 1.2;
-            }
-            
-            .score-bar {
-                font-size: 12px;
-            }
-            
-            .journey-tracker {
-                font-size: 10px;
-            }
-        }
-
-        @media (max-width: 320px) {
-            #frontDoorScreen h2 {
-                font-size: 14px;
-            }
-            
-            .header h1 {
-                font-size: 1em;
-            }
-            
-            .category-button {
-                font-size: 13px;
-                padding: 15px 10px;
+            @media (max-width: 320px) {
+                #frontDoorScreen h2 {
+                    font-size: 14px;
+                }
+                
+                .header h1 {
+                    font-size: 1em;
+                }
+                
+                .btn-category {
+                    font-size: 13px;
+                    padding: 15px 10px;
+                }
             }
         }
 
-        /* Landscape mode optimizations */
+        /* Landscape */
         @media (max-height: 600px) and (orientation: landscape) {
             .header {
                 padding: 10px;
@@ -951,7 +998,7 @@
 <body>
     <div class="game-container">
         <div class="header">
-            <button class="help-button" onclick="game.showHelp()">?</button>
+            <button class="btn btn-help" onclick="game.showHelp()">?</button>
             <h1>🚀 Visualize your Citizen Development journey!</h1>
             <div class="score-bar">
                 <div class="score-item">
@@ -990,14 +1037,13 @@
         <div id="frontDoorScreen" class="game-screen active">
             <h2 style="font-size: 1.2em; text-align: center;">See the path your journey can take</h2>
             
-            <!-- Citizen Development Image -->
             <div class="cit-dev-image-container">
                 <img src="https://github.com/mky250/citizen-dev-app/blob/main/cit%20dev.png?raw=true" 
                      alt="Citizen Development Framework" 
                      class="cit-dev-image"
                      loading="eager"
-                     onerror="this.style.display='none'; console.error('Image failed to load:', this.src);"
-                     onload="console.log('Image loaded successfully')"/>
+                     onerror="this.style.display='none';"
+                     onload="console.log('Image loaded')"/>
             </div>
             
             <div class="story-text">
@@ -1009,8 +1055,7 @@
                 💡 <strong>ICP Value:</strong> We prevent duplicate efforts, accelerate development, and scale solutions across the organization!
             </div>
             
-            <!-- How This Works Panel -->
-            <div class="instruction-panel">
+            <div class="panel-instruction">
                 <h3>How This Works:</h3>
                 <ol>
                     <li>Explore 4 different innovation journey examples</li>
@@ -1020,15 +1065,14 @@
                 </ol>
             </div>
             
-            <button class="continue-button" onclick="game.startJourney()">Start Your Guided Journey</button>
+            <button class="btn btn-continue" onclick="game.startJourney()">Start Your Guided Journey</button>
         </div>
 
         <!-- Self Discovery Screen -->
         <div id="selfDiscoveryScreen" class="game-screen">
             <h2>🔍 Step 1: Self-Discovery</h2>
             
-            <!-- Exploration Progress -->
-            <div class="exploration-progress">
+            <div class="progress-container">
                 <p style="color: #6b7280;">Progress: <strong><span id="explorationCount">0</span>/4 innovations explored</strong></p>
                 <div class="progress-bar">
                     <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
@@ -1041,15 +1085,14 @@
                 <p>First, let's check if your innovation idea already exists.</p>
             </div>
             
-            <!-- First-time hint -->
             <div id="firstTimeHint" class="hint-banner" style="display: none;">
                 👆 Click any innovation below to start exploring! Start with the highlighted one.
             </div>
             
-            <div class="innovation-card">
+            <div class="card">
                 <h3 style="font-size: 0.9em; color: #667eea;">Select an Innovation Journey Example to Explore:</h3>
                 <div style="margin-bottom: 20px;">
-                    <button class="category-button" id="chatbot-btn" onclick="game.checkIdea('chatbot')">
+                    <button class="btn btn-category" id="chatbot-btn" onclick="game.checkIdea('chatbot')">
                         🤖 AI Customer Service Chatbot
                     </button>
                     <p style="font-size: 12px; color: #6b7280; margin: 5px 10px 15px 10px; line-height: 1.4;">
@@ -1057,7 +1100,7 @@
                     </p>
                 </div>
                 <div style="margin-bottom: 20px;">
-                    <button class="category-button" id="analytics-btn" onclick="game.checkIdea('analytics')">
+                    <button class="btn btn-category" id="analytics-btn" onclick="game.checkIdea('analytics')">
                         🚨 Incident Management Automation
                     </button>
                     <p style="font-size: 12px; color: #6b7280; margin: 5px 10px 15px 10px; line-height: 1.4;">
@@ -1065,7 +1108,7 @@
                     </p>
                 </div>
                 <div style="margin-bottom: 20px;">
-                    <button class="category-button" id="mobile-btn" onclick="game.checkIdea('mobile')">
+                    <button class="btn btn-category" id="mobile-btn" onclick="game.checkIdea('mobile')">
                         📄 Case Summarization Analysis
                     </button>
                     <p style="font-size: 12px; color: #6b7280; margin: 5px 10px 15px 10px; line-height: 1.4;">
@@ -1073,7 +1116,7 @@
                     </p>
                 </div>
                 <div style="margin-bottom: 20px;">
-                    <button class="category-button" id="assistant-btn" onclick="game.checkIdea('assistant')">
+                    <button class="btn btn-category" id="assistant-btn" onclick="game.checkIdea('assistant')">
                         🧠 AI Meeting Intelligence Assistant
                     </button>
                     <p style="font-size: 12px; color: #6b7280; margin: 5px 10px 15px 10px; line-height: 1.4;">
@@ -1101,7 +1144,7 @@
                 <p>Great! Your idea is new. Now connect with your ICP Subject Matter Expert (SME) to submit it to ICP.</p>
             </div>
             
-            <div class="innovation-card">
+            <div class="card">
                 <h3>Your Innovation:</h3>
                 <p id="selectedIdea" class="story-text"></p>
             </div>
@@ -1111,7 +1154,7 @@
                 "This looks promising! Let me help you submit this to ICP for triage."
             </div>
 
-            <button class="continue-button" onclick="game.submitToICP()">Submit to ICP Pipeline</button>
+            <button class="btn btn-continue" onclick="game.submitToICP()">Submit to ICP Pipeline</button>
         </div>
 
         <!-- Cit Dev Consult Screen -->
@@ -1142,7 +1185,7 @@
                 <small>Collaborative AI solutions and experiments</small>
             </div>
 
-            <button class="continue-button" onclick="game.assignTeam()">See Team Assignment</button>
+            <button class="btn btn-continue" onclick="game.assignTeam()">See Team Assignment</button>
         </div>
 
         <!-- Incubation Marketplace Screen -->
@@ -1155,7 +1198,7 @@
             
             <div class="process-flow" id="incubationFlow"></div>
 
-            <div class="innovation-card">
+            <div class="card">
                 <h3>Citizen Developer Tasks:</h3>
                 <div id="incubationTasks">
                     <div class="requirement-item">
@@ -1179,7 +1222,7 @@
                 💡 <strong>Why Incubation?</strong> The AI Community ensures every citizen developer is properly trained and matched with the right project!
             </div>
 
-            <button class="continue-button" id="incubationBtn" onclick="game.progressIncubation()">Complete Next Task</button>
+            <button class="btn btn-continue" id="incubationBtn" onclick="game.progressIncubation()">Complete Next Task</button>
         </div>
 
         <!-- Development Screen -->
@@ -1191,14 +1234,14 @@
             
             <div class="process-flow" id="devProcessFlow"></div>
 
-            <div class="innovation-card">
+            <div class="card">
                 <h3>Development Progress:</h3>
                 <div id="devProgress">
                     <p>⏳ Sprint 1: Requirements gathering...</p>
                 </div>
             </div>
 
-            <button class="continue-button" onclick="game.progressDevelopment()">Continue Development</button>
+            <button class="btn btn-continue" onclick="game.progressDevelopment()">Continue Development</button>
         </div>
 
         <!-- LT Approval Screen -->
@@ -1222,7 +1265,7 @@
                 </p>
             </div>
 
-            <button class="continue-button" onclick="game.proceedToEngineering()" style="margin-top: 20px;">Scale Out!</button>
+            <button class="btn btn-continue" onclick="game.proceedToEngineering()" style="margin-top: 20px;">Scale Out!</button>
         </div>
 
         <!-- Engineering Screen -->
@@ -1234,7 +1277,7 @@
             
             <div class="process-flow" id="engProcessFlow"></div>
 
-            <div class="innovation-card">
+            <div class="card">
                 <h3>Engineering Tasks:</h3>
                 <div id="engTasks">
                     <p>✅ Security review completed</p>
@@ -1243,18 +1286,18 @@
                 </div>
             </div>
 
-            <button class="continue-button" onclick="game.completeEngineering()">Complete Productization</button>
+            <button class="btn btn-continue" onclick="game.completeEngineering()">Complete Productization</button>
         </div>
 
         <!-- Success Screen -->
         <div id="successScreen" class="game-screen">
             <h2>🎉 Mission Complete!</h2>
             
-            <div class="innovation-avatar">🏆</div>
+            <div style="width: 80px; height: 80px; margin: 0 auto 15px; background: var(--primary-gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px;">🏆</div>
             
-            <div class="completion-summary">
+            <div class="feedback success">
                 <h3>What You Learned:</h3>
-                <ul>
+                <ul style="text-align: left; color: #059669; line-height: 1.8; padding-left: 20px;">
                     <li>How to validate if a solution already exists</li>
                     <li>The ICP submission process through your ICP SME</li>
                     <li>How Citizen Dev consultants match ideas to teams</li>
@@ -1263,7 +1306,7 @@
                 </ul>
             </div>
 
-            <div class="next-action" id="nextActionSection">
+            <div class="next-action" id="nextActionSection" style="background: linear-gradient(145deg, #f0f9ff, #dbeafe); border: 2px solid #0ea5e9; padding: 15px; border-radius: 10px; margin: 20px 0; text-align: center;">
                 <!-- Will be populated dynamically -->
             </div>
 
@@ -1271,19 +1314,23 @@
                 🌟 <strong>ICP Impact:</strong> Your innovation is now helping thousands of employees and customers!
             </div>
 
-            <button class="continue-button" onclick="game.exploreMore()">Explore More Innovations</button>
+            <button class="btn btn-continue" onclick="game.exploreMore()">Explore More Innovations</button>
         </div>
     </div>
 
-    <!-- Scroll Progress Bar -->
-    <div id="scrollProgress" class="scroll-progress"></div>
+    <!-- Scroll Indicators -->
+    <div id="scrollProgress" class="scroll-progress">
+        <div class="scroll-progress-fill"></div>
+    </div>
+    <div id="scrollIndicator" class="scroll-indicator hidden" onclick="game.smoothScrollDown()"></div>
+    <div id="scrollText" class="fade-in-text hidden">Scroll for more</div>
 
     <!-- Achievement Popup -->
     <div id="achievementPopup" class="achievement-popup">
         <div class="achievement-icon">🏆</div>
         <h2>Achievement Unlocked!</h2>
         <p id="achievementName">Innovation Champion</p>
-        <button class="continue-button" onclick="game.closeAchievement()" style="margin-top: 15px;">Awesome!</button>
+        <button class="btn btn-continue" onclick="game.closeAchievement()" style="margin-top: 15px;">Awesome!</button>
     </div>
 
     <!-- Help Modal -->
@@ -1316,9 +1363,10 @@
     </div>
 
     <script>
-        // Optimized Game Controller with Enhanced UX
+        // Optimized Game Controller
         class CitizenDevelopmentGame {
             constructor() {
+                // Initialize state
                 this.state = {
                     score: 0,
                     ideas: 0,
@@ -1334,34 +1382,34 @@
                     achievements: 0,
                     earnedAchievements: [],
                     firstTimeUser: true,
-                    // Track scoring to prevent spam
                     scoredActions: {
-                        lob: [], // Track which innovations have scored LOB points
-                        icp: [], // Track which innovations have scored ICP submission
-                        team: [], // Track which innovations have scored team assignment
-                        incubation: [], // Track which innovations have scored incubation
-                        development: [], // Track which innovations have scored development sprints
-                        ltApproval: [], // Track which innovations have scored LT approval
-                        engineering: [] // Track which innovations have scored engineering
+                        lob: [],
+                        icp: [],
+                        team: [],
+                        incubation: [],
+                        development: [],
+                        ltApproval: [],
+                        engineering: []
                     }
                 };
 
-                this.levelTitles = {
-                    1: "Newcomer",
-                    2: "Explorer",
-                    3: "Practitioner",
-                    4: "Innovator",
-                    5: "Expert",
-                    6: "Master",
-                    7: "Champion",
-                    8: "Visionary",
-                    9: "Legend"
+                // Game configuration
+                this.config = {
+                    levelTitles: ["", "Newcomer", "Explorer", "Practitioner", "Innovator", "Expert", "Master", "Champion", "Visionary", "Legend"],
+                    levelThresholds: [0, 100, 250, 450, 700, 1000, 1400, 1900, 2500],
+                    teamNames: {
+                        'team1': 'ZebraAI - Prompt Engineering',
+                        'team2': 'Nexus - Workflow Automation',
+                        'team3': 'Agentic Practice - Agent Building',
+                        'team4': 'AI Innovator Community'
+                    },
+                    confettiColors: ['confetti-1', 'confetti-2', 'confetti-3', 'confetti-4', 'confetti-5', 'confetti-6']
                 };
 
+                // Innovations data
                 this.innovations = {
                     chatbot: {
                         name: "AI Customer Service Chatbot",
-                        description: "An intelligent virtual assistant that handles customer inquiries 24/7, reducing support ticket volume by automating responses to common questions.",
                         exists: true,
                         completed: false,
                         solution: {
@@ -1373,95 +1421,94 @@
                     },
                     analytics: {
                         name: "Incident Management Automation",
-                        description: "Automated system that detects, categorizes, and routes IT incidents to the right teams, reducing response time and improving resolution rates.",
                         exists: false,
                         completed: false,
                         bestTeam: "team2"
                     },
                     mobile: {
                         name: "Case Summarization Analysis",
-                        description: "AI-powered tool that automatically analyzes support cases and generates concise summaries, helping agents quickly understand context and history.",
                         exists: false,
                         completed: false,
                         bestTeam: "team1"
                     },
                     assistant: {
                         name: "AI Meeting Intelligence Assistant",
-                        description: "Smart assistant that joins meetings, takes notes, extracts action items, and automatically follows up with participants on assigned tasks.",
                         exists: false,
                         completed: false,
                         bestTeam: "team4"
                     }
                 };
 
-                this.teamNames = {
-                    'team1': 'ZebraAI - Prompt Engineering',
-                    'team2': 'Nexus - Workflow Automation',
-                    'team3': 'Agentic Practice - Agent Building',
-                    'team4': 'AI Innovator Community'
-                };
-
-                // Cache commonly used DOM elements
+                // Cache DOM elements
                 this.elements = {};
-                this.cacheElements();
-                this.renderProcessFlow('selfDiscoveryFlow', 1, 7);
-                this.updateJourneyTracker();
-                this.initMobileOptimizations();
+                this.init();
             }
 
-            initMobileOptimizations() {
-                // Detect if mobile
-                this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+            init() {
+                this.cacheElements();
+                this.initEventListeners();
+                this.initMobileOptimizations();
+                this.renderProcessFlow('selfDiscoveryFlow', 1, 7);
+                this.updateJourneyTracker();
+            }
+
+            cacheElements() {
+                const ids = ['score', 'ideas', 'level', 'levelTooltip', 'achievements', 'discoveryResult', 
+                            'selectedIdea', 'teamAssignment', 'devProgress', 'engTasks', 'achievementPopup', 
+                            'achievementName', 'explorationCount', 'progressFill', 'firstTimeHint', 
+                            'helpModal', 'trackerHome', 'trackerDiscovery', 'trackerJourney',
+                            'scrollProgress', 'scrollIndicator', 'scrollText', 'allCompletedMessage',
+                            'incubationBtn', 'onboardingAssignment'];
                 
-                // Initialize scroll progress bar
-                this.initScrollProgress();
-                
-                // Prevent double-tap zoom on buttons
-                let lastTouchEnd = 0;
-                document.addEventListener('touchend', function(event) {
-                    const now = Date.now();
-                    if (now - lastTouchEnd <= 300) {
-                        event.preventDefault();
-                    }
-                    lastTouchEnd = now;
-                }, false);
-                
-                // Add touch feedback class
-                document.addEventListener('touchstart', function(e) {
+                ids.forEach(id => {
+                    this.elements[id] = document.getElementById(id);
+                });
+            }
+
+            initEventListeners() {
+                // Touch feedback for mobile
+                document.addEventListener('touchstart', e => {
                     if (e.target.tagName === 'BUTTON' || e.target.classList.contains('team-card')) {
                         e.target.classList.add('touch-active');
                     }
                 });
-                
-                document.addEventListener('touchend', function(e) {
+
+                document.addEventListener('touchend', e => {
                     if (e.target.tagName === 'BUTTON' || e.target.classList.contains('team-card')) {
-                        setTimeout(() => {
-                            e.target.classList.remove('touch-active');
-                        }, 100);
+                        setTimeout(() => e.target.classList.remove('touch-active'), 100);
                     }
                 });
+
+                // Prevent double-tap zoom
+                let lastTouchEnd = 0;
+                document.addEventListener('touchend', e => {
+                    const now = Date.now();
+                    if (now - lastTouchEnd <= 300) e.preventDefault();
+                    lastTouchEnd = now;
+                }, false);
+
+                // Handle orientation changes
+                window.addEventListener('orientationchange', () => {
+                    setTimeout(() => this.adjustForOrientation(), 100);
+                });
+            }
+
+            initMobileOptimizations() {
+                this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                                window.innerWidth <= 768;
                 
-                // Improve scrolling on mobile
+                this.initScrollProgress();
+                
                 if (this.isMobile) {
                     document.body.style.overscrollBehavior = 'none';
-                    
-                    // Make scrollbar always visible on mobile
                     document.documentElement.style.overflowY = 'scroll';
                 }
                 
-                // Handle orientation changes
-                window.addEventListener('orientationchange', () => {
-                    setTimeout(() => {
-                        this.adjustForOrientation();
-                    }, 100);
-                });
-                
-                // Initial adjustment
                 this.adjustForOrientation();
             }
 
             initScrollProgress() {
-                const progressBar = document.getElementById('scrollProgress');
+                let hasScrolled = false;
                 
                 const updateScrollProgress = () => {
                     const windowHeight = window.innerHeight;
@@ -1469,26 +1516,45 @@
                     const scrolled = window.scrollY;
                     const progress = documentHeight > 0 ? scrolled / documentHeight : 0;
                     
-                    if (progressBar) {
-                        progressBar.style.transform = `scaleX(${progress})`;
+                    if (this.elements.scrollProgress) {
+                        this.elements.scrollProgress.style.transform = `scaleX(${progress})`;
+                    }
+                    
+                    // Show/hide scroll indicator
+                    if (this.elements.scrollIndicator && this.elements.scrollText) {
+                        const shouldShow = documentHeight > 50 && scrolled < documentHeight - 100;
+                        
+                        this.elements.scrollIndicator.classList.toggle('hidden', !shouldShow || hasScrolled);
+                        this.elements.scrollText.classList.toggle('hidden', !shouldShow || hasScrolled || scrolled > 50);
+                        
+                        if (scrolled > 50) hasScrolled = true;
                     }
                 };
                 
-                // Update on scroll
                 window.addEventListener('scroll', updateScrollProgress);
-                
-                // Update on resize
                 window.addEventListener('resize', updateScrollProgress);
                 
-                // Update on screen change
+                // Override showScreen to reset scroll
                 const originalShowScreen = this.showScreen.bind(this);
                 this.showScreen = function(screenId) {
                     originalShowScreen(screenId);
-                    setTimeout(updateScrollProgress, 100);
+                    setTimeout(() => {
+                        hasScrolled = false;
+                        updateScrollProgress();
+                        window.scrollTo(0, 0);
+                    }, 300);
                 };
                 
-                // Initial update
                 updateScrollProgress();
+            }
+
+            smoothScrollDown() {
+                const currentScroll = window.scrollY;
+                const windowHeight = window.innerHeight;
+                window.scrollTo({
+                    top: currentScroll + windowHeight * 0.8,
+                    behavior: 'smooth'
+                });
             }
 
             adjustForOrientation() {
@@ -1504,45 +1570,18 @@
                 }
             }
 
-            cacheElements() {
-                this.elements = {
-                    score: document.getElementById('score'),
-                    ideas: document.getElementById('ideas'),
-                    level: document.getElementById('level'),
-                    levelTooltip: document.getElementById('levelTooltip'),
-                    achievements: document.getElementById('achievements'),
-                    discoveryResult: document.getElementById('discoveryResult'),
-                    selectedIdea: document.getElementById('selectedIdea'),
-                    teamAssignment: document.getElementById('teamAssignment'),
-                    devProgress: document.getElementById('devProgress'),
-                    engTasks: document.getElementById('engTasks'),
-                    achievementPopup: document.getElementById('achievementPopup'),
-                    achievementName: document.getElementById('achievementName'),
-                    explorationCount: document.getElementById('explorationCount'),
-                    progressFill: document.getElementById('progressFill'),
-                    firstTimeHint: document.getElementById('firstTimeHint'),
-                    helpModal: document.getElementById('helpModal'),
-                    trackerHome: document.getElementById('trackerHome'),
-                    trackerDiscovery: document.getElementById('trackerDiscovery'),
-                    trackerJourney: document.getElementById('trackerJourney')
-                };
-            }
-
-            // Journey Tracker Management
+            // UI Updates
             updateJourneyTracker() {
-                const currentScreen = this.state.currentScreen;
+                const trackers = ['trackerHome', 'trackerDiscovery', 'trackerJourney'];
+                const screen = this.state.currentScreen;
                 
-                // Reset all
-                ['trackerHome', 'trackerDiscovery', 'trackerJourney'].forEach(id => {
-                    if (this.elements[id]) {
-                        this.elements[id].className = '';
-                    }
+                trackers.forEach(t => {
+                    if (this.elements[t]) this.elements[t].className = '';
                 });
 
-                // Set active/completed states
-                if (currentScreen === 'frontDoorScreen') {
+                if (screen === 'frontDoorScreen') {
                     this.elements.trackerHome.className = 'active';
-                } else if (currentScreen === 'selfDiscoveryScreen') {
+                } else if (screen === 'selfDiscoveryScreen') {
                     this.elements.trackerHome.className = 'completed';
                     this.elements.trackerDiscovery.className = 'active';
                 } else {
@@ -1552,53 +1591,22 @@
                 }
             }
 
-            // Help System
-            showHelp() {
-                if (this.elements.helpModal) {
-                    this.elements.helpModal.classList.add('show');
-                }
-            }
-
-            closeHelp() {
-                if (this.elements.helpModal) {
-                    this.elements.helpModal.classList.remove('show');
-                }
-            }
-
-            // Helper Methods
-            isEightStepJourney() {
-                return this.state.currentIdea === 'assistant';
-            }
-
-            getTotalSteps() {
-                return this.isEightStepJourney() ? 8 : 7;
-            }
-
-            // Process Flow Rendering
             renderProcessFlow(elementId, currentStep, totalSteps = null) {
                 const element = document.getElementById(elementId);
                 if (!element) return;
 
                 const steps = totalSteps || this.getTotalSteps();
-                let html = '';
-
-                for (let i = 1; i <= steps; i++) {
+                element.innerHTML = Array.from({length: steps}, (_, i) => {
+                    const num = i + 1;
                     let className = 'process-step';
-                    if (i < currentStep) className += ' completed';
-                    else if (i === currentStep) className += ' current';
-                    
-                    html += `<div class="${className}">${i}</div>`;
-                }
-
-                element.innerHTML = html;
+                    if (num < currentStep) className += ' completed';
+                    else if (num === currentStep) className += ' current';
+                    return `<div class="${className}">${num}</div>`;
+                }).join('');
             }
 
-            // Screen Management
             showScreen(screenId) {
-                document.querySelectorAll('.game-screen').forEach(screen => {
-                    screen.classList.remove('active');
-                });
-
+                document.querySelectorAll('.game-screen').forEach(s => s.classList.remove('active'));
                 const targetScreen = document.getElementById(screenId);
                 if (targetScreen) {
                     targetScreen.classList.add('active');
@@ -1607,78 +1615,25 @@
                 }
             }
 
-            // Progress Management
-            updateExplorationProgress() {
-                // Count only fully explored innovations
-                let fullyExploredCount = 0;
-                
-                Object.keys(this.innovations).forEach(key => {
-                    const innovation = this.innovations[key];
-                    if (innovation.exists) {
-                        // For existing solutions, just need to be checked
-                        if (this.state.checkedInnovations.includes(key)) {
-                            fullyExploredCount++;
-                        }
-                    } else {
-                        // For new innovations, must be completed (gone through full journey)
-                        if (innovation.completed) {
-                            fullyExploredCount++;
-                        }
-                    }
-                });
-                
-                const percentage = (fullyExploredCount / 4) * 100;
-                
-                if (this.elements.explorationCount) {
-                    this.elements.explorationCount.textContent = fullyExploredCount;
-                }
-                
-                if (this.elements.progressFill) {
-                    this.elements.progressFill.style.width = percentage + '%';
-                }
-
-                // Show "Journey Master" message only when all journeyable innovations have been completed
-                const allCompletedMsg = document.getElementById('allCompletedMessage');
-                if (allCompletedMsg) {
-                    allCompletedMsg.style.display = fullyExploredCount === 4 ? 'block' : 'none';
-                }
-            }
-
-            // Score Management
+            // Score & Progress
             updateScore(points, action) {
                 this.state.score += points;
                 if (this.elements.score) {
                     this.elements.score.textContent = this.state.score;
-                    this.elements.score.style.animation = 'pulse 0.5s';
-                    setTimeout(() => {
-                        this.elements.score.style.animation = '';
-                    }, 500);
+                    this.animateElement(this.elements.score, 'pulse');
                 }
-
-                if (action) {
-                    this.showScorePopup(`+${points} - ${action}`);
-                }
-
+                if (action) this.showScorePopup(`+${points} - ${action}`);
                 this.checkLevelUp();
             }
 
             checkLevelUp() {
-                const levelThresholds = [0, 100, 250, 450, 700, 1000, 1400, 1900, 2500];
-                let newLevel = 1;
+                const newLevel = this.config.levelThresholds.findLastIndex(t => this.state.score >= t) + 1;
                 
-                for (let i = 0; i < levelThresholds.length; i++) {
-                    if (this.state.score >= levelThresholds[i]) {
-                        newLevel = i + 1;
-                    }
-                }
-
                 if (newLevel > this.state.level) {
                     this.state.level = newLevel;
-                    if (this.elements.level) {
-                        this.elements.level.textContent = this.state.level;
-                    }
+                    if (this.elements.level) this.elements.level.textContent = newLevel;
                     if (this.elements.levelTooltip) {
-                        this.elements.levelTooltip.textContent = this.levelTitles[this.state.level] || "Legend";
+                        this.elements.levelTooltip.textContent = this.config.levelTitles[newLevel];
                     }
                 }
             }
@@ -1688,36 +1643,38 @@
                 popup.className = 'score-popup';
                 popup.textContent = text;
                 document.body.appendChild(popup);
-
-                setTimeout(() => {
-                    if (popup.parentNode) {
-                        popup.parentNode.removeChild(popup);
-                    }
-                }, 2000);
+                setTimeout(() => popup.remove(), 2000);
             }
 
-            updateIdeas() {
-                this.state.ideas++;
-                if (this.elements.ideas) {
-                    this.elements.ideas.textContent = this.state.ideas;
+            updateExplorationProgress() {
+                const fullyExplored = Object.keys(this.innovations).filter(key => {
+                    const inn = this.innovations[key];
+                    return inn.exists ? this.state.checkedInnovations.includes(key) : inn.completed;
+                }).length;
+                
+                const percentage = (fullyExplored / 4) * 100;
+                
+                if (this.elements.explorationCount) {
+                    this.elements.explorationCount.textContent = fullyExplored;
+                }
+                if (this.elements.progressFill) {
+                    this.elements.progressFill.style.width = `${percentage}%`;
+                }
+                if (this.elements.allCompletedMessage) {
+                    this.elements.allCompletedMessage.style.display = fullyExplored === 4 ? 'block' : 'none';
                 }
             }
 
-            // Achievement System
+            // Achievements
             showAchievement(title, description) {
-                // Check if this achievement has already been earned
-                const achievementKey = `${title}_${description}`;
-                if (!this.state.earnedAchievements.includes(achievementKey)) {
-                    this.state.earnedAchievements.push(achievementKey);
+                const key = `${title}_${description}`;
+                if (!this.state.earnedAchievements.includes(key)) {
+                    this.state.earnedAchievements.push(key);
                     this.state.achievements++;
                     
-                    // Update achievement counter display
                     if (this.elements.achievements) {
                         this.elements.achievements.textContent = this.state.achievements;
-                        this.elements.achievements.style.animation = 'pulse 0.5s';
-                        setTimeout(() => {
-                            this.elements.achievements.style.animation = '';
-                        }, 500);
+                        this.animateElement(this.elements.achievements, 'pulse');
                     }
                 }
                 
@@ -1737,56 +1694,42 @@
             }
 
             createConfetti() {
-                const confettiCount = 40;
-                const colors = ['confetti-1', 'confetti-2', 'confetti-3', 'confetti-4', 'confetti-5', 'confetti-6'];
-
-                for (let i = 0; i < confettiCount; i++) {
+                const count = 40;
+                for (let i = 0; i < count; i++) {
                     setTimeout(() => {
                         const confetti = document.createElement('div');
                         confetti.className = 'confetti';
-                        confetti.classList.add(colors[Math.floor(Math.random() * colors.length)]);
+                        confetti.classList.add(this.config.confettiColors[Math.floor(Math.random() * this.config.confettiColors.length)]);
                         confetti.style.left = Math.random() * 100 + '%';
                         
                         const size = Math.random() * 6 + 4;
-                        confetti.style.width = size + 'px';
-                        confetti.style.height = size + 'px';
+                        confetti.style.width = confetti.style.height = size + 'px';
                         
                         const duration = Math.random() * 2 + 2;
                         confetti.style.animationDuration = duration + 's';
                         confetti.classList.add('confetti-animate');
                         
-                        if (Math.random() > 0.5) {
-                            confetti.style.borderRadius = '50%';
-                        }
+                        if (Math.random() > 0.5) confetti.style.borderRadius = '50%';
                         
                         document.body.appendChild(confetti);
-                        
-                        setTimeout(() => {
-                            if (confetti && confetti.parentNode) {
-                                confetti.parentNode.removeChild(confetti);
-                            }
-                        }, duration * 1000 + 500);
+                        setTimeout(() => confetti.remove(), duration * 1000 + 500);
                     }, i * 50);
                 }
             }
 
-            // Game Flow Functions
+            // Game Flow
             startJourney() {
                 this.resetGameState();
                 this.updateInnovationButtonStates();
                 this.highlightNextUnexplored();
                 this.showScreen('selfDiscoveryScreen');
                 
-                // Show first-time hint
                 if (this.state.firstTimeUser && this.elements.firstTimeHint) {
                     this.elements.firstTimeHint.style.display = 'block';
                     this.state.firstTimeUser = false;
-                    setTimeout(() => {
-                        this.elements.firstTimeHint.style.display = 'none';
-                    }, 5000);
+                    setTimeout(() => this.elements.firstTimeHint.style.display = 'none', 5000);
                 }
                 
-                // Only award points for first journey start
                 if (!this.state.journeyStarted) {
                     this.updateScore(10, "Journey Started");
                     this.state.journeyStarted = true;
@@ -1796,39 +1739,16 @@
                 this.updateExplorationProgress();
             }
 
-            highlightNextUnexplored() {
-                // Remove all highlights first
-                Object.keys(this.innovations).forEach(key => {
-                    const btn = document.getElementById(`${key}-btn`);
-                    if (btn) {
-                        btn.classList.remove('unexplored');
-                    }
-                });
-
-                // Find and highlight first unexplored
-                for (let key of Object.keys(this.innovations)) {
-                    if (!this.state.checkedInnovations.includes(key)) {
-                        const btn = document.getElementById(`${key}-btn`);
-                        if (btn) {
-                            btn.classList.add('unexplored');
-                        }
-                        break;
-                    }
-                }
-            }
-
             resetGameState() {
-                this.state.currentIdea = null;
-                this.state.currentTeam = null;
-                this.state.devStage = 0;
-                this.state.incubationStage = 0;
-
-                document.querySelectorAll('.team-card').forEach(team => {
-                    team.classList.remove('selected');
+                Object.assign(this.state, {
+                    currentIdea: null,
+                    currentTeam: null,
+                    devStage: 0,
+                    incubationStage: 0
                 });
 
-                document.querySelectorAll('.category-button').forEach(btn => {
-                    btn.classList.remove('selected');
+                document.querySelectorAll('.team-card, .btn-category').forEach(el => {
+                    el.classList.remove('selected');
                 });
 
                 if (this.elements.discoveryResult) {
@@ -1838,6 +1758,29 @@
                 this.resetIncubationRequirements();
                 this.resetDevelopmentProgress();
                 this.resetEngineeringTasks();
+            }
+
+            resetIncubationRequirements() {
+                this.state.incubationStage = 0;
+                const requirements = ['Adopt an idea', 'Project Accountability', 'Onboarding'];
+                
+                requirements.forEach((req, i) => {
+                    const reqEl = document.getElementById(`req${i + 1}`);
+                    if (reqEl) {
+                        reqEl.innerHTML = `⏳ ${req}`;
+                        reqEl.style.cssText = 'color: #6b7280; font-weight: normal;';
+                        reqEl.parentElement.style.cssText = 'background: #f3f4f6; box-shadow: none;';
+                    }
+                });
+
+                if (this.elements.onboardingAssignment) {
+                    this.elements.onboardingAssignment.style.display = 'none';
+                }
+
+                if (this.elements.incubationBtn) {
+                    this.elements.incubationBtn.textContent = 'Complete Next Task';
+                    this.elements.incubationBtn.onclick = () => this.progressIncubation();
+                }
             }
 
             resetDevelopmentProgress() {
@@ -1856,13 +1799,26 @@
                 }
             }
 
+            highlightNextUnexplored() {
+                document.querySelectorAll('.btn-category').forEach(btn => {
+                    btn.classList.remove('unexplored');
+                });
+
+                for (let key of Object.keys(this.innovations)) {
+                    if (!this.state.checkedInnovations.includes(key)) {
+                        const btn = document.getElementById(`${key}-btn`);
+                        if (btn) btn.classList.add('unexplored');
+                        break;
+                    }
+                }
+            }
+
             updateInnovationButtonStates() {
                 Object.keys(this.innovations).forEach(type => {
                     const button = document.getElementById(`${type}-btn`);
                     const innovation = this.innovations[type];
 
                     if (button) {
-                        // Clear all states
                         button.classList.remove('completed', 'existing-solution');
                         
                         if (innovation.completed && !innovation.exists) {
@@ -1873,98 +1829,61 @@
                     }
                 });
 
-                // Update exploration progress to check for Journey Master
                 this.updateExplorationProgress();
             }
 
+            // Innovation Selection
             checkIdea(ideaType) {
                 const idea = this.innovations[ideaType];
                 this.state.currentIdea = ideaType;
                 
-                // Check if this is the first time checking this innovation
                 const isFirstCheck = !this.state.checkedInnovations.includes(ideaType);
                 if (isFirstCheck) {
                     this.state.checkedInnovations.push(ideaType);
                 }
 
-                // Hide first-time hint
                 if (this.elements.firstTimeHint) {
                     this.elements.firstTimeHint.style.display = 'none';
                 }
 
-                document.querySelectorAll('.category-button').forEach(btn => {
+                document.querySelectorAll('.btn-category').forEach(btn => {
                     btn.classList.remove('selected');
                 });
                 document.getElementById(`${ideaType}-btn`).classList.add('selected');
 
-                // Update progress bar based on innovation
                 const totalSteps = ideaType === 'assistant' ? 8 : 7;
                 this.renderProcessFlow('selfDiscoveryFlow', 1, totalSteps);
 
                 if (this.elements.discoveryResult) {
                     let resultHTML = '';
                     
-                    // Check if it's an existing solution first
                     if (idea.exists) {
-                        // Mark as completed for button styling only
                         if (!idea.completed) {
                             idea.completed = true;
                             this.state.completedInnovations.push(ideaType);
                             this.updateInnovationButtonStates();
                         }
                         resultHTML = this.getExistingSolutionHTML(idea);
-                        // Only award points on first check
-                        if (isFirstCheck) {
-                            this.updateScore(15, "Found existing solution");
-                        }
+                        if (isFirstCheck) this.updateScore(15, "Found existing solution");
                     } else if (idea.completed && !idea.exists) {
-                        // Only show completed message for innovations that went through the full journey
                         resultHTML = this.getCompletedInnovationHTML(idea);
                     } else {
                         resultHTML = this.getNewInnovationHTML();
-                        // Only award points on first check
-                        if (isFirstCheck) {
-                            this.updateScore(20, "Discovered new opportunity");
-                        }
+                        if (isFirstCheck) this.updateScore(20, "Discovered new opportunity");
                     }
                     
                     this.elements.discoveryResult.innerHTML = resultHTML;
                     this.elements.discoveryResult.style.display = 'block';
                 }
 
-                // Update progress and highlight next
                 this.updateExplorationProgress();
                 this.highlightNextUnexplored();
                 this.updateInnovationButtonStates();
             }
 
-            getCompletedInnovationHTML(idea) {
-                // Check if there are any unexplored innovations
-                const hasUnexploredInnovations = Object.keys(this.innovations).some(key => 
-                    !this.state.checkedInnovations.includes(key)
-                );
-                
-                const tryAnotherButton = hasUnexploredInnovations ? 
-                    `<button class="continue-button" onclick="game.tryAnother()">Try Another Innovation</button>` : '';
-                
-                return `
-                    <div class="feedback success">
-                        <h3>🎉 Innovation Already Completed!</h3>
-                        <p><strong>${idea.name}</strong> has been successfully launched through the innovation journey!</p>
-                        <p style="margin-top: 10px;">🏆 <em>Journey Status: Complete</em></p>
-                    </div>
-                    ${tryAnotherButton}
-                `;
-            }
-
             getExistingSolutionHTML(idea) {
-                // Check if there are any unexplored innovations
-                const hasUnexploredInnovations = Object.keys(this.innovations).some(key => 
-                    !this.state.checkedInnovations.includes(key)
-                );
-                
-                const tryAnotherButton = hasUnexploredInnovations ? 
-                    `<button class="continue-button" onclick="game.tryAnother()">Try Another Idea</button>` : '';
+                const hasMore = Object.keys(this.innovations).some(k => !this.state.checkedInnovations.includes(k));
+                const button = hasMore ? `<button class="btn btn-continue" onclick="game.tryAnother()">Try Another Idea</button>` : '';
                 
                 return `
                     <div class="solution-exists">
@@ -1976,7 +1895,21 @@
                         <p style="margin-top: 10px;"><strong>ADO Link:</strong> <span style="color: #6b7280;">https://dev.azure.com/project/workitem-12345</span></p>
                         <p style="margin-top: 15px; font-weight: bold; color: #0ea5e9;">📧 Contact the team to get plugged in</p>
                     </div>
-                    ${tryAnotherButton}
+                    ${button}
+                `;
+            }
+
+            getCompletedInnovationHTML(idea) {
+                const hasMore = Object.keys(this.innovations).some(k => !this.state.checkedInnovations.includes(k));
+                const button = hasMore ? `<button class="btn btn-continue" onclick="game.tryAnother()">Try Another Innovation</button>` : '';
+                
+                return `
+                    <div class="feedback success">
+                        <h3>🎉 Innovation Already Completed!</h3>
+                        <p><strong>${idea.name}</strong> has been successfully launched through the innovation journey!</p>
+                        <p style="margin-top: 10px;">🏆 <em>Journey Status: Complete</em></p>
+                    </div>
+                    ${button}
                 `;
             }
 
@@ -1986,7 +1919,7 @@
                         <h3>💡 New Innovation Opportunity!</h3>
                         <p>No existing solution found. This is a great opportunity to innovate!</p>
                     </div>
-                    <button class="continue-button" onclick="game.proceedToLOB()">Proceed to ICP SME Contact</button>
+                    <button class="btn btn-continue" onclick="game.proceedToLOB()">Proceed to ICP SME Contact</button>
                 `;
             }
 
@@ -1995,11 +1928,12 @@
                     this.elements.discoveryResult.style.display = 'none';
                 }
                 this.state.currentIdea = null;
-                document.querySelectorAll('.category-button').forEach(btn => {
+                document.querySelectorAll('.btn-category').forEach(btn => {
                     btn.classList.remove('selected');
                 });
             }
 
+            // Journey Steps
             proceedToLOB() {
                 this.showScreen('lobContactScreen');
                 this.renderProcessFlow('lobContactFlow', 2);
@@ -2008,7 +1942,6 @@
                     this.elements.selectedIdea.textContent = this.innovations[this.state.currentIdea].name;
                 }
                 
-                // Only award points once per innovation
                 if (!this.state.scoredActions.lob.includes(this.state.currentIdea)) {
                     this.updateScore(10, "ICP SME contact initiated");
                     this.state.scoredActions.lob.push(this.state.currentIdea);
@@ -2019,11 +1952,17 @@
                 this.showScreen('triageScreen');
                 this.renderProcessFlow('triageFlow', 3);
                 
-                // Only award points and count ideas once per innovation
                 if (!this.state.scoredActions.icp.includes(this.state.currentIdea)) {
                     this.updateScore(25, "Idea submitted to ICP");
                     this.updateIdeas();
                     this.state.scoredActions.icp.push(this.state.currentIdea);
+                }
+            }
+
+            updateIdeas() {
+                this.state.ideas++;
+                if (this.elements.ideas) {
+                    this.elements.ideas.textContent = this.state.ideas;
                 }
             }
 
@@ -2037,11 +1976,8 @@
                     });
 
                     const selectedTeam = document.getElementById(bestTeam);
-                    if (selectedTeam) {
-                        selectedTeam.classList.add('selected');
-                    }
+                    if (selectedTeam) selectedTeam.classList.add('selected');
 
-                    // Only award points once per innovation
                     if (!this.state.scoredActions.team.includes(this.state.currentIdea)) {
                         this.updateScore(30, "Team assigned");
                         this.state.scoredActions.team.push(this.state.currentIdea);
@@ -2051,7 +1987,7 @@
                 setTimeout(() => {
                     if (this.elements.teamAssignment) {
                         this.elements.teamAssignment.textContent = 
-                            `Your innovation has been assigned to: ${this.teamNames[this.state.currentTeam] || 'AI Innovator Community'}`;
+                            `Your innovation has been assigned to: ${this.config.teamNames[this.state.currentTeam]}`;
                     }
 
                     if (this.state.currentTeam === 'team4') {
@@ -2065,7 +2001,7 @@
 
             progressIncubation() {
                 this.state.incubationStage++;
-
+                
                 const requirements = [
                     { id: 'req1', text: '✅ Adopt an idea', points: 15, action: "Idea adopted" },
                     { id: 'req2', text: '✅ Project Accountability', points: 20, action: "Accountability accepted" },
@@ -2073,63 +2009,31 @@
                 ];
 
                 if (this.state.incubationStage <= requirements.length) {
-                    const currentReq = requirements[this.state.incubationStage - 1];
-                    const reqElement = document.getElementById(currentReq.id);
+                    const req = requirements[this.state.incubationStage - 1];
+                    const reqElement = document.getElementById(req.id);
                     
                     if (reqElement) {
-                        reqElement.innerHTML = currentReq.text;
-                        reqElement.style.color = '#ffffff';
-                        reqElement.style.fontWeight = 'bold';
-                        reqElement.parentElement.style.background = 'linear-gradient(135deg, #10b981, #059669)';
-                        reqElement.parentElement.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+                        reqElement.innerHTML = req.text;
+                        reqElement.style.cssText = 'color: #ffffff; font-weight: bold;';
+                        reqElement.parentElement.style.cssText = 'background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 2px 4px rgba(0,0,0,0.2);';
                     }
                     
-                    // Only award points once per innovation
-                    const incubationKey = `${this.state.currentIdea}_${this.state.incubationStage}`;
-                    if (!this.state.scoredActions.incubation.includes(incubationKey)) {
-                        this.updateScore(currentReq.points, currentReq.action);
-                        this.state.scoredActions.incubation.push(incubationKey);
+                    const key = `${this.state.currentIdea}_${this.state.incubationStage}`;
+                    if (!this.state.scoredActions.incubation.includes(key)) {
+                        this.updateScore(req.points, req.action);
+                        this.state.scoredActions.incubation.push(key);
                     }
 
                     if (this.state.incubationStage >= requirements.length) {
-                        const onboardingDiv = document.getElementById('onboardingAssignment');
-                        if (onboardingDiv) {
-                            onboardingDiv.style.display = 'block';
+                        if (this.elements.onboardingAssignment) {
+                            this.elements.onboardingAssignment.style.display = 'block';
                         }
 
-                        const btn = document.getElementById('incubationBtn');
-                        if (btn) {
-                            btn.textContent = 'Proceed to Development';
-                            btn.onclick = () => this.showDevelopmentScreen();
+                        if (this.elements.incubationBtn) {
+                            this.elements.incubationBtn.textContent = 'Proceed to Development';
+                            this.elements.incubationBtn.onclick = () => this.showDevelopmentScreen();
                         }
                     }
-                }
-            }
-
-            resetIncubationRequirements() {
-                this.state.incubationStage = 0;
-
-                const requirements = ['Adopt an idea', 'Project Accountability', 'Onboarding'];
-                requirements.forEach((req, i) => {
-                    const reqEl = document.getElementById(`req${i + 1}`);
-                    if (reqEl) {
-                        reqEl.innerHTML = `⏳ ${req}`;
-                        reqEl.style.color = '#6b7280';
-                        reqEl.style.fontWeight = 'normal';
-                        reqEl.parentElement.style.background = '#f3f4f6';
-                        reqEl.parentElement.style.boxShadow = 'none';
-                    }
-                });
-
-                const onboardingDiv = document.getElementById('onboardingAssignment');
-                if (onboardingDiv) {
-                    onboardingDiv.style.display = 'none';
-                }
-
-                const btn = document.getElementById('incubationBtn');
-                if (btn) {
-                    btn.textContent = 'Complete Next Task';
-                    btn.onclick = () => this.progressIncubation();
                 }
             }
 
@@ -2160,11 +2064,10 @@
                         this.elements.devProgress.innerHTML = stages.slice(0, this.state.devStage + 1)
                             .map(s => `<p>${s}</p>`).join('');
                         
-                        // Only award points once per sprint per innovation
-                        const devKey = `${this.state.currentIdea}_sprint${this.state.devStage}`;
-                        if (!this.state.scoredActions.development.includes(devKey)) {
+                        const key = `${this.state.currentIdea}_sprint${this.state.devStage}`;
+                        if (!this.state.scoredActions.development.includes(key)) {
                             this.updateScore(20, `Sprint ${this.state.devStage + 1} completed`);
-                            this.state.scoredActions.development.push(devKey);
+                            this.state.scoredActions.development.push(key);
                         }
                     } else {
                         this.showLTApprovalScreen();
@@ -2176,7 +2079,6 @@
             showLTApprovalScreen() {
                 this.showScreen('ltApprovalScreen');
                 
-                // Only award points once per innovation
                 if (!this.state.scoredActions.ltApproval.includes(this.state.currentIdea)) {
                     this.updateScore(40, "Leadership approval");
                     this.state.scoredActions.ltApproval.push(this.state.currentIdea);
@@ -2217,22 +2119,18 @@
                     `;
                 }
                 
-                // Only award points once per innovation
                 if (!this.state.scoredActions.engineering.includes(this.state.currentIdea)) {
                     this.updateScore(50, "Engineering completed");
                     this.state.scoredActions.engineering.push(this.state.currentIdea);
                 }
 
-                setTimeout(() => {
-                    this.showSuccessScreen();
-                }, 1500);
+                setTimeout(() => this.showSuccessScreen(), 1500);
             }
 
             showSuccessScreen() {
                 this.showScreen('successScreen');
 
                 if (this.state.currentIdea) {
-                    // Award achievement for completing this specific innovation journey
                     const innovationName = this.innovations[this.state.currentIdea].name;
                     this.showAchievement("Journey Complete!", `Completed: ${innovationName}`);
                     
@@ -2240,57 +2138,33 @@
                     this.state.completedInnovations.push(this.state.currentIdea);
                 }
 
-                // Update next action section
                 const nextActionSection = document.getElementById('nextActionSection');
-                const unexploredCount = 4 - this.state.checkedInnovations.length;
                 
-                // Check if all innovations are fully explored
-                let allFullyExplored = true;
-                Object.keys(this.innovations).forEach(key => {
-                    const innovation = this.innovations[key];
-                    if (innovation.exists) {
-                        // For existing solutions, just need to be checked
-                        if (!this.state.checkedInnovations.includes(key)) {
-                            allFullyExplored = false;
-                        }
-                    } else {
-                        // For new innovations, must be completed (gone through full journey)
-                        if (!innovation.completed) {
-                            allFullyExplored = false;
-                        }
-                    }
+                const allFullyExplored = Object.keys(this.innovations).every(key => {
+                    const inn = this.innovations[key];
+                    return inn.exists ? this.state.checkedInnovations.includes(key) : inn.completed;
                 });
                 
                 if (nextActionSection) {
                     if (!allFullyExplored) {
-                        // Still have innovations to explore
                         const nextUnexplored = Object.keys(this.innovations).find(key => {
-                            const innovation = this.innovations[key];
-                            if (innovation.exists) {
-                                return !this.state.checkedInnovations.includes(key);
-                            } else {
-                                return !innovation.completed;
-                            }
+                            const inn = this.innovations[key];
+                            return inn.exists ? !this.state.checkedInnovations.includes(key) : !inn.completed;
                         });
                         
-                        const remainingJourneys = Object.keys(this.innovations).filter(key => {
-                            const innovation = this.innovations[key];
-                            if (innovation.exists) {
-                                return !this.state.checkedInnovations.includes(key);
-                            } else {
-                                return !innovation.completed;
-                            }
+                        const remaining = Object.keys(this.innovations).filter(key => {
+                            const inn = this.innovations[key];
+                            return inn.exists ? !this.state.checkedInnovations.includes(key) : !inn.completed;
                         }).length;
                         
                         nextActionSection.innerHTML = `
-                            <h4>What's Next?</h4>
-                            <p><strong>${remainingJourneys} innovation${remainingJourneys > 1 ? 's' : ''} still to explore!</strong></p>
+                            <h4 style="color: #0284c7;">What's Next?</h4>
+                            <p><strong>${remaining} innovation${remaining > 1 ? 's' : ''} still to explore!</strong></p>
                             <p style="margin-top: 10px;">Next up: <strong>${this.innovations[nextUnexplored]?.name || 'Continue exploring'}</strong></p>
                         `;
                     } else {
-                        // All innovations fully explored - show journey summary
                         nextActionSection.innerHTML = `
-                            <h4>Journey Summary</h4>
+                            <h4 style="color: #0284c7;">Journey Summary</h4>
                             <div style="text-align: left; color: #059669; line-height: 1.8;">
                                 <p>✅ Self-discovery completed</p>
                                 <p>✅ ICP SME submission successful</p>
@@ -2318,13 +2192,34 @@
                 this.updateExplorationProgress();
             }
 
-            playAgain() {
-                this.resetGameState();
-                this.showScreen('frontDoorScreen');
+            // Helpers
+            showHelp() {
+                if (this.elements.helpModal) {
+                    this.elements.helpModal.classList.add('show');
+                }
+            }
+
+            closeHelp() {
+                if (this.elements.helpModal) {
+                    this.elements.helpModal.classList.remove('show');
+                }
+            }
+
+            isEightStepJourney() {
+                return this.state.currentIdea === 'assistant';
+            }
+
+            getTotalSteps() {
+                return this.isEightStepJourney() ? 8 : 7;
+            }
+
+            animateElement(element, animationClass, duration = 500) {
+                element.style.animation = `${animationClass} ${duration}ms`;
+                setTimeout(() => element.style.animation = '', duration);
             }
         }
 
-        // Initialize the game
+        // Initialize game
         const game = new CitizenDevelopmentGame();
     </script>
 </body>
