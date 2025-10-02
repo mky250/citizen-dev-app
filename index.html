@@ -5,1056 +5,191 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Citizen Developer Journey</title>
     <style>
-        /* CSS Variables for consistent theming */
         :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --primary-color: #667eea;
+            --primary: #667eea;
             --primary-dark: #764ba2;
-            --success-color: #10b981;
+            --success: #10b981;
             --success-dark: #059669;
-            --info-color: #0ea5e9;
+            --info: #0ea5e9;
             --info-dark: #0284c7;
-            --warning-color: #fbbf24;
+            --warning: #fbbf24;
             --warning-light: #fef3c7;
-            --text-primary: #374151;
-            --text-secondary: #6b7280;
-            --bg-light: #f9fafb;
-            --bg-white: #ffffff;
-            --border-light: #e5e7eb;
-            --shadow-sm: 0 2px 8px rgba(100, 116, 139, 0.1);
-            --shadow-md: 0 4px 12px rgba(100, 116, 139, 0.15);
-            --shadow-lg: 0 8px 20px rgba(100, 116, 139, 0.2);
-            --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.2);
-            --transition: all 0.3s ease;
-            --radius-sm: 8px;
-            --radius-md: 10px;
-            --radius-lg: 15px;
-            --radius-xl: 20px;
+            --text: #374151;
+            --text-muted: #6b7280;
+            --bg: #f9fafb;
+            --border: #e5e7eb;
+            --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            --gradient-success: linear-gradient(135deg, var(--success), var(--success-dark));
+            --gradient-info: linear-gradient(145deg, var(--info), var(--info-dark));
+            --shadow: 0 4px 12px rgba(100, 116, 139, 0.15);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.2);
+            --radius: 10px;
+            --radius-lg: 20px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Base Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: var(--primary-gradient);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 10px;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
+        body { font-family: system-ui, -apple-system, sans-serif; background: var(--gradient-primary); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 10px; }
+        
         /* Container */
-        .game-container {
-            width: 100%;
-            max-width: 400px;
-            background: var(--bg-white);
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-xl);
-            overflow: hidden;
-            position: relative;
-        }
-
+        .container { width: 100%; max-width: 400px; background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); overflow: hidden; position: relative; }
+        
         /* Header */
-        .header {
-            background: var(--primary-gradient);
-            color: white;
-            padding: 20px;
-            text-align: center;
-            position: relative;
-        }
-
-        .header h1 {
-            font-size: 1.3em;
-            line-height: 1.3;
-            margin: 0;
-        }
-
-        /* Buttons Base */
-        .btn {
-            border: none;
-            cursor: pointer;
-            transition: var(--transition);
-            font-weight: bold;
-        }
-
-        .btn-help {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid white;
-            color: white;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-        }
-
-        .btn-help:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.1);
-        }
-
-        .btn-continue {
-            width: 100%;
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: var(--radius-md);
-            background: linear-gradient(135deg, var(--success-color), var(--success-dark));
-            color: white;
-            font-size: 16px;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-        }
-
-        .btn-continue:hover {
-            background: linear-gradient(135deg, var(--success-dark), #047857);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
-        }
-
-        .btn-category {
-            width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            border: 3px solid transparent;
-            border-radius: var(--radius-md);
-            background: var(--primary-gradient);
-            color: white;
-            font-size: 16px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-category:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-category.unexplored {
-            animation: pulse-glow 2s infinite;
-        }
-
-        .btn-category.selected {
-            border-color: var(--warning-color);
-            background: linear-gradient(145deg, var(--success-color), var(--success-dark));
-            box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
-            transform: translateY(-2px);
-        }
-
-        .btn-category.existing-solution {
-            background: linear-gradient(145deg, var(--info-color), var(--info-dark));
-            border-color: var(--info-color);
-        }
-
-        .btn-category.existing-solution::after,
-        .btn-category.completed::after {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            font-size: 16px;
-        }
-
-        .btn-category.existing-solution::after {
-            content: 'ℹ️';
-        }
-
-        .btn-category.completed {
-            background: linear-gradient(145deg, var(--success-color), var(--success-dark));
-            border-color: var(--success-color);
-            opacity: 0.9;
-        }
-
-        .btn-category.completed::after {
-            content: '✅';
-        }
-
-        /* Cards and Panels */
-        .card {
-            background: linear-gradient(145deg, #f8fafc, var(--bg-white));
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-lg);
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow-sm);
-            transition: var(--transition);
-        }
-
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .panel-instruction {
-            background: linear-gradient(145deg, #f0f9ff, #dbeafe);
-            border: 2px solid var(--info-color);
-            padding: 15px;
-            border-radius: var(--radius-md);
-            margin: 15px 20px;
-        }
-
-        .panel-instruction h3 {
-            color: var(--info-dark);
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
-
-        .panel-instruction ol {
-            text-align: left;
-            color: #475569;
-            line-height: 1.8;
-            padding-left: 20px;
-            font-size: 13px;
-        }
-
+        .header { background: var(--gradient-primary); color: white; padding: 20px; text-align: center; position: relative; }
+        .header h1 { font-size: 1.3em; line-height: 1.3; }
+        
+        /* Buttons */
+        .btn { border: none; cursor: pointer; transition: var(--transition); font-weight: bold; border-radius: var(--radius); }
+        .btn-help { position: absolute; top: 20px; right: 20px; width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,0.2); border: 2px solid white; color: white; font-size: 18px; display: flex; align-items: center; justify-content: center; }
+        .btn-help:hover { background: rgba(255,255,255,0.3); transform: scale(1.1); }
+        .btn-primary { width: 100%; padding: 15px; margin-top: 20px; background: var(--gradient-success); color: white; font-size: 16px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4); }
+        .btn-category { width: 100%; padding: 15px; margin: 10px 0; border: 3px solid transparent; background: var(--gradient-primary); color: white; font-size: 16px; position: relative; }
+        .btn-category:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); }
+        .btn-category.selected { border-color: var(--warning); background: var(--gradient-success); }
+        .btn-category.unexplored { animation: pulse-glow 2s infinite; }
+        .btn-category.existing-solution { background: var(--gradient-info); }
+        .btn-category.completed { background: var(--gradient-success); opacity: 0.9; }
+        .btn-category::after { position: absolute; top: 8px; right: 8px; font-size: 16px; }
+        .btn-category.existing-solution::after { content: 'ℹ️'; }
+        .btn-category.completed::after { content: '✅'; }
+        
         /* Journey Tracker */
-        .journey-tracker {
-            background: var(--bg-light);
-            padding: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            border-bottom: 1px solid var(--border-light);
-        }
-
-        .journey-tracker span {
-            color: #9ca3af;
-        }
-
-        .journey-tracker span.active {
-            color: var(--primary-color);
-            font-weight: bold;
-        }
-
-        .journey-tracker span.completed {
-            color: var(--success-color);
-        }
-
+        .tracker { background: var(--bg); padding: 10px; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 12px; border-bottom: 1px solid var(--border); }
+        .tracker span { color: #9ca3af; transition: var(--transition); }
+        .tracker .active { color: var(--primary); font-weight: bold; }
+        .tracker .completed { color: var(--success); }
+        
         /* Score Bar */
-        .score-bar {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 30px;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: var(--radius-md);
-            margin-top: 10px;
-        }
-
-        .score-item {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-            cursor: help;
-            position: relative;
-        }
-
-        .score-item:hover .tooltip {
-            display: block;
-        }
-
-        .tooltip {
-            display: none;
-            position: absolute;
-            bottom: -35px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 11px;
-            white-space: nowrap;
-            z-index: 10;
-        }
-
-        /* Progress */
-        .progress-container {
-            text-align: center;
-            margin: 20px 0;
-            padding: 0 20px;
-        }
-
-        .progress-bar {
-            width: 100%;
-            background: var(--border-light);
-            height: 8px;
-            border-radius: 4px;
-            margin-top: 10px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            background: var(--primary-gradient);
-            height: 100%;
-            border-radius: 4px;
-            transition: width 0.3s ease;
-        }
-
+        .score-bar { display: flex; justify-content: center; gap: 30px; padding: 10px; background: rgba(255,255,255,0.1); border-radius: var(--radius); margin-top: 10px; }
+        .score-item { display: flex; align-items: center; gap: 5px; position: relative; }
+        .tooltip { display: none; position: absolute; bottom: -35px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 5px 10px; border-radius: 5px; font-size: 11px; white-space: nowrap; z-index: 10; }
+        .score-item:hover .tooltip { display: block; }
+        
+        /* Cards */
+        .card { background: linear-gradient(145deg, #f8fafc, white); border: 1px solid var(--border); border-radius: 15px; padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow); transition: var(--transition); }
+        .card:hover { transform: translateY(-2px); }
+        
         /* Screens */
-        .game-screen {
-            padding: 20px;
-            min-height: 500px;
-            padding-bottom: 20px;
-            display: none;
-        }
-
-        .game-screen.active {
-            display: block;
-            animation: fadeIn 0.5s;
-        }
-
+        .screen { padding: 20px; min-height: 500px; display: none; }
+        .screen.active { display: block; animation: fadeIn 0.5s; }
+        
         /* Process Flow */
-        .process-flow {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin: 20px 0;
-            padding: 15px;
-            background: #f8fafc;
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border-light);
-        }
-
-        .process-step {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--border-light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: var(--text-secondary);
-            transition: var(--transition);
-        }
-
-        .process-step.completed {
-            background: linear-gradient(135deg, var(--success-color), var(--success-dark));
-            color: white;
-            animation: pulse 0.5s;
-        }
-
-        .process-step.current {
-            background: var(--primary-gradient);
-            color: white;
-            animation: pulse 1s infinite;
-        }
-
-        /* Feedback Messages */
-        .feedback {
-            padding: 20px;
-            background: linear-gradient(145deg, #f3f4f6, var(--bg-white));
-            border-radius: var(--radius-lg);
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .feedback.success {
-            border: 2px solid var(--success-color);
-        }
-
-        .feedback.error {
-            border: 2px solid #ef4444;
-        }
-
-        /* Solution States */
-        .solution-exists {
-            background: #dbeafe;
-            border: 2px solid var(--info-color);
-            padding: 15px;
-            border-radius: var(--radius-md);
-            margin: 15px 0;
-        }
-
-        .no-solution {
-            background: var(--warning-light);
-            border: 2px solid var(--warning-color);
-            padding: 15px;
-            border-radius: var(--radius-md);
-            margin: 15px 0;
-        }
-
-        /* Hint Boxes */
-        .hint-box {
-            background: var(--warning-light);
-            border: 1px solid var(--warning-color);
-            padding: 10px;
-            border-radius: var(--radius-sm);
-            margin: 10px 0;
-            font-size: 14px;
-        }
-
-        .hint-banner {
-            background: linear-gradient(135deg, var(--warning-light), #fde68a);
-            border: 2px solid var(--warning-color);
-            padding: 12px;
-            border-radius: var(--radius-md);
-            margin: 15px 0;
-            text-align: center;
-            font-size: 14px;
-            color: #78350f;
-            animation: slideInDown 0.5s ease;
-        }
-
+        .process-flow { display: flex; justify-content: space-between; margin: 20px 0; padding: 15px; background: var(--bg); border-radius: var(--radius); }
+        .step { width: 40px; height: 40px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--text-muted); transition: var(--transition); }
+        .step.completed { background: var(--gradient-success); color: white; }
+        .step.current { background: var(--gradient-primary); color: white; animation: pulse 1s infinite; }
+        
+        /* Feedback */
+        .feedback { padding: 20px; background: linear-gradient(145deg, #f3f4f6, white); border-radius: 15px; margin: 20px 0; text-align: center; }
+        .feedback.success { border: 2px solid var(--success); }
+        .solution-exists { background: #dbeafe; border: 2px solid var(--info); padding: 15px; border-radius: var(--radius); margin: 15px 0; }
+        .no-solution { background: var(--warning-light); border: 2px solid var(--warning); padding: 15px; border-radius: var(--radius); margin: 15px 0; }
+        
         /* Team Cards */
-        .team-card {
-            background: linear-gradient(145deg, #f8fafc, var(--bg-white));
-            border: 2px solid var(--border-light);
-            border-radius: var(--radius-md);
-            padding: 15px;
-            margin: 10px 0;
-            transition: var(--transition);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .team-card:hover {
-            border-color: #cbd5e1;
-            box-shadow: var(--shadow-md);
-        }
-
-        .team-card.selected {
-            border-color: var(--primary-color);
-            background: linear-gradient(145deg, #f0f4ff, var(--bg-white));
-            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.2);
-        }
-
-        /* Common Text Styles */
-        .story-text {
-            line-height: 1.6;
-            color: var(--text-primary);
-            margin: 15px 0;
-        }
-
-        .dialog-box {
-            background: var(--bg-light);
-            border-left: 4px solid var(--primary-color);
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 5px;
-            font-style: italic;
-        }
-
-        /* Requirement Items */
-        .requirement-item {
-            padding: 10px;
-            margin: 10px 0;
-            background: #f3f4f6;
-            border-radius: var(--radius-sm);
-            transition: var(--transition);
-        }
-
+        .team-card { background: linear-gradient(145deg, #f8fafc, white); border: 2px solid var(--border); border-radius: var(--radius); padding: 15px; margin: 10px 0; transition: var(--transition); cursor: pointer; }
+        .team-card:hover { border-color: #cbd5e1; box-shadow: var(--shadow); }
+        .team-card.selected { border-color: var(--primary); background: linear-gradient(145deg, #f0f4ff, white); }
+        
+        /* Common */
+        .story-text { line-height: 1.6; color: var(--text); margin: 15px 0; }
+        .hint-box { background: var(--warning-light); border: 1px solid var(--warning); padding: 10px; border-radius: 8px; margin: 10px 0; font-size: 14px; }
+        .hint-banner { background: linear-gradient(135deg, var(--warning-light), #fde68a); border: 2px solid var(--warning); padding: 12px; border-radius: var(--radius); margin: 15px 0; text-align: center; font-size: 14px; color: #78350f; }
+        .dialog-box { background: var(--bg); border-left: 4px solid var(--primary); padding: 15px; margin: 20px 0; border-radius: 5px; font-style: italic; }
+        .requirement-item { padding: 10px; margin: 10px 0; background: #f3f4f6; border-radius: 8px; transition: var(--transition); }
+        .panel-instruction { background: linear-gradient(145deg, #f0f9ff, #dbeafe); border: 2px solid var(--info); padding: 15px; border-radius: var(--radius); margin: 15px 20px; }
+        .panel-instruction h3 { color: var(--info-dark); margin-bottom: 10px; font-size: 14px; }
+        .panel-instruction ol { text-align: left; color: #475569; line-height: 1.8; padding-left: 20px; font-size: 13px; }
+        
+        /* Image */
+        .cit-dev-image-container { margin: 20px auto; max-width: 350px; text-align: center; padding: 15px; background: linear-gradient(145deg, #f8fafc, white); border-radius: var(--radius-lg); box-shadow: var(--shadow); border: 1px solid var(--border); }
+        .cit-dev-image { width: 100%; max-width: 280px; height: auto; border-radius: 15px; box-shadow: var(--shadow); }
+        
+        /* Modals */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; }
+        .modal.show { display: flex; }
+        .modal-content { background: white; padding: 30px; border-radius: var(--radius-lg); max-width: 350px; max-height: 80vh; overflow-y: auto; position: relative; }
+        .modal-close { position: absolute; top: 15px; right: 15px; font-size: 24px; cursor: pointer; color: var(--text-muted); }
+        
         /* Achievement */
-        .achievement-popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 30px;
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-xl);
-            text-align: center;
-            z-index: 1000;
-            display: none;
-        }
-
-        .achievement-popup.show {
-            display: block;
-            animation: zoomIn 0.5s;
-        }
-
-        .achievement-icon {
-            font-size: 60px;
-            margin-bottom: 15px;
-        }
-
-        /* Image Container */
-        .cit-dev-image-container {
-            margin: 20px auto;
-            max-width: 350px;
-            text-align: center;
-            padding: 15px;
-            background: linear-gradient(145deg, #f8fafc, var(--bg-white));
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--border-light);
-        }
-
-        .cit-dev-image {
-            width: 100%;
-            max-width: 280px;
-            height: auto;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-sm);
-            transition: var(--transition);
-        }
-
-        .cit-dev-image:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        /* Modal */
-        .help-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .help-modal.show {
-            display: flex;
-        }
-
-        .help-content {
-            background: white;
-            padding: 30px;
-            border-radius: var(--radius-xl);
-            max-width: 350px;
-            max-height: 80vh;
-            overflow-y: auto;
-            position: relative;
-        }
-
-        .help-close {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--text-secondary);
-        }
-
-        .help-close:hover {
-            color: var(--text-primary);
-        }
-
-        /* Confetti */
-        .confetti {
-            position: fixed;
-            width: 8px;
-            height: 8px;
-            z-index: 10000;
-            pointer-events: none;
-            border-radius: 2px;
-        }
-
-        .confetti-1 { background: #ff6b6b; }
-        .confetti-2 { background: #4ecdc4; }
-        .confetti-3 { background: #45b7d1; }
-        .confetti-4 { background: #96ceb4; }
-        .confetti-5 { background: #feca57; }
-        .confetti-6 { background: #ff9ff3; }
-
-        .confetti-animate {
-            animation: confetti-fall linear forwards;
-        }
-
-        /* Score Popup */
-        .score-popup {
-            position: fixed;
-            top: 80px;
-            right: 20px;
-            background: var(--success-color);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: bold;
-            z-index: 1001;
-            animation: slideInFade 2s ease-out forwards;
-            pointer-events: none;
-        }
-
+        .achievement { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); text-align: center; z-index: 1000; display: none; }
+        .achievement.show { display: block; animation: zoomIn 0.5s; }
+        .achievement-icon { font-size: 60px; margin-bottom: 15px; }
+        
         /* Scroll Indicators */
-        .scroll-progress {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: rgba(102, 126, 234, 0.2);
-            z-index: 2001;
-            transform-origin: left;
-            transform: scaleX(0);
-            transition: transform 0.2s ease;
-        }
-
-        .scroll-progress-fill {
-            height: 100%;
-            background: var(--primary-gradient);
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
-        }
-
-        .scroll-indicator {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 40px;
-            height: 40px;
-            background: var(--primary-gradient);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 999;
-            cursor: pointer;
-            box-shadow: var(--shadow-md);
-            animation: bounce-indicator 2s infinite;
-            transition: opacity 0.3s ease;
-        }
-
-        .scroll-indicator.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .scroll-indicator::before {
-            content: '↓';
-            color: white;
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        .fade-in-text {
-            position: fixed;
-            bottom: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: var(--primary-color);
-            font-size: 12px;
-            font-weight: bold;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            z-index: 998;
-            transition: opacity 0.3s ease;
-            text-align: center;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 5px 15px;
-            border-radius: 20px;
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
-        }
-
-        .fade-in-text.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .touch-active {
-            transform: scale(0.98) !important;
-            opacity: 0.9 !important;
-        }
-
+        .scroll-progress { position: fixed; top: 0; left: 0; width: 100%; height: 4px; background: rgba(102,126,234,0.2); z-index: 2001; transform-origin: left; transform: scaleX(0); transition: transform 0.2s; }
+        .scroll-indicator { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 40px; height: 40px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 999; cursor: pointer; box-shadow: var(--shadow); animation: bounce 2s infinite; transition: opacity 0.3s; }
+        .scroll-indicator::before { content: '↓'; color: white; font-size: 20px; font-weight: bold; }
+        .scroll-text { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); color: var(--primary); font-size: 12px; font-weight: bold; z-index: 998; background: rgba(255,255,255,0.9); padding: 5px 15px; border-radius: 20px; box-shadow: 0 2px 8px rgba(102,126,234,0.2); }
+        .hidden { opacity: 0; pointer-events: none; }
+        
         /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
-            50% { box-shadow: 0 0 10px 2px rgba(102, 126, 234, 0.4); }
-        }
-
-        @keyframes slideInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes zoomIn {
-            from { transform: translate(-50%, -50%) scale(0); }
-            to { transform: translate(-50%, -50%) scale(1); }
-        }
-
-        @keyframes confetti-fall {
-            0% {
-                transform: translateY(-100px) rotateZ(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(calc(100vh + 100px)) rotateZ(360deg);
-                opacity: 0;
-            }
-        }
-
-        @keyframes slideInFade {
-            0% { opacity: 0; transform: translateX(100px); }
-            20% { opacity: 1; transform: translateX(0); }
-            80% { opacity: 1; transform: translateX(0); }
-            100% { opacity: 0; transform: translateY(-20px); }
-        }
-
-        @keyframes bounce-indicator {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateX(-50%) translateY(0);
-            }
-            40% {
-                transform: translateX(-50%) translateY(-10px);
-            }
-            60% {
-                transform: translateX(-50%) translateY(-5px);
-            }
-        }
-
-        /* Responsive Design */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 0 0 rgba(102,126,234,0); } 50% { box-shadow: 0 0 10px 2px rgba(102,126,234,0.4); } }
+        @keyframes zoomIn { from { transform: translate(-50%, -50%) scale(0); } to { transform: translate(-50%, -50%) scale(1); } }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); } 40% { transform: translateX(-50%) translateY(-10px); } 60% { transform: translateX(-50%) translateY(-5px); } }
+        
+        /* Confetti */
+        .confetti { position: fixed; width: 8px; height: 8px; z-index: 10000; pointer-events: none; animation: fall linear forwards; }
+        @keyframes fall { to { transform: translateY(calc(100vh + 100px)) rotateZ(360deg); opacity: 0; } }
+        
+        /* Score Popup */
+        .score-popup { position: fixed; top: 80px; right: 20px; background: var(--success); color: white; padding: 8px 15px; border-radius: 20px; font-size: 14px; font-weight: bold; z-index: 1001; animation: slideInFade 2s forwards; pointer-events: none; }
+        @keyframes slideInFade { 0% { opacity: 0; transform: translateX(100px); } 20% { opacity: 1; transform: translateX(0); } 80% { opacity: 1; } 100% { opacity: 0; transform: translateY(-20px); } }
+        
+        /* Mobile */
         @media (max-width: 768px) {
-            body {
-                padding: 0;
-            }
-
-            .game-container {
-                border-radius: 0;
-                max-width: 100%;
-                min-height: 100vh;
-            }
-
-            .header {
-                padding: 15px;
-            }
-
-            .header h1 {
-                font-size: 1.2em;
-                padding: 0 45px 0 0;
-            }
-
-            .btn-help {
-                width: 35px;
-                height: 35px;
-                top: 15px;
-                right: 10px;
-            }
-
-            .journey-tracker {
-                padding: 8px;
-                font-size: 11px;
-            }
-
-            .score-bar {
-                padding: 8px;
-                gap: 15px;
-            }
-
-            .score-item {
-                font-size: 14px;
-            }
-
-            .game-screen {
-                padding: 15px;
-                min-height: calc(100vh - 200px);
-            }
-
-            .card {
-                padding: 15px;
-                margin-bottom: 15px;
-            }
-
-            .btn-category {
-                padding: 18px 15px;
-                font-size: 15px;
-                min-height: 56px;
-                touch-action: manipulation;
-            }
-
-            .btn-continue {
-                padding: 18px;
-                font-size: 16px;
-                min-height: 56px;
-                touch-action: manipulation;
-            }
-
-            .process-flow {
-                padding: 10px;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-
-            .process-step {
-                width: 35px;
-                height: 35px;
-                font-size: 14px;
-                flex-shrink: 0;
-            }
-
-            .team-card {
-                padding: 18px;
-                touch-action: manipulation;
-            }
-
-            .hint-box {
-                padding: 12px;
-                font-size: 13px;
-            }
-
-            .dialog-box {
-                padding: 12px;
-                font-size: 14px;
-            }
-
-            .story-text {
-                font-size: 14px;
-                line-height: 1.5;
-            }
-
-            .panel-instruction {
-                margin: 15px 0;
-                padding: 12px;
-            }
-
-            .panel-instruction h3 {
-                font-size: 13px;
-            }
-
-            .panel-instruction ol {
-                font-size: 12px;
-                padding-left: 18px;
-            }
-
-            .cit-dev-image-container {
-                margin: 15px auto;
-                max-width: 90%;
-                padding: 10px;
-            }
-
-            .achievement-popup {
-                width: 90%;
-                max-width: 320px;
-                padding: 20px;
-            }
-
-            .help-content {
-                width: 90%;
-                max-width: 100%;
-                margin: 20px;
-                padding: 20px;
-            }
-
-            .scroll-indicator {
-                bottom: 20px;
-                width: 35px;
-                height: 35px;
-            }
-
-            .scroll-indicator::before {
-                font-size: 18px;
-            }
-
-            .fade-in-text {
-                bottom: 65px;
-                font-size: 11px;
-            }
-
-            .card p {
-                font-size: 11px !important;
-                margin: 5px 5px 12px 5px !important;
-            }
-
-            .tooltip {
-                display: none !important;
-            }
-
-            button, .team-card, .btn-category {
-                -webkit-tap-highlight-color: rgba(102, 126, 234, 0.2);
-            }
-
-            button {
-                -webkit-user-select: none;
-                -webkit-touch-callout: none;
-            }
-
-            .help-modal {
-                padding: 10px;
-            }
-
-            @media (max-width: 480px) {
-                .score-bar {
-                    gap: 10px;
-                }
-                
-                .score-item {
-                    font-size: 13px;
-                }
-            }
-
-            @media (max-width: 380px) {
-                #frontDoorScreen h2 {
-                    font-size: 16px;
-                    line-height: 1.2;
-                }
-                
-                .score-bar {
-                    font-size: 12px;
-                }
-                
-                .journey-tracker {
-                    font-size: 10px;
-                }
-            }
-
-            @media (max-width: 360px) {
-                .header h1 {
-                    font-size: 1.1em;
-                    padding: 0 40px 0 0;
-                }
-                
-                .btn-help {
-                    width: 32px;
-                    height: 32px;
-                    font-size: 16px;
-                    right: 8px;
-                }
-                
-                .btn-category {
-                    font-size: 14px;
-                    padding: 16px 12px;
-                }
-                
-                .story-text {
-                    font-size: 13px;
-                }
-                
-                .process-step {
-                    width: 32px;
-                    height: 32px;
-                    font-size: 12px;
-                }
-            }
-
-            @media (max-width: 320px) {
-                #frontDoorScreen h2 {
-                    font-size: 14px;
-                }
-                
-                .header h1 {
-                    font-size: 1em;
-                }
-                
-                .btn-category {
-                    font-size: 13px;
-                    padding: 15px 10px;
-                }
-            }
-        }
-
-        /* Landscape */
-        @media (max-height: 600px) and (orientation: landscape) {
-            .header {
-                padding: 10px;
-            }
-            
-            .header h1 {
-                font-size: 1.1em;
-            }
-            
-            .score-bar {
-                margin-top: 5px;
-                padding: 5px;
-            }
-            
-            .game-screen {
-                padding: 10px;
-                min-height: calc(100vh - 150px);
-            }
-            
-            .process-flow {
-                margin: 10px 0;
-                padding: 8px;
-            }
-            
-            .cit-dev-image-container {
-                max-width: 250px;
-                margin: 10px auto;
-            }
+            body { padding: 0; }
+            .container { border-radius: 0; max-width: 100%; min-height: 100vh; }
+            .header { padding: 15px; }
+            .header h1 { font-size: 1.2em; padding: 0 45px 0 0; }
+            .btn-help { width: 35px; height: 35px; top: 15px; right: 10px; }
+            .tracker { padding: 8px; font-size: 11px; }
+            .score-bar { padding: 8px; gap: 15px; }
+            .screen { padding: 15px; min-height: calc(100vh - 200px); }
+            .card { padding: 15px; }
+            .btn-category, .btn-primary { min-height: 56px; touch-action: manipulation; }
+            .process-flow { padding: 10px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            .step { width: 35px; height: 35px; font-size: 14px; flex-shrink: 0; }
+            .scroll-indicator { bottom: 20px; width: 35px; height: 35px; }
+            .scroll-text { bottom: 65px; font-size: 11px; }
+            .tooltip { display: none !important; }
         }
     </style>
 </head>
 <body>
-    <div class="game-container">
+    <div class="container">
         <div class="header">
-            <button class="btn btn-help" onclick="game.showHelp()">?</button>
+            <button class="btn btn-help" onclick="G.showHelp()">?</button>
             <h1>🚀 Visualize your Citizen Development journey!</h1>
             <div class="score-bar">
-                <div class="score-item">
-                    <span>🎓</span>
-                    <span id="level">1</span>
-                    <div class="tooltip" id="levelTooltip">Newcomer</div>
-                </div>
-                <div class="score-item">
-                    <span>⭐</span>
-                    <span id="score">0</span>
-                    <div class="tooltip">Points earned</div>
-                </div>
-                <div class="score-item">
-                    <span>💡</span>
-                    <span id="ideas">0</span>
-                    <div class="tooltip">Ideas processed</div>
-                </div>
-                <div class="score-item">
-                    <span>🏆</span>
-                    <span id="achievements">0</span>
-                    <div class="tooltip">Journeys completed</div>
-                </div>
+                <div class="score-item"><span>🎓</span><span id="level">1</span><div class="tooltip">Newcomer</div></div>
+                <div class="score-item"><span>⭐</span><span id="score">0</span><div class="tooltip">Points earned</div></div>
+                <div class="score-item"><span>💡</span><span id="ideas">0</span><div class="tooltip">Ideas processed</div></div>
+                <div class="score-item"><span>🏆</span><span id="achievements">0</span><div class="tooltip">Journeys completed</div></div>
             </div>
         </div>
-
-        <!-- Journey Tracker -->
-        <div class="journey-tracker" id="journeyTracker">
-            <span id="trackerHome">Home</span>
-            <span>→</span>
-            <span id="trackerDiscovery">Discovery</span>
-            <span>→</span>
-            <span id="trackerJourney">Journey</span>
+        
+        <div class="tracker">
+            <span id="t-home">Home</span><span>→</span>
+            <span id="t-discovery">Discovery</span><span>→</span>
+            <span id="t-journey">Journey</span>
         </div>
-
-        <!-- ICP Front Door Screen -->
-        <div id="frontDoorScreen" class="game-screen active">
+        
+        <!-- Front Door Screen -->
+        <div id="s-front" class="screen active">
             <h2 style="font-size: 1.2em; text-align: center;">See the path your journey can take</h2>
-            
             <div class="cit-dev-image-container">
                 <img src="https://github.com/mky250/citizen-dev-app/blob/main/cit%20dev.png?raw=true" 
-                     alt="Citizen Development Framework" 
-                     class="cit-dev-image"
-                     loading="eager"
-                     onerror="this.style.display='none';"
-                     onload="console.log('Image loaded')"/>
+                     alt="Citizen Development Framework" class="cit-dev-image" loading="eager" 
+                     onerror="this.style.display='none'"/>
             </div>
-            
             <div class="story-text">
                 <p><strong>Citizen Development</strong> empowers all CSS team members regardless of role or technical background to contribute ideas, experiment with new technologies, and rapidly build the <strong>next generation</strong> of AI-driven capabilities.</p>
                 <p style="margin-top: 15px;">We streamline innovation from idea to production, connecting you with the right teams and resources.</p>
             </div>
-            
-            <div class="hint-box">
-                💡 <strong>ICP Value:</strong> We prevent duplicate efforts, accelerate development, and scale solutions across the organization!
-            </div>
-            
+            <div class="hint-box">💡 <strong>ICP Value:</strong> We prevent duplicate efforts, accelerate development, and scale solutions across the organization!</div>
             <div class="panel-instruction">
                 <h3>How This Works:</h3>
                 <ol>
@@ -1062,1166 +197,851 @@
                     <li>See if solutions already exist or need development</li>
                     <li>Follow the journey from idea to production</li>
                     <li>Learn the actual process along the way</li>
-                    <li>Ready with a real idea? Visit <a href="https://aka.ms/AIInnovationFrontDoor" target="_blank" style="color: #0284c7; font-weight: bold;">aka.ms/AIInnovationFrontDoor</a> to submit it!</li>
+                    <li>Ready with a real idea? Visit <a href="https://aka.ms/AIInnovationFrontDoor" target="_blank" style="color: #0284c7; font-weight: bold;">AI Innovation Front Door</a> or email <a href="mailto:ICP_Inquiries@microsoft.com" style="color: #0284c7; font-weight: bold;">ICP_Inquiries@microsoft.com</a></li>
                 </ol>
             </div>
-            
-            <button class="btn btn-continue" onclick="game.startJourney()">Start Your Guided Journey</button>
+            <button class="btn btn-primary" onclick="G.start()">Start Your Guided Journey</button>
         </div>
-
-        <!-- Self Discovery Screen -->
-        <div id="selfDiscoveryScreen" class="game-screen">
+        
+        <!-- Discovery Screen -->
+        <div id="s-discovery" class="screen">
             <h2>🔍 Step 1: Self-Discovery</h2>
-            
-            <div class="progress-container">
-                <p style="color: #6b7280;">Progress: <strong><span id="explorationCount">0</span>/4 innovations explored</strong></p>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+            <div style="text-align: center; margin: 20px 0;">
+                <p style="color: #6b7280;">Progress: <strong><span id="exp-count">0</span>/4 innovations explored</strong></p>
+                <div style="width: 100%; background: #e5e7eb; height: 8px; border-radius: 4px; margin-top: 10px; overflow: hidden;">
+                    <div id="progress" style="background: linear-gradient(90deg, #667eea, #764ba2); height: 100%; width: 0%; transition: width 0.3s;"></div>
                 </div>
             </div>
-            
-            <div class="process-flow" id="selfDiscoveryFlow"></div>
-            
-            <div class="story-text">
-                <p>First, let's check if your innovation idea already exists.</p>
-            </div>
-            
-            <div id="firstTimeHint" class="hint-banner" style="display: none;">
-                👆 Click any innovation below to start exploring! Start with the highlighted one.
-            </div>
-            
+            <div class="process-flow" id="flow-discovery"></div>
+            <div class="story-text"><p>First, let's check if your innovation idea already exists.</p></div>
+            <div id="hint" class="hint-banner" style="display: none;">👆 Click any innovation below to start exploring! Start with the highlighted one.</div>
             <div class="card">
                 <h3 style="font-size: 0.9em; color: #667eea;">Select an Innovation Journey Example to Explore:</h3>
-                <div style="margin-bottom: 20px;">
-                    <button class="btn btn-category" id="chatbot-btn" onclick="game.checkIdea('chatbot')">
-                        🤖 AI Customer Service Chatbot
-                    </button>
-                    <p style="font-size: 12px; color: #6b7280; margin: 5px 10px 15px 10px; line-height: 1.4;">
-                        An intelligent virtual assistant that handles customer inquiries 24/7, reducing support ticket volume by automating responses to common questions.
-                    </p>
-                </div>
-                <div style="margin-bottom: 20px;">
-                    <button class="btn btn-category" id="analytics-btn" onclick="game.checkIdea('analytics')">
-                        🚨 Incident Management Automation
-                    </button>
-                    <p style="font-size: 12px; color: #6b7280; margin: 5px 10px 15px 10px; line-height: 1.4;">
-                        Automated system that detects, categorizes, and routes IT incidents to the right teams, reducing response time and improving resolution rates.
-                    </p>
-                </div>
-                <div style="margin-bottom: 20px;">
-                    <button class="btn btn-category" id="mobile-btn" onclick="game.checkIdea('mobile')">
-                        📄 Case Summarization Analysis
-                    </button>
-                    <p style="font-size: 12px; color: #6b7280; margin: 5px 10px 15px 10px; line-height: 1.4;">
-                        AI-powered tool that automatically analyzes support cases and generates concise summaries, helping agents quickly understand context and history.
-                    </p>
-                </div>
-                <div style="margin-bottom: 20px;">
-                    <button class="btn btn-category" id="assistant-btn" onclick="game.checkIdea('assistant')">
-                        🧠 AI Meeting Intelligence Assistant
-                    </button>
-                    <p style="font-size: 12px; color: #6b7280; margin: 5px 10px 15px 10px; line-height: 1.4;">
-                        Smart assistant that joins meetings, takes notes, extracts action items, and automatically follows up with participants on assigned tasks.
-                    </p>
-                </div>
+                <div id="innovations"></div>
             </div>
-
-            <div id="discoveryResult" style="display: none;"></div>
-            
-            <div id="allCompletedMessage" style="display: none;" class="feedback success">
+            <div id="result" style="display: none;"></div>
+            <div id="completed-msg" style="display: none;" class="feedback success">
                 <h3>🎉 Journey Master!</h3>
-                <p>Congratulations! You've successfully completed all available innovation journeys. You've experienced the full citizen development process from idea validation through enterprise scaling.</p>
-                <p style="margin-top: 15px;"><strong>Go here to get started:</strong> <a href="https://aka.ms/AIInnovationFrontDoor" target="_blank" style="color: #667eea; text-decoration: underline;">AI Innovation Front Door</a></p>
+                <p>Congratulations! You've successfully completed all available innovation journeys.</p>
+                <p style="margin-top: 15px;"><strong>Ready to get started?</strong></p>
+                <p style="margin-top: 8px;">📌 Visit the <a href="https://aka.ms/AIInnovationFrontDoor" target="_blank" style="color: #667eea;">AI Innovation Front Door</a></p>
+                <p style="margin-top: 5px; color: #6b7280; font-style: italic;">or</p>
+                <p style="margin-top: 5px;">📧 Contact our team: <a href="mailto:ICP_Inquiries@microsoft.com" style="color: #667eea;">ICP_Inquiries@microsoft.com</a></p>
             </div>
         </div>
-
-        <!-- LOB Contact Screen -->
-        <div id="lobContactScreen" class="game-screen">
-            <h2>📞 Step 2: Contact Your ICP SME</h2>
-            
-            <div class="process-flow" id="lobContactFlow"></div>
-            
-            <div class="story-text">
-                <p>Great! Your idea is new. Now connect with your ICP Subject Matter Expert (SME) to submit it to ICP.</p>
-            </div>
-            
-            <div class="card">
-                <h3>Your Innovation:</h3>
-                <p id="selectedIdea" class="story-text"></p>
-            </div>
-
-            <div class="dialog-box">
-                <strong>ICP SME Innovation Champion:</strong><br>
-                "This looks promising! Let me help you submit this to ICP for triage."
-            </div>
-
-            <button class="btn btn-continue" onclick="game.submitToICP()">Submit to ICP Pipeline</button>
-        </div>
-
-        <!-- Cit Dev Consult Screen -->
-        <div id="triageScreen" class="game-screen">
-            <h2>⚡ Step 3: Cit Dev Consult</h2>
-            
-            <div class="process-flow" id="triageFlow"></div>
-            
-            <div class="story-text">
-                <p>Citizen Developer consultants review your innovation and assign it to the best team!</p>
-            </div>
-
-            <h3>Available Teams:</h3>
-            <div class="team-card" id="team1">
-                <strong>🦓 ZebraAI</strong><br>
-                <small>Prompt Engineering - Optimizing AI interactions and responses</small>
-            </div>
-            <div class="team-card" id="team2">
-                <strong>🔗 Nexus</strong><br>
-                <small>Workflow Automation - Streamlining processes and integrations</small>
-            </div>
-            <div class="team-card" id="team3">
-                <strong>🤖 Agentic Practice</strong><br>
-                <small>Agent Building - Creating intelligent autonomous systems</small>
-            </div>
-            <div class="team-card" id="team4">
-                <strong>🚀 AI Innovator Community</strong><br>
-                <small>Collaborative AI solutions and experiments</small>
-            </div>
-
-            <button class="btn btn-continue" onclick="game.assignTeam()">See Team Assignment</button>
-        </div>
-
-        <!-- Incubation Marketplace Screen -->
-        <div id="incubationScreen" class="game-screen">
-            <h2>🌱 Step 4: Incubation Marketplace</h2>
-            <div class="story-text">
-                <p><strong>Calling All Citizen Developers!</strong></p>
-                <p>Turn innovative idea into a real application. Our Incubation Marketplace is your launchpad. Get matched with a dedicated expert mentor, and gain instant access to powerful starter kits, pre-built templates, and essential SDKs. Follow the simple steps below to onboard and start building your solution today.</p>
-            </div>
-            
-            <div class="process-flow" id="incubationFlow"></div>
-
-            <div class="card">
-                <h3>Citizen Developer Tasks:</h3>
-                <div id="incubationTasks">
-                    <div class="requirement-item">
-                        <p id="req1" style="color: #6b7280;">⏳ Adopt an idea</p>
-                    </div>
-                    <div class="requirement-item">
-                        <p id="req2" style="color: #6b7280;">⏳ Project Accountability</p>
-                    </div>
-                    <div class="requirement-item">
-                        <p id="req3" style="color: #6b7280;">⏳ Onboarding</p>
-                    </div>
-                </div>
-            </div>
-
-            <div id="onboardingAssignment" style="display: none;" class="feedback success">
-                <h3>🎯 Ready for Development!</h3>
-                <p>You've completed all citizen developer onboarding requirements and are ready to start building!</p>
-            </div>
-
-            <div class="hint-box">
-                💡 <strong>Why Incubation?</strong> The AI Community ensures every citizen developer is properly trained and matched with the right project!
-            </div>
-
-            <button class="btn btn-continue" id="incubationBtn" onclick="game.progressIncubation()">Complete Next Task</button>
-        </div>
-
-        <!-- Development Screen -->
-        <div id="developmentScreen" class="game-screen">
-            <h2>💻 <span id="devStepNumber">Step 5</span>: Development</h2>
-            <div class="story-text">
-                <p id="teamAssignment"></p>
-            </div>
-            
-            <div class="process-flow" id="devProcessFlow"></div>
-
-            <div class="card">
-                <h3>Development Progress:</h3>
-                <div id="devProgress">
-                    <p>⏳ Sprint 1: Requirements gathering...</p>
-                </div>
-            </div>
-
-            <button class="btn btn-continue" onclick="game.progressDevelopment()">Continue Development</button>
-        </div>
-
-        <!-- LT Approval Screen -->
-        <div id="ltApprovalScreen" class="game-screen">
-            <h2>🎯 <span id="ltStepNumber">Step 6</span>: LT Approval</h2>
-            <div class="story-text">
-                <p>Development complete! The Leadership Team reviews your innovation for scaling.</p>
-            </div>
-            
-            <div class="process-flow" id="ltProcessFlow"></div>
-
-            <div class="feedback success" style="margin-top: 30px;">
-                <h3>✅ Leadership Approved!</h3>
-                <p class="story-text">
-                    Your innovation has been approved for enterprise-wide scaling. 
-                    The engineering team will now productize your solution for deployment across the organization.
-                </p>
-                <p style="font-size: 12px; color: #6b7280; margin-top: 15px; font-style: italic;">
-                    Note: If an innovation is not approved for immediate scaling, it gets added to the Solution Catalog 
-                    for future reference and potential reactivation.
-                </p>
-            </div>
-
-            <button class="btn btn-continue" onclick="game.proceedToEngineering()" style="margin-top: 20px;">Scale Out!</button>
-        </div>
-
-        <!-- Engineering Screen -->
-        <div id="engineeringScreen" class="game-screen">
-            <h2>🔧 <span id="engStepNumber">Step 7</span>: Engineering & Productization</h2>
-            <div class="story-text">
-                <p>LT Approved! Engineering team now productizes your solution for enterprise scale.</p>
-            </div>
-            
-            <div class="process-flow" id="engProcessFlow"></div>
-
-            <div class="card">
-                <h3>Engineering Tasks:</h3>
-                <div id="engTasks">
-                    <p>✅ Security review completed</p>
-                    <p>✅ Performance optimization done</p>
-                    <p>⏳ Scalability testing in progress...</p>
-                </div>
-            </div>
-
-            <button class="btn btn-continue" onclick="game.completeEngineering()">Complete Productization</button>
-        </div>
-
-        <!-- Success Screen -->
-        <div id="successScreen" class="game-screen">
-            <h2>🎉 Mission Complete!</h2>
-            
-            <div style="width: 80px; height: 80px; margin: 0 auto 15px; background: var(--primary-gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px;">🏆</div>
-            
-            <div class="feedback success">
-                <h3>What You Learned:</h3>
-                <ul style="text-align: left; color: #059669; line-height: 1.8; padding-left: 20px;">
-                    <li>How to validate if a solution already exists</li>
-                    <li>The ICP submission process through your ICP SME</li>
-                    <li>How Citizen Dev consultants match ideas to teams</li>
-                    <li>The development and scaling process</li>
-                    <li>How innovations become enterprise solutions</li>
-                </ul>
-            </div>
-
-            <div class="next-action" id="nextActionSection" style="background: linear-gradient(145deg, #f0f9ff, #dbeafe); border: 2px solid #0ea5e9; padding: 15px; border-radius: 10px; margin: 20px 0; text-align: center;">
-                <!-- Will be populated dynamically -->
-            </div>
-
-            <div class="hint-box">
-                🌟 <strong>ICP Impact:</strong> Your innovation is now helping thousands of employees and customers!
-            </div>
-
-            <button class="btn btn-continue" onclick="game.exploreMore()">Explore More Innovations</button>
-        </div>
+        
+        <!-- Dynamic Screens Container -->
+        <div id="dynamic-screens"></div>
     </div>
-
+    
     <!-- Scroll Indicators -->
-    <div id="scrollProgress" class="scroll-progress">
-        <div class="scroll-progress-fill"></div>
-    </div>
-    <div id="scrollIndicator" class="scroll-indicator hidden" onclick="game.smoothScrollDown()"></div>
-    <div id="scrollText" class="fade-in-text hidden">Scroll for more</div>
-
+    <div class="scroll-progress" id="scroll-bar"></div>
+    <div class="scroll-indicator hidden" id="scroll-btn" onclick="G.scrollDown()"></div>
+    <div class="scroll-text hidden" id="scroll-txt">Scroll for more</div>
+    
     <!-- Achievement Popup -->
-    <div id="achievementPopup" class="achievement-popup">
+    <div class="achievement" id="achievement">
         <div class="achievement-icon">🏆</div>
         <h2>Achievement Unlocked!</h2>
-        <p id="achievementName">Innovation Champion</p>
-        <button class="btn btn-continue" onclick="game.closeAchievement()" style="margin-top: 15px;">Awesome!</button>
+        <p id="achievement-text">Innovation Champion</p>
+        <button class="btn btn-primary" onclick="G.closeAchievement()" style="margin-top: 15px;">Awesome!</button>
     </div>
-
+    
     <!-- Help Modal -->
-    <div id="helpModal" class="help-modal">
-        <div class="help-content">
-            <span class="help-close" onclick="game.closeHelp()">&times;</span>
+    <div class="modal" id="help-modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="G.closeHelp()">&times;</span>
             <h2>📚 Help & Guide</h2>
             <div style="margin-top: 20px;">
                 <h3>What is this tool?</h3>
                 <p style="color: #6b7280; margin: 10px 0;">An interactive guide to understand the Citizen Development innovation process at CSS.</p>
-                
                 <h3 style="margin-top: 20px;">What is ICP?</h3>
-                <p style="color: #6b7280; margin: 10px 0;">Innovation Collaboration Platform - the system that manages innovation ideas from concept to production.</p>
-                
+                <p style="color: #6b7280; margin: 10px 0;">Innovation Collaboration Platform - manages innovation ideas from concept to production.</p>
                 <h3 style="margin-top: 20px;">How to use:</h3>
                 <ol style="color: #6b7280; line-height: 1.8; padding-left: 20px;">
-                    <li>Start by exploring any of the 4 innovation examples</li>
-                    <li>Some will show existing solutions, others need development</li>
+                    <li>Explore 4 innovation examples</li>
+                    <li>Some show existing solutions, others need development</li>
                     <li>Follow the complete journey for new innovations</li>
                     <li>Complete all 4 to master the process!</li>
                 </ol>
-                
                 <h3 style="margin-top: 20px;">Ready to submit a real idea?</h3>
                 <p style="color: #6b7280; margin: 10px 0;">Visit the <a href="https://aka.ms/AIInnovationFrontDoor" target="_blank" style="color: #667eea;">AI Innovation Front Door</a></p>
-                
-                <h3 style="margin-top: 20px;">Need help?</h3>
-                <p style="color: #6b7280; margin: 10px 0;">Contact the Citizen Development team</p>
+                <p style="color: #6b7280; font-style: italic; margin: 5px 0;">or</p>
+                <p style="color: #6b7280; margin: 5px 0;">Email: <a href="mailto:ICP_Inquiries@microsoft.com" style="color: #667eea;">ICP_Inquiries@microsoft.com</a></p>
             </div>
         </div>
     </div>
-
+    
     <script>
-        // Optimized Game Controller
-        class CitizenDevelopmentGame {
-            constructor() {
-                // Initialize state
-                this.state = {
-                    score: 0,
-                    ideas: 0,
-                    level: 1,
-                    currentIdea: null,
-                    currentTeam: null,
-                    devStage: 0,
-                    incubationStage: 0,
-                    currentScreen: 'frontDoorScreen',
-                    completedInnovations: [],
-                    checkedInnovations: [],
-                    journeyStarted: false,
-                    achievements: 0,
-                    earnedAchievements: [],
-                    firstTimeUser: true,
-                    scoredActions: {
-                        lob: [],
-                        icp: [],
-                        team: [],
-                        incubation: [],
-                        development: [],
-                        ltApproval: [],
-                        engineering: []
+    // Enterprise-optimized Game Engine
+    const G = (() => {
+        'use strict';
+        
+        // Constants & Configuration
+        const CONFIG = {
+            levels: ["", "Newcomer", "Explorer", "Practitioner", "Innovator", "Expert", "Master", "Champion", "Visionary", "Legend"],
+            thresholds: [0, 100, 250, 450, 700, 1000, 1400, 1900, 2500],
+            teams: {
+                team1: 'ZebraAI - Prompt Engineering',
+                team2: 'Nexus - Workflow Automation',
+                team3: 'Agentic Practice - Agent Building',
+                team4: 'AI Innovator Community'
+            },
+            innovations: {
+                chatbot: {
+                    name: "AI Customer Service Chatbot",
+                    desc: "An intelligent virtual assistant that handles customer inquiries 24/7",
+                    exists: true,
+                    solution: {
+                        name: "ServiceBot Pro",
+                        team: "AI Innovation Team",
+                        contact: "ai.innovations@company.com",
+                        status: "Currently in pilot with Customer Service department. 85% query resolution rate."
                     }
-                };
-
-                // Game configuration
-                this.config = {
-                    levelTitles: ["", "Newcomer", "Explorer", "Practitioner", "Innovator", "Expert", "Master", "Champion", "Visionary", "Legend"],
-                    levelThresholds: [0, 100, 250, 450, 700, 1000, 1400, 1900, 2500],
-                    teamNames: {
-                        'team1': 'ZebraAI - Prompt Engineering',
-                        'team2': 'Nexus - Workflow Automation',
-                        'team3': 'Agentic Practice - Agent Building',
-                        'team4': 'AI Innovator Community'
-                    },
-                    confettiColors: ['confetti-1', 'confetti-2', 'confetti-3', 'confetti-4', 'confetti-5', 'confetti-6']
-                };
-
-                // Innovations data
-                this.innovations = {
-                    chatbot: {
-                        name: "AI Customer Service Chatbot",
-                        exists: true,
-                        completed: false,
-                        solution: {
-                            name: "ServiceBot Pro",
-                            team: "AI Innovation Team",
-                            contact: "ai.innovations@company.com",
-                            status: "Currently in pilot with Customer Service department. 85% query resolution rate."
-                        }
-                    },
-                    analytics: {
-                        name: "Incident Management Automation",
-                        exists: false,
-                        completed: false,
-                        bestTeam: "team2"
-                    },
-                    mobile: {
-                        name: "Case Summarization Analysis",
-                        exists: false,
-                        completed: false,
-                        bestTeam: "team1"
-                    },
-                    assistant: {
-                        name: "AI Meeting Intelligence Assistant",
-                        exists: false,
-                        completed: false,
-                        bestTeam: "team4"
-                    }
-                };
-
-                // Cache DOM elements
-                this.elements = {};
-                this.init();
-            }
-
-            init() {
-                this.cacheElements();
-                this.initEventListeners();
-                this.initMobileOptimizations();
-                this.renderProcessFlow('selfDiscoveryFlow', 1, 7);
-                this.updateJourneyTracker();
-            }
-
-            cacheElements() {
-                const ids = ['score', 'ideas', 'level', 'levelTooltip', 'achievements', 'discoveryResult', 
-                            'selectedIdea', 'teamAssignment', 'devProgress', 'engTasks', 'achievementPopup', 
-                            'achievementName', 'explorationCount', 'progressFill', 'firstTimeHint', 
-                            'helpModal', 'trackerHome', 'trackerDiscovery', 'trackerJourney',
-                            'scrollProgress', 'scrollIndicator', 'scrollText', 'allCompletedMessage',
-                            'incubationBtn', 'onboardingAssignment'];
-                
-                ids.forEach(id => {
-                    this.elements[id] = document.getElementById(id);
-                });
-            }
-
-            initEventListeners() {
-                // Touch feedback for mobile
-                document.addEventListener('touchstart', e => {
-                    if (e.target.tagName === 'BUTTON' || e.target.classList.contains('team-card')) {
-                        e.target.classList.add('touch-active');
-                    }
-                });
-
-                document.addEventListener('touchend', e => {
-                    if (e.target.tagName === 'BUTTON' || e.target.classList.contains('team-card')) {
-                        setTimeout(() => e.target.classList.remove('touch-active'), 100);
-                    }
-                });
-
-                // Prevent double-tap zoom
-                let lastTouchEnd = 0;
-                document.addEventListener('touchend', e => {
-                    const now = Date.now();
-                    if (now - lastTouchEnd <= 300) e.preventDefault();
-                    lastTouchEnd = now;
-                }, false);
-
-                // Handle orientation changes
-                window.addEventListener('orientationchange', () => {
-                    setTimeout(() => this.adjustForOrientation(), 100);
-                });
-            }
-
-            initMobileOptimizations() {
-                this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
-                                window.innerWidth <= 768;
-                
-                this.initScrollProgress();
-                
-                if (this.isMobile) {
-                    document.body.style.overscrollBehavior = 'none';
-                    document.documentElement.style.overflowY = 'scroll';
+                },
+                analytics: {
+                    name: "Incident Management Automation",
+                    desc: "Automated system that detects, categorizes, and routes IT incidents",
+                    exists: false,
+                    bestTeam: "team2"
+                },
+                mobile: {
+                    name: "Case Summarization Analysis",
+                    desc: "AI-powered tool that automatically analyzes support cases",
+                    exists: false,
+                    bestTeam: "team1"
+                },
+                assistant: {
+                    name: "AI Meeting Intelligence Assistant",
+                    desc: "Smart assistant that joins meetings, takes notes, extracts action items",
+                    exists: false,
+                    bestTeam: "team4"
                 }
-                
-                this.adjustForOrientation();
+            },
+            screens: [
+                { id: 's-lob', title: '📞 Step 2: Contact Your ICP SME', flow: 'lob', step: 2 },
+                { id: 's-triage', title: '⚡ Step 3: Cit Dev Consult', flow: 'triage', step: 3 },
+                { id: 's-incubation', title: '🌱 Step 4: Incubation Marketplace', flow: 'incubation', step: 4 },
+                { id: 's-dev', title: '💻 Development', flow: 'dev', step: 4 },
+                { id: 's-lt', title: '🎯 LT Approval', flow: 'lt', step: 5 },
+                { id: 's-eng', title: '🔧 Engineering & Productization', flow: 'eng', step: 6 },
+                { id: 's-success', title: '🎉 Mission Complete!', flow: null, step: 7 }
+            ]
+        };
+        
+        // State Management
+        const state = {
+            score: 0,
+            ideas: 0,
+            level: 1,
+            currentIdea: null,
+            currentTeam: null,
+            devStage: 0,
+            incubationStage: 0,
+            currentScreen: 's-front',
+            completedInnovations: new Set(),
+            checkedInnovations: new Set(),
+            journeyStarted: false,
+            achievements: 0,
+            earnedAchievements: new Set(),
+            firstTimeUser: true,
+            scoredActions: {
+                lob: new Set(),
+                icp: new Set(),
+                team: new Set(),
+                incubation: new Set(),
+                development: new Set(),
+                ltApproval: new Set(),
+                engineering: new Set()
             }
-
-            initScrollProgress() {
-                let hasScrolled = false;
-                
-                const updateScrollProgress = () => {
-                    const windowHeight = window.innerHeight;
-                    const documentHeight = document.documentElement.scrollHeight - windowHeight;
-                    const scrolled = window.scrollY;
-                    const progress = documentHeight > 0 ? scrolled / documentHeight : 0;
-                    
-                    if (this.elements.scrollProgress) {
-                        this.elements.scrollProgress.style.transform = `scaleX(${progress})`;
+        };
+        
+        // DOM Cache
+        const dom = {};
+        const $ = id => dom[id] || (dom[id] = document.getElementById(id));
+        const $$ = (selector, parent = document) => parent.querySelectorAll(selector);
+        
+        // Utility Functions
+        const render = (template) => {
+            const div = document.createElement('div');
+            div.innerHTML = template;
+            return div.firstElementChild || div;
+        };
+        
+        const animate = (element, animation, duration = 500) => {
+            element.style.animation = `${animation} ${duration}ms`;
+            setTimeout(() => element.style.animation = '', duration);
+        };
+        
+        const showScreen = (screenId) => {
+            $$('.screen').forEach(s => s.classList.remove('active'));
+            const screen = $(screenId);
+            if (screen) {
+                screen.classList.add('active');
+                state.currentScreen = screenId;
+                updateTracker();
+                window.scrollTo(0, 0);
+            }
+        };
+        
+        // Core Game Logic
+        const updateScore = (points, action) => {
+            state.score += points;
+            $('score').textContent = state.score;
+            animate($('score'), 'pulse');
+            if (action) showScorePopup(`+${points} - ${action}`);
+            checkLevelUp();
+        };
+        
+        const checkLevelUp = () => {
+            const newLevel = CONFIG.thresholds.findLastIndex(t => state.score >= t) + 1;
+            if (newLevel > state.level) {
+                state.level = newLevel;
+                $('level').textContent = newLevel;
+            }
+        };
+        
+        const showScorePopup = (text) => {
+            const popup = render(`<div class="score-popup">${text}</div>`);
+            document.body.appendChild(popup);
+            setTimeout(() => popup.remove(), 2000);
+        };
+        
+        const updateProgress = () => {
+            const explored = [...state.checkedInnovations].filter(k => 
+                CONFIG.innovations[k].exists || state.completedInnovations.has(k)
+            ).length;
+            const pct = (explored / 4) * 100;
+            $('exp-count').textContent = explored;
+            $('progress').style.width = `${pct}%`;
+            $('completed-msg').style.display = explored === 4 ? 'block' : 'none';
+        };
+        
+        const updateTracker = () => {
+            const screen = state.currentScreen;
+            ['t-home', 't-discovery', 't-journey'].forEach(t => $(t).className = '');
+            
+            if (screen === 's-front') {
+                $('t-home').className = 'active';
+            } else if (screen === 's-discovery') {
+                $('t-home').className = 'completed';
+                $('t-discovery').className = 'active';
+            } else {
+                $('t-home').className = 'completed';
+                $('t-discovery').className = 'completed';
+                $('t-journey').className = 'active';
+            }
+        };
+        
+        const renderFlow = (containerId, current, total = null) => {
+            const steps = total || (state.currentIdea === 'assistant' ? 8 : 7);
+            const html = Array.from({length: steps}, (_, i) => {
+                const n = i + 1;
+                let cls = 'step';
+                if (n < current) cls += ' completed';
+                else if (n === current) cls += ' current';
+                return `<div class="${cls}">${n}</div>`;
+            }).join('');
+            const container = $(containerId);
+            if (container) container.innerHTML = html;
+        };
+        
+        // Achievement System
+        const showAchievement = (title, desc) => {
+            const key = `${title}_${desc}`;
+            if (!state.earnedAchievements.has(key)) {
+                state.earnedAchievements.add(key);
+                state.achievements++;
+                $('achievements').textContent = state.achievements;
+                animate($('achievements'), 'pulse');
+            }
+            
+            $('achievement-text').textContent = desc;
+            $('achievement').classList.add('show');
+            createConfetti();
+            setTimeout(() => closeAchievement(), 3000);
+        };
+        
+        const closeAchievement = () => {
+            $('achievement').classList.remove('show');
+        };
+        
+        const createConfetti = () => {
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3'];
+            for (let i = 0; i < 40; i++) {
+                setTimeout(() => {
+                    const c = render(`<div class="confetti" style="left: ${Math.random()*100}%; background: ${colors[i%6]}; animation-duration: ${Math.random()*2+2}s"></div>`);
+                    document.body.appendChild(c);
+                    setTimeout(() => c.remove(), 4000);
+                }, i * 50);
+            }
+        };
+        
+        // Innovation Management
+        const initInnovations = () => {
+            const container = $('innovations');
+            container.innerHTML = Object.entries(CONFIG.innovations).map(([key, inn]) => `
+                <div style="margin-bottom: 20px;">
+                    <button class="btn btn-category" id="${key}-btn" onclick="G.checkIdea('${key}')">
+                        ${key === 'chatbot' ? '🤖' : key === 'analytics' ? '🚨' : key === 'mobile' ? '📄' : '🧠'} ${inn.name}
+                    </button>
+                    <p style="font-size: 12px; color: #6b7280; margin: 5px 10px 15px 10px; line-height: 1.4;">${inn.desc}</p>
+                </div>
+            `).join('');
+        };
+        
+        const checkIdea = (type) => {
+            const idea = CONFIG.innovations[type];
+            state.currentIdea = type;
+            
+            const isFirst = !state.checkedInnovations.has(type);
+            if (isFirst) state.checkedInnovations.add(type);
+            
+            if ($('hint')) $('hint').style.display = 'none';
+            
+            $$('.btn-category').forEach(b => b.classList.remove('selected'));
+            $(`${type}-btn`).classList.add('selected');
+            
+            renderFlow('flow-discovery', 1, type === 'assistant' ? 8 : 7);
+            
+            let html = '';
+            if (idea.exists) {
+                if (!state.completedInnovations.has(type)) {
+                    state.completedInnovations.add(type);
+                    updateButtonStates();
+                }
+                html = getExistingSolution(idea);
+                if (isFirst) updateScore(15, "Found existing solution");
+            } else if (state.completedInnovations.has(type)) {
+                html = getCompletedInnovation(idea);
+            } else {
+                html = getNewInnovation();
+                if (isFirst) updateScore(20, "Discovered new opportunity");
+            }
+            
+            $('result').innerHTML = html;
+            $('result').style.display = 'block';
+            
+            updateProgress();
+            highlightNext();
+            updateButtonStates();
+        };
+        
+        const getExistingSolution = (idea) => {
+            const hasMore = Object.keys(CONFIG.innovations).some(k => !state.checkedInnovations.has(k));
+            return `
+                <div class="solution-exists">
+                    <h3>✅ Solution Already Exists!</h3>
+                    <p><strong>Name:</strong> ${idea.solution.name}</p>
+                    <p><strong>Team:</strong> ${idea.solution.team}</p>
+                    <p><strong>Contact:</strong> ${idea.solution.contact}</p>
+                    <p><strong>Status:</strong> ${idea.solution.status}</p>
+                    <p style="margin-top: 10px;"><strong>ADO Link:</strong> <span style="color: #6b7280;">https://dev.azure.com/project/workitem-12345</span></p>
+                    <p style="margin-top: 15px; font-weight: bold; color: #0ea5e9;">📧 Contact the team to get plugged in</p>
+                </div>
+                ${hasMore ? `<button class="btn btn-primary" onclick="G.tryAnother()">Try Another Idea</button>` : ''}
+            `;
+        };
+        
+        const getCompletedInnovation = (idea) => {
+            const hasMore = Object.keys(CONFIG.innovations).some(k => !state.checkedInnovations.has(k));
+            return `
+                <div class="feedback success">
+                    <h3>🎉 Innovation Already Completed!</h3>
+                    <p><strong>${idea.name}</strong> has been successfully launched!</p>
+                    <p style="margin-top: 10px;">🏆 <em>Journey Status: Complete</em></p>
+                </div>
+                ${hasMore ? `<button class="btn btn-primary" onclick="G.tryAnother()">Try Another Innovation</button>` : ''}
+            `;
+        };
+        
+        const getNewInnovation = () => `
+            <div class="no-solution">
+                <h3>💡 New Innovation Opportunity!</h3>
+                <p>No existing solution found. This is a great opportunity to innovate!</p>
+            </div>
+            <button class="btn btn-primary" onclick="G.proceed('s-lob')">Proceed to ICP SME Contact</button>
+        `;
+        
+        const tryAnother = () => {
+            $('result').style.display = 'none';
+            state.currentIdea = null;
+            $$('.btn-category').forEach(b => b.classList.remove('selected'));
+        };
+        
+        const updateButtonStates = () => {
+            Object.keys(CONFIG.innovations).forEach(type => {
+                const btn = $(`${type}-btn`);
+                const inn = CONFIG.innovations[type];
+                if (btn) {
+                    btn.classList.remove('completed', 'existing-solution');
+                    if (state.completedInnovations.has(type)) {
+                        btn.classList.add(inn.exists ? 'existing-solution' : 'completed');
                     }
-                    
-                    // Show/hide scroll indicator
-                    if (this.elements.scrollIndicator && this.elements.scrollText) {
-                        const shouldShow = documentHeight > 50 && scrolled < documentHeight - 100;
-                        
-                        this.elements.scrollIndicator.classList.toggle('hidden', !shouldShow || hasScrolled);
-                        this.elements.scrollText.classList.toggle('hidden', !shouldShow || hasScrolled || scrolled > 50);
-                        
-                        if (scrolled > 50) hasScrolled = true;
-                    }
-                };
-                
-                window.addEventListener('scroll', updateScrollProgress);
-                window.addEventListener('resize', updateScrollProgress);
-                
-                // Override showScreen to reset scroll
-                const originalShowScreen = this.showScreen.bind(this);
-                this.showScreen = function(screenId) {
-                    originalShowScreen(screenId);
-                    setTimeout(() => {
-                        hasScrolled = false;
-                        updateScrollProgress();
-                        window.scrollTo(0, 0);
-                    }, 300);
-                };
-                
-                updateScrollProgress();
+                }
+            });
+        };
+        
+        const highlightNext = () => {
+            $$('.btn-category').forEach(b => b.classList.remove('unexplored'));
+            for (let key of Object.keys(CONFIG.innovations)) {
+                if (!state.checkedInnovations.has(key)) {
+                    $(`${key}-btn`).classList.add('unexplored');
+                    break;
+                }
             }
-
-            smoothScrollDown() {
-                const currentScroll = window.scrollY;
-                const windowHeight = window.innerHeight;
-                window.scrollTo({
-                    top: currentScroll + windowHeight * 0.8,
-                    behavior: 'smooth'
-                });
-            }
-
-            adjustForOrientation() {
-                const isLandscape = window.innerHeight < window.innerWidth;
-                const container = document.querySelector('.game-container');
+        };
+        
+        // Journey Progression
+        const generateJourneyScreens = () => {
+            const container = $('dynamic-screens');
+            container.innerHTML = `
+                <div id="s-lob" class="screen">
+                    <h2>📞 Step 2: Contact Your ICP SME</h2>
+                    <div class="process-flow" id="flow-lob"></div>
+                    <div class="story-text"><p>Great! Your idea is new. Connect with your ICP Subject Matter Expert to submit it.</p></div>
+                    <div class="card"><h3>Your Innovation:</h3><p id="selected-idea" class="story-text"></p></div>
+                    <div class="dialog-box"><strong>ICP SME:</strong><br>"This looks promising! Let me help you submit this to ICP."</div>
+                    <button class="btn btn-primary" onclick="G.proceed('s-triage')">Submit to ICP Pipeline</button>
+                </div>
                 
-                if (this.isMobile && isLandscape) {
-                    container.style.maxHeight = '100vh';
-                    container.style.overflowY = 'auto';
+                <div id="s-triage" class="screen">
+                    <h2>⚡ Step 3: Cit Dev Consult</h2>
+                    <div class="process-flow" id="flow-triage"></div>
+                    <div class="story-text"><p>Citizen Developer consultants review your innovation and assign it to the best team!</p></div>
+                    <h3>Available Teams:</h3>
+                    <div id="teams"></div>
+                    <button class="btn btn-primary" onclick="G.assignTeam()">See Team Assignment</button>
+                </div>
+                
+                <div id="s-incubation" class="screen">
+                    <h2>🌱 Step 4: Incubation Marketplace</h2>
+                    <div class="story-text"><p><strong>Calling All Citizen Developers!</strong> Turn innovative ideas into real applications.</p></div>
+                    <div class="process-flow" id="flow-incubation"></div>
+                    <div class="card">
+                        <h3>Citizen Developer Tasks:</h3>
+                        <div id="inc-tasks"></div>
+                    </div>
+                    <div id="inc-ready" style="display: none;" class="feedback success">
+                        <h3>🎯 Ready for Development!</h3>
+                        <p>All onboarding requirements completed!</p>
+                    </div>
+                    <div class="hint-box">💡 <strong>Why Incubation?</strong> Ensures proper training and project matching!</div>
+                    <button class="btn btn-primary" id="inc-btn" onclick="G.progressIncubation()">Complete Next Task</button>
+                </div>
+                
+                <div id="s-dev" class="screen">
+                    <h2>💻 <span id="dev-step">Step 4</span>: Development</h2>
+                    <div class="story-text"><p id="team-assign"></p></div>
+                    <div class="process-flow" id="flow-dev"></div>
+                    <div class="card"><h3>Development Progress:</h3><div id="dev-progress"></div></div>
+                    <button class="btn btn-primary" onclick="G.progressDev()">Continue Development</button>
+                </div>
+                
+                <div id="s-lt" class="screen">
+                    <h2>🎯 <span id="lt-step">Step 5</span>: LT Approval</h2>
+                    <div class="story-text"><p>Development complete! Leadership Team reviews for scaling.</p></div>
+                    <div class="process-flow" id="flow-lt"></div>
+                    <div class="feedback success" style="margin-top: 30px;">
+                        <h3>✅ Leadership Approved!</h3>
+                        <p>Your innovation has been approved for enterprise-wide scaling.</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="G.proceed('s-eng')" style="margin-top: 20px;">Scale Out!</button>
+                </div>
+                
+                <div id="s-eng" class="screen">
+                    <h2>🔧 <span id="eng-step">Step 6</span>: Engineering & Productization</h2>
+                    <div class="story-text"><p>LT Approved! Engineering productizes for enterprise scale.</p></div>
+                    <div class="process-flow" id="flow-eng"></div>
+                    <div class="card"><h3>Engineering Tasks:</h3><div id="eng-tasks"></div></div>
+                    <button class="btn btn-primary" onclick="G.completeEng()">Complete Productization</button>
+                </div>
+                
+                <div id="s-success" class="screen">
+                    <h2>🎉 Mission Complete!</h2>
+                    <div style="width: 80px; height: 80px; margin: 0 auto 15px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px;">🏆</div>
+                    <div class="feedback success">
+                        <h3>What You Learned:</h3>
+                        <ul style="text-align: left; color: #059669; line-height: 1.8; padding-left: 20px;">
+                            <li>How to validate if a solution already exists</li>
+                            <li>The ICP submission process through your ICP SME</li>
+                            <li>How Citizen Dev consultants match ideas to teams</li>
+                            <li>The development and scaling process</li>
+                            <li>How innovations become enterprise solutions</li>
+                        </ul>
+                    </div>
+                    <div id="next-action" style="background: linear-gradient(145deg, #f0f9ff, #dbeafe); border: 2px solid #0ea5e9; padding: 15px; border-radius: 10px; margin: 20px 0; text-align: center;"></div>
+                    <div class="hint-box">🌟 <strong>ICP Impact:</strong> Your innovation is now helping thousands!</div>
+                    <button class="btn btn-primary" onclick="G.exploreMore()">Explore More Innovations</button>
+                </div>
+            `;
+            
+            // Initialize teams
+            $('teams').innerHTML = Object.entries(CONFIG.teams).map(([id, name]) => 
+                `<div class="team-card" id="${id}" onclick="G.selectTeam('${id}')"><strong>${name.split('-')[0]}</strong><br><small>${name.split('-')[1]}</small></div>`
+            ).join('');
+            
+            // Initialize incubation tasks
+            $('inc-tasks').innerHTML = ['Adopt an idea', 'Project Accountability', 'Onboarding'].map((task, i) => 
+                `<div class="requirement-item"><p id="req${i+1}" style="color: #6b7280;">⏳ ${task}</p></div>`
+            ).join('');
+            
+            // Initialize dev progress
+            $('dev-progress').innerHTML = '<p>⏳ Sprint 1: Requirements gathering...</p>';
+            
+            // Initialize eng tasks
+            $('eng-tasks').innerHTML = `
+                <p>✅ Security review completed</p>
+                <p>✅ Performance optimization done</p>
+                <p>⏳ Scalability testing in progress...</p>
+            `;
+        };
+        
+        const proceed = (screen) => {
+            const inn = CONFIG.innovations[state.currentIdea];
+            
+            if (screen === 's-lob') {
+                renderFlow('flow-lob', 2);
+                $('selected-idea').textContent = inn.name;
+                if (!state.scoredActions.lob.has(state.currentIdea)) {
+                    updateScore(10, "ICP SME contact initiated");
+                    state.scoredActions.lob.add(state.currentIdea);
+                }
+            } else if (screen === 's-triage') {
+                renderFlow('flow-triage', 3);
+                if (!state.scoredActions.icp.has(state.currentIdea)) {
+                    updateScore(25, "Idea submitted to ICP");
+                    state.ideas++;
+                    $('ideas').textContent = state.ideas;
+                    state.scoredActions.icp.add(state.currentIdea);
+                }
+            } else if (screen === 's-eng') {
+                const isEight = state.currentIdea === 'assistant';
+                $('eng-step').textContent = isEight ? 'Step 7' : 'Step 6';
+                renderFlow('flow-eng', isEight ? 7 : 6);
+            }
+            
+            showScreen(screen);
+        };
+        
+        const selectTeam = (id) => {
+            $$('.team-card').forEach(t => t.classList.remove('selected'));
+            $(id).classList.add('selected');
+            state.currentTeam = id;
+        };
+        
+        const assignTeam = () => {
+            const team = CONFIG.innovations[state.currentIdea]?.bestTeam || 'team4';
+            selectTeam(team);
+            
+            if (!state.scoredActions.team.has(state.currentIdea)) {
+                updateScore(30, "Team assigned");
+                state.scoredActions.team.add(state.currentIdea);
+            }
+            
+            setTimeout(() => {
+                if (team === 'team4') {
+                    showScreen('s-incubation');
+                    renderFlow('flow-incubation', 4);
                 } else {
-                    container.style.maxHeight = '';
-                    container.style.overflowY = '';
+                    showDevScreen();
                 }
-            }
-
-            // UI Updates
-            updateJourneyTracker() {
-                const trackers = ['trackerHome', 'trackerDiscovery', 'trackerJourney'];
-                const screen = this.state.currentScreen;
+            }, 2000);
+        };
+        
+        const progressIncubation = () => {
+            state.incubationStage++;
+            const tasks = [
+                { id: 'req1', text: '✅ Adopt an idea', points: 15, action: "Idea adopted" },
+                { id: 'req2', text: '✅ Project Accountability', points: 20, action: "Accountability accepted" },
+                { id: 'req3', text: '✅ Onboarding', points: 25, action: "Onboarding completed" }
+            ];
+            
+            if (state.incubationStage <= tasks.length) {
+                const task = tasks[state.incubationStage - 1];
+                const el = $(task.id);
+                if (el) {
+                    el.innerHTML = task.text;
+                    el.style.cssText = 'color: white; font-weight: bold;';
+                    el.parentElement.style.cssText = 'background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 2px 4px rgba(0,0,0,0.2);';
+                }
                 
-                trackers.forEach(t => {
-                    if (this.elements[t]) this.elements[t].className = '';
-                });
-
-                if (screen === 'frontDoorScreen') {
-                    this.elements.trackerHome.className = 'active';
-                } else if (screen === 'selfDiscoveryScreen') {
-                    this.elements.trackerHome.className = 'completed';
-                    this.elements.trackerDiscovery.className = 'active';
-                } else {
-                    this.elements.trackerHome.className = 'completed';
-                    this.elements.trackerDiscovery.className = 'completed';
-                    this.elements.trackerJourney.className = 'active';
+                const key = `${state.currentIdea}_${state.incubationStage}`;
+                if (!state.scoredActions.incubation.has(key)) {
+                    updateScore(task.points, task.action);
+                    state.scoredActions.incubation.add(key);
                 }
-            }
-
-            renderProcessFlow(elementId, currentStep, totalSteps = null) {
-                const element = document.getElementById(elementId);
-                if (!element) return;
-
-                const steps = totalSteps || this.getTotalSteps();
-                element.innerHTML = Array.from({length: steps}, (_, i) => {
-                    const num = i + 1;
-                    let className = 'process-step';
-                    if (num < currentStep) className += ' completed';
-                    else if (num === currentStep) className += ' current';
-                    return `<div class="${className}">${num}</div>`;
-                }).join('');
-            }
-
-            showScreen(screenId) {
-                document.querySelectorAll('.game-screen').forEach(s => s.classList.remove('active'));
-                const targetScreen = document.getElementById(screenId);
-                if (targetScreen) {
-                    targetScreen.classList.add('active');
-                    this.state.currentScreen = screenId;
-                    this.updateJourneyTracker();
-                }
-            }
-
-            // Score & Progress
-            updateScore(points, action) {
-                this.state.score += points;
-                if (this.elements.score) {
-                    this.elements.score.textContent = this.state.score;
-                    this.animateElement(this.elements.score, 'pulse');
-                }
-                if (action) this.showScorePopup(`+${points} - ${action}`);
-                this.checkLevelUp();
-            }
-
-            checkLevelUp() {
-                const newLevel = this.config.levelThresholds.findLastIndex(t => this.state.score >= t) + 1;
                 
-                if (newLevel > this.state.level) {
-                    this.state.level = newLevel;
-                    if (this.elements.level) this.elements.level.textContent = newLevel;
-                    if (this.elements.levelTooltip) {
-                        this.elements.levelTooltip.textContent = this.config.levelTitles[newLevel];
-                    }
+                if (state.incubationStage >= tasks.length) {
+                    $('inc-ready').style.display = 'block';
+                    $('inc-btn').textContent = 'Proceed to Development';
+                    $('inc-btn').onclick = () => showDevScreen();
                 }
             }
-
-            showScorePopup(text) {
-                const popup = document.createElement('div');
-                popup.className = 'score-popup';
-                popup.textContent = text;
-                document.body.appendChild(popup);
-                setTimeout(() => popup.remove(), 2000);
+        };
+        
+        const showDevScreen = () => {
+            const isEight = state.currentIdea === 'assistant';
+            $('dev-step').textContent = isEight ? 'Step 5' : 'Step 4';
+            renderFlow('flow-dev', isEight ? 5 : 4);
+            $('team-assign').textContent = `Assigned to: ${CONFIG.teams[state.currentTeam]}`;
+            showScreen('s-dev');
+        };
+        
+        const progressDev = () => {
+            state.devStage++;
+            const stages = [
+                '✅ Sprint 1: Requirements gathering complete',
+                '✅ Sprint 2: Prototype developed',
+                '✅ Sprint 3: Testing completed',
+                '✅ Sprint 4: Ready for productization!'
+            ];
+            
+            if (state.devStage < stages.length) {
+                $('dev-progress').innerHTML = stages.slice(0, state.devStage + 1).map(s => `<p>${s}</p>`).join('');
+                
+                const key = `${state.currentIdea}_sprint${state.devStage}`;
+                if (!state.scoredActions.development.has(key)) {
+                    updateScore(20, `Sprint ${state.devStage + 1} completed`);
+                    state.scoredActions.development.add(key);
+                }
+            } else {
+                showLTScreen();
+                state.devStage = 0;
             }
-
-            updateExplorationProgress() {
-                const fullyExplored = Object.keys(this.innovations).filter(key => {
-                    const inn = this.innovations[key];
-                    return inn.exists ? this.state.checkedInnovations.includes(key) : inn.completed;
+        };
+        
+        const showLTScreen = () => {
+            const isEight = state.currentIdea === 'assistant';
+            $('lt-step').textContent = isEight ? 'Step 6' : 'Step 5';
+            renderFlow('flow-lt', isEight ? 6 : 5);
+            
+            if (!state.scoredActions.ltApproval.has(state.currentIdea)) {
+                updateScore(40, "Leadership approval");
+                state.scoredActions.ltApproval.add(state.currentIdea);
+            }
+            
+            showScreen('s-lt');
+        };
+        
+        const completeEng = () => {
+            $('eng-tasks').innerHTML = `
+                <p>✅ Security review completed</p>
+                <p>✅ Performance optimization done</p>
+                <p>✅ Scalability testing completed</p>
+                <p>✅ Production deployment ready!</p>
+            `;
+            
+            if (!state.scoredActions.engineering.has(state.currentIdea)) {
+                updateScore(50, "Engineering completed");
+                state.scoredActions.engineering.add(state.currentIdea);
+            }
+            
+            setTimeout(() => showSuccessScreen(), 1500);
+        };
+        
+        const showSuccessScreen = () => {
+            if (state.currentIdea) {
+                const inn = CONFIG.innovations[state.currentIdea];
+                showAchievement("Journey Complete!", `Completed: ${inn.name}`);
+                state.completedInnovations.add(state.currentIdea);
+            }
+            
+            const allDone = Object.keys(CONFIG.innovations).every(k => {
+                const inn = CONFIG.innovations[k];
+                return inn.exists ? state.checkedInnovations.has(k) : state.completedInnovations.has(k);
+            });
+            
+            const nextAction = $('next-action');
+            if (!allDone) {
+                const remaining = Object.keys(CONFIG.innovations).filter(k => {
+                    const inn = CONFIG.innovations[k];
+                    return inn.exists ? !state.checkedInnovations.has(k) : !state.completedInnovations.has(k);
                 }).length;
                 
-                const percentage = (fullyExplored / 4) * 100;
-                
-                if (this.elements.explorationCount) {
-                    this.elements.explorationCount.textContent = fullyExplored;
-                }
-                if (this.elements.progressFill) {
-                    this.elements.progressFill.style.width = `${percentage}%`;
-                }
-                if (this.elements.allCompletedMessage) {
-                    this.elements.allCompletedMessage.style.display = fullyExplored === 4 ? 'block' : 'none';
-                }
-            }
-
-            // Achievements
-            showAchievement(title, description) {
-                const key = `${title}_${description}`;
-                if (!this.state.earnedAchievements.includes(key)) {
-                    this.state.earnedAchievements.push(key);
-                    this.state.achievements++;
-                    
-                    if (this.elements.achievements) {
-                        this.elements.achievements.textContent = this.state.achievements;
-                        this.animateElement(this.elements.achievements, 'pulse');
-                    }
-                }
-                
-                if (this.elements.achievementName) {
-                    this.elements.achievementName.textContent = description;
-                }
-                if (this.elements.achievementPopup) {
-                    this.elements.achievementPopup.classList.add('show');
-                }
-                this.createConfetti();
-            }
-
-            closeAchievement() {
-                if (this.elements.achievementPopup) {
-                    this.elements.achievementPopup.classList.remove('show');
-                }
-            }
-
-            createConfetti() {
-                const count = 40;
-                for (let i = 0; i < count; i++) {
-                    setTimeout(() => {
-                        const confetti = document.createElement('div');
-                        confetti.className = 'confetti';
-                        confetti.classList.add(this.config.confettiColors[Math.floor(Math.random() * this.config.confettiColors.length)]);
-                        confetti.style.left = Math.random() * 100 + '%';
-                        
-                        const size = Math.random() * 6 + 4;
-                        confetti.style.width = confetti.style.height = size + 'px';
-                        
-                        const duration = Math.random() * 2 + 2;
-                        confetti.style.animationDuration = duration + 's';
-                        confetti.classList.add('confetti-animate');
-                        
-                        if (Math.random() > 0.5) confetti.style.borderRadius = '50%';
-                        
-                        document.body.appendChild(confetti);
-                        setTimeout(() => confetti.remove(), duration * 1000 + 500);
-                    }, i * 50);
-                }
-            }
-
-            // Game Flow
-            startJourney() {
-                this.resetGameState();
-                this.updateInnovationButtonStates();
-                this.highlightNextUnexplored();
-                this.showScreen('selfDiscoveryScreen');
-                
-                if (this.state.firstTimeUser && this.elements.firstTimeHint) {
-                    this.elements.firstTimeHint.style.display = 'block';
-                    this.state.firstTimeUser = false;
-                    setTimeout(() => this.elements.firstTimeHint.style.display = 'none', 5000);
-                }
-                
-                if (!this.state.journeyStarted) {
-                    this.updateScore(10, "Journey Started");
-                    this.state.journeyStarted = true;
-                }
-                
-                this.renderProcessFlow('selfDiscoveryFlow', 1, 7);
-                this.updateExplorationProgress();
-            }
-
-            resetGameState() {
-                Object.assign(this.state, {
-                    currentIdea: null,
-                    currentTeam: null,
-                    devStage: 0,
-                    incubationStage: 0
-                });
-
-                document.querySelectorAll('.team-card, .btn-category').forEach(el => {
-                    el.classList.remove('selected');
-                });
-
-                if (this.elements.discoveryResult) {
-                    this.elements.discoveryResult.style.display = 'none';
-                }
-
-                this.resetIncubationRequirements();
-                this.resetDevelopmentProgress();
-                this.resetEngineeringTasks();
-            }
-
-            resetIncubationRequirements() {
-                this.state.incubationStage = 0;
-                const requirements = ['Adopt an idea', 'Project Accountability', 'Onboarding'];
-                
-                requirements.forEach((req, i) => {
-                    const reqEl = document.getElementById(`req${i + 1}`);
-                    if (reqEl) {
-                        reqEl.innerHTML = `⏳ ${req}`;
-                        reqEl.style.cssText = 'color: #6b7280; font-weight: normal;';
-                        reqEl.parentElement.style.cssText = 'background: #f3f4f6; box-shadow: none;';
-                    }
-                });
-
-                if (this.elements.onboardingAssignment) {
-                    this.elements.onboardingAssignment.style.display = 'none';
-                }
-
-                if (this.elements.incubationBtn) {
-                    this.elements.incubationBtn.textContent = 'Complete Next Task';
-                    this.elements.incubationBtn.onclick = () => this.progressIncubation();
-                }
-            }
-
-            resetDevelopmentProgress() {
-                if (this.elements.devProgress) {
-                    this.elements.devProgress.innerHTML = '<p>⏳ Sprint 1: Requirements gathering...</p>';
-                }
-            }
-
-            resetEngineeringTasks() {
-                if (this.elements.engTasks) {
-                    this.elements.engTasks.innerHTML = `
-                        <p>✅ Security review completed</p>
-                        <p>✅ Performance optimization done</p>
-                        <p>⏳ Scalability testing in progress...</p>
-                    `;
-                }
-            }
-
-            highlightNextUnexplored() {
-                document.querySelectorAll('.btn-category').forEach(btn => {
-                    btn.classList.remove('unexplored');
-                });
-
-                for (let key of Object.keys(this.innovations)) {
-                    if (!this.state.checkedInnovations.includes(key)) {
-                        const btn = document.getElementById(`${key}-btn`);
-                        if (btn) btn.classList.add('unexplored');
-                        break;
-                    }
-                }
-            }
-
-            updateInnovationButtonStates() {
-                Object.keys(this.innovations).forEach(type => {
-                    const button = document.getElementById(`${type}-btn`);
-                    const innovation = this.innovations[type];
-
-                    if (button) {
-                        button.classList.remove('completed', 'existing-solution');
-                        
-                        if (innovation.completed && !innovation.exists) {
-                            button.classList.add('completed');
-                        } else if (innovation.exists && this.state.checkedInnovations.includes(type)) {
-                            button.classList.add('existing-solution');
-                        }
-                    }
-                });
-
-                this.updateExplorationProgress();
-            }
-
-            // Innovation Selection
-            checkIdea(ideaType) {
-                const idea = this.innovations[ideaType];
-                this.state.currentIdea = ideaType;
-                
-                const isFirstCheck = !this.state.checkedInnovations.includes(ideaType);
-                if (isFirstCheck) {
-                    this.state.checkedInnovations.push(ideaType);
-                }
-
-                if (this.elements.firstTimeHint) {
-                    this.elements.firstTimeHint.style.display = 'none';
-                }
-
-                document.querySelectorAll('.btn-category').forEach(btn => {
-                    btn.classList.remove('selected');
-                });
-                document.getElementById(`${ideaType}-btn`).classList.add('selected');
-
-                const totalSteps = ideaType === 'assistant' ? 8 : 7;
-                this.renderProcessFlow('selfDiscoveryFlow', 1, totalSteps);
-
-                if (this.elements.discoveryResult) {
-                    let resultHTML = '';
-                    
-                    if (idea.exists) {
-                        if (!idea.completed) {
-                            idea.completed = true;
-                            this.state.completedInnovations.push(ideaType);
-                            this.updateInnovationButtonStates();
-                        }
-                        resultHTML = this.getExistingSolutionHTML(idea);
-                        if (isFirstCheck) this.updateScore(15, "Found existing solution");
-                    } else if (idea.completed && !idea.exists) {
-                        resultHTML = this.getCompletedInnovationHTML(idea);
-                    } else {
-                        resultHTML = this.getNewInnovationHTML();
-                        if (isFirstCheck) this.updateScore(20, "Discovered new opportunity");
-                    }
-                    
-                    this.elements.discoveryResult.innerHTML = resultHTML;
-                    this.elements.discoveryResult.style.display = 'block';
-                }
-
-                this.updateExplorationProgress();
-                this.highlightNextUnexplored();
-                this.updateInnovationButtonStates();
-            }
-
-            getExistingSolutionHTML(idea) {
-                const hasMore = Object.keys(this.innovations).some(k => !this.state.checkedInnovations.includes(k));
-                const button = hasMore ? `<button class="btn btn-continue" onclick="game.tryAnother()">Try Another Idea</button>` : '';
-                
-                return `
-                    <div class="solution-exists">
-                        <h3>✅ Solution Already Exists!</h3>
-                        <p><strong>Name:</strong> ${idea.solution.name}</p>
-                        <p><strong>Team:</strong> ${idea.solution.team}</p>
-                        <p><strong>Contact:</strong> ${idea.solution.contact}</p>
-                        <p><strong>Status:</strong> ${idea.solution.status}</p>
-                        <p style="margin-top: 10px;"><strong>ADO Link:</strong> <span style="color: #6b7280;">https://dev.azure.com/project/workitem-12345</span></p>
-                        <p style="margin-top: 15px; font-weight: bold; color: #0ea5e9;">📧 Contact the team to get plugged in</p>
+                nextAction.innerHTML = `
+                    <h4 style="color: #0284c7;">What's Next?</h4>
+                    <p><strong>${remaining} innovation${remaining > 1 ? 's' : ''} still to explore!</strong></p>
+                    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e5e7eb;">
+                        <p style="color: #0284c7; font-weight: bold;">Ready with your own idea?</p>
+                        <p style="margin-top: 8px;">📌 Visit the <a href="https://aka.ms/AIInnovationFrontDoor" target="_blank" style="color: #667eea; font-weight: bold;">AI Innovation Front Door</a></p>
+                        <p style="margin-top: 8px; color: #6b7280; font-style: italic;">or</p>
+                        <p style="margin-top: 8px;">📧 Contact our team directly: <a href="mailto:ICP_Inquiries@microsoft.com" style="color: #667eea; font-weight: bold;">ICP_Inquiries@microsoft.com</a></p>
                     </div>
-                    ${button}
+                `;
+            } else {
+                nextAction.innerHTML = `
+                    <h4 style="color: #0284c7;">Journey Summary</h4>
+                    <div style="text-align: left; color: #059669; line-height: 1.8;">
+                        <p>✅ All journeys completed!</p>
+                    </div>
+                    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e5e7eb; text-align: center;">
+                        <p style="color: #0284c7; font-weight: bold;">Ready to submit a real idea?</p>
+                        <p style="margin-top: 8px;">📌 Visit the <a href="https://aka.ms/AIInnovationFrontDoor" target="_blank" style="color: #667eea; font-weight: bold;">AI Innovation Front Door</a></p>
+                        <p style="margin-top: 8px; color: #6b7280; font-style: italic;">or</p>
+                        <p style="margin-top: 8px;">📧 Contact: <a href="mailto:ICP_Inquiries@microsoft.com" style="color: #667eea; font-weight: bold;">ICP_Inquiries@microsoft.com</a></p>
+                    </div>
                 `;
             }
-
-            getCompletedInnovationHTML(idea) {
-                const hasMore = Object.keys(this.innovations).some(k => !this.state.checkedInnovations.includes(k));
-                const button = hasMore ? `<button class="btn btn-continue" onclick="game.tryAnother()">Try Another Innovation</button>` : '';
+            
+            showScreen('s-success');
+        };
+        
+        const exploreMore = () => {
+            resetState();
+            showScreen('s-discovery');
+            updateButtonStates();
+            highlightNext();
+            updateProgress();
+        };
+        
+        const resetState = () => {
+            state.currentIdea = null;
+            state.currentTeam = null;
+            state.devStage = 0;
+            state.incubationStage = 0;
+            
+            $$('.team-card, .btn-category').forEach(e => e.classList.remove('selected'));
+            $('result').style.display = 'none';
+            
+            // Reset incubation
+            ['Adopt an idea', 'Project Accountability', 'Onboarding'].forEach((task, i) => {
+                const el = $(`req${i+1}`);
+                if (el) {
+                    el.innerHTML = `⏳ ${task}`;
+                    el.style.cssText = 'color: #6b7280;';
+                    el.parentElement.style.cssText = '';
+                }
+            });
+            $('inc-ready').style.display = 'none';
+            $('inc-btn').textContent = 'Complete Next Task';
+            $('inc-btn').onclick = () => progressIncubation();
+            
+            // Reset dev & eng
+            $('dev-progress').innerHTML = '<p>⏳ Sprint 1: Requirements gathering...</p>';
+            $('eng-tasks').innerHTML = `
+                <p>✅ Security review completed</p>
+                <p>✅ Performance optimization done</p>
+                <p>⏳ Scalability testing in progress...</p>
+            `;
+        };
+        
+        // Scroll Management
+        const initScroll = () => {
+            let hasScrolled = false;
+            
+            const updateScroll = () => {
+                const h = window.innerHeight;
+                const dh = document.documentElement.scrollHeight - h;
+                const s = window.scrollY;
+                const progress = dh > 0 ? s / dh : 0;
                 
-                return `
-                    <div class="feedback success">
-                        <h3>🎉 Innovation Already Completed!</h3>
-                        <p><strong>${idea.name}</strong> has been successfully launched through the innovation journey!</p>
-                        <p style="margin-top: 10px;">🏆 <em>Journey Status: Complete</em></p>
-                    </div>
-                    ${button}
-                `;
-            }
-
-            getNewInnovationHTML() {
-                return `
-                    <div class="no-solution">
-                        <h3>💡 New Innovation Opportunity!</h3>
-                        <p>No existing solution found. This is a great opportunity to innovate!</p>
-                    </div>
-                    <button class="btn btn-continue" onclick="game.proceedToLOB()">Proceed to ICP SME Contact</button>
-                `;
-            }
-
-            tryAnother() {
-                if (this.elements.discoveryResult) {
-                    this.elements.discoveryResult.style.display = 'none';
-                }
-                this.state.currentIdea = null;
-                document.querySelectorAll('.btn-category').forEach(btn => {
-                    btn.classList.remove('selected');
-                });
-            }
-
-            // Journey Steps
-            proceedToLOB() {
-                this.showScreen('lobContactScreen');
-                this.renderProcessFlow('lobContactFlow', 2);
+                $('scroll-bar').style.transform = `scaleX(${progress})`;
                 
-                if (this.elements.selectedIdea && this.state.currentIdea) {
-                    this.elements.selectedIdea.textContent = this.innovations[this.state.currentIdea].name;
-                }
+                const shouldShow = dh > 50 && s < dh - 100;
+                $('scroll-btn').classList.toggle('hidden', !shouldShow || hasScrolled);
+                $('scroll-txt').classList.toggle('hidden', !shouldShow || hasScrolled || s > 50);
                 
-                if (!this.state.scoredActions.lob.includes(this.state.currentIdea)) {
-                    this.updateScore(10, "ICP SME contact initiated");
-                    this.state.scoredActions.lob.push(this.state.currentIdea);
-                }
-            }
-
-            submitToICP() {
-                this.showScreen('triageScreen');
-                this.renderProcessFlow('triageFlow', 3);
-                
-                if (!this.state.scoredActions.icp.includes(this.state.currentIdea)) {
-                    this.updateScore(25, "Idea submitted to ICP");
-                    this.updateIdeas();
-                    this.state.scoredActions.icp.push(this.state.currentIdea);
-                }
-            }
-
-            updateIdeas() {
-                this.state.ideas++;
-                if (this.elements.ideas) {
-                    this.elements.ideas.textContent = this.state.ideas;
-                }
-            }
-
-            assignTeam() {
-                if (this.state.currentIdea) {
-                    const bestTeam = this.innovations[this.state.currentIdea].bestTeam || 'team4';
-                    this.state.currentTeam = bestTeam;
-
-                    document.querySelectorAll('.team-card').forEach(team => {
-                        team.classList.remove('selected');
-                    });
-
-                    const selectedTeam = document.getElementById(bestTeam);
-                    if (selectedTeam) selectedTeam.classList.add('selected');
-
-                    if (!this.state.scoredActions.team.includes(this.state.currentIdea)) {
-                        this.updateScore(30, "Team assigned");
-                        this.state.scoredActions.team.push(this.state.currentIdea);
-                    }
-                }
-
+                if (s > 50) hasScrolled = true;
+            };
+            
+            window.addEventListener('scroll', updateScroll);
+            window.addEventListener('resize', updateScroll);
+            
+            const originalShow = showScreen;
+            window.showScreen = (id) => {
+                originalShow(id);
                 setTimeout(() => {
-                    if (this.elements.teamAssignment) {
-                        this.elements.teamAssignment.textContent = 
-                            `Your innovation has been assigned to: ${this.config.teamNames[this.state.currentTeam]}`;
-                    }
-
-                    if (this.state.currentTeam === 'team4') {
-                        this.showScreen('incubationScreen');
-                        this.renderProcessFlow('incubationFlow', 4);
-                    } else {
-                        this.showDevelopmentScreen();
-                    }
-                }, 2000);
+                    hasScrolled = false;
+                    updateScroll();
+                }, 300);
+            };
+            
+            updateScroll();
+        };
+        
+        const scrollDown = () => {
+            window.scrollTo({ top: window.scrollY + window.innerHeight * 0.8, behavior: 'smooth' });
+        };
+        
+        // Mobile Optimization
+        const initMobile = () => {
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+            
+            if (isMobile) {
+                document.body.style.overscrollBehavior = 'none';
+                document.documentElement.style.overflowY = 'scroll';
             }
-
-            progressIncubation() {
-                this.state.incubationStage++;
+            
+            // Touch feedback
+            document.addEventListener('touchstart', e => {
+                if (e.target.tagName === 'BUTTON' || e.target.classList.contains('team-card')) {
+                    e.target.style.opacity = '0.8';
+                }
+            });
+            
+            document.addEventListener('touchend', e => {
+                if (e.target.tagName === 'BUTTON' || e.target.classList.contains('team-card')) {
+                    setTimeout(() => e.target.style.opacity = '', 100);
+                }
+            });
+            
+            // Prevent double-tap zoom
+            let lastTouch = 0;
+            document.addEventListener('touchend', e => {
+                const now = Date.now();
+                if (now - lastTouch <= 300) e.preventDefault();
+                lastTouch = now;
+            }, false);
+        };
+        
+        // Public API
+        return {
+            start: () => {
+                resetState();
+                updateButtonStates();
+                highlightNext();
+                showScreen('s-discovery');
                 
-                const requirements = [
-                    { id: 'req1', text: '✅ Adopt an idea', points: 15, action: "Idea adopted" },
-                    { id: 'req2', text: '✅ Project Accountability', points: 20, action: "Accountability accepted" },
-                    { id: 'req3', text: '✅ Onboarding', points: 25, action: "Onboarding completed" }
-                ];
-
-                if (this.state.incubationStage <= requirements.length) {
-                    const req = requirements[this.state.incubationStage - 1];
-                    const reqElement = document.getElementById(req.id);
-                    
-                    if (reqElement) {
-                        reqElement.innerHTML = req.text;
-                        reqElement.style.cssText = 'color: #ffffff; font-weight: bold;';
-                        reqElement.parentElement.style.cssText = 'background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 2px 4px rgba(0,0,0,0.2);';
-                    }
-                    
-                    const key = `${this.state.currentIdea}_${this.state.incubationStage}`;
-                    if (!this.state.scoredActions.incubation.includes(key)) {
-                        this.updateScore(req.points, req.action);
-                        this.state.scoredActions.incubation.push(key);
-                    }
-
-                    if (this.state.incubationStage >= requirements.length) {
-                        if (this.elements.onboardingAssignment) {
-                            this.elements.onboardingAssignment.style.display = 'block';
-                        }
-
-                        if (this.elements.incubationBtn) {
-                            this.elements.incubationBtn.textContent = 'Proceed to Development';
-                            this.elements.incubationBtn.onclick = () => this.showDevelopmentScreen();
-                        }
-                    }
-                }
-            }
-
-            showDevelopmentScreen() {
-                this.showScreen('developmentScreen');
-                
-                if (this.isEightStepJourney()) {
-                    document.getElementById('devStepNumber').textContent = 'Step 5';
-                    this.renderProcessFlow('devProcessFlow', 5);
-                } else {
-                    document.getElementById('devStepNumber').textContent = 'Step 4';
-                    this.renderProcessFlow('devProcessFlow', 4);
-                }
-            }
-
-            progressDevelopment() {
-                this.state.devStage++;
-                
-                const stages = [
-                    '✅ Sprint 1: Requirements gathering complete',
-                    '✅ Sprint 2: Prototype developed',
-                    '✅ Sprint 3: Testing completed',
-                    '✅ Sprint 4: Ready for productization!'
-                ];
-
-                if (this.elements.devProgress) {
-                    if (this.state.devStage < stages.length) {
-                        this.elements.devProgress.innerHTML = stages.slice(0, this.state.devStage + 1)
-                            .map(s => `<p>${s}</p>`).join('');
-                        
-                        const key = `${this.state.currentIdea}_sprint${this.state.devStage}`;
-                        if (!this.state.scoredActions.development.includes(key)) {
-                            this.updateScore(20, `Sprint ${this.state.devStage + 1} completed`);
-                            this.state.scoredActions.development.push(key);
-                        }
-                    } else {
-                        this.showLTApprovalScreen();
-                        this.state.devStage = 0;
-                    }
-                }
-            }
-
-            showLTApprovalScreen() {
-                this.showScreen('ltApprovalScreen');
-                
-                if (!this.state.scoredActions.ltApproval.includes(this.state.currentIdea)) {
-                    this.updateScore(40, "Leadership approval");
-                    this.state.scoredActions.ltApproval.push(this.state.currentIdea);
-                }
-
-                if (this.isEightStepJourney()) {
-                    document.getElementById('ltStepNumber').textContent = 'Step 6';
-                    this.renderProcessFlow('ltProcessFlow', 6);
-                } else {
-                    document.getElementById('ltStepNumber').textContent = 'Step 5';
-                    this.renderProcessFlow('ltProcessFlow', 5);
-                }
-            }
-
-            proceedToEngineering() {
-                this.showEngineeringScreen();
-            }
-
-            showEngineeringScreen() {
-                this.showScreen('engineeringScreen');
-
-                if (this.isEightStepJourney()) {
-                    document.getElementById('engStepNumber').textContent = 'Step 7';
-                    this.renderProcessFlow('engProcessFlow', 7);
-                } else {
-                    document.getElementById('engStepNumber').textContent = 'Step 6';
-                    this.renderProcessFlow('engProcessFlow', 6);
-                }
-            }
-
-            completeEngineering() {
-                if (this.elements.engTasks) {
-                    this.elements.engTasks.innerHTML = `
-                        <p>✅ Security review completed</p>
-                        <p>✅ Performance optimization done</p>
-                        <p>✅ Scalability testing completed</p>
-                        <p>✅ Production deployment ready!</p>
-                    `;
+                if (state.firstTimeUser) {
+                    $('hint').style.display = 'block';
+                    state.firstTimeUser = false;
+                    setTimeout(() => $('hint').style.display = 'none', 5000);
                 }
                 
-                if (!this.state.scoredActions.engineering.includes(this.state.currentIdea)) {
-                    this.updateScore(50, "Engineering completed");
-                    this.state.scoredActions.engineering.push(this.state.currentIdea);
+                if (!state.journeyStarted) {
+                    updateScore(10, "Journey Started");
+                    state.journeyStarted = true;
                 }
-
-                setTimeout(() => this.showSuccessScreen(), 1500);
-            }
-
-            showSuccessScreen() {
-                this.showScreen('successScreen');
-
-                if (this.state.currentIdea) {
-                    const innovationName = this.innovations[this.state.currentIdea].name;
-                    this.showAchievement("Journey Complete!", `Completed: ${innovationName}`);
-                    
-                    this.innovations[this.state.currentIdea].completed = true;
-                    this.state.completedInnovations.push(this.state.currentIdea);
-                }
-
-                const nextActionSection = document.getElementById('nextActionSection');
                 
-                const allFullyExplored = Object.keys(this.innovations).every(key => {
-                    const inn = this.innovations[key];
-                    return inn.exists ? this.state.checkedInnovations.includes(key) : inn.completed;
-                });
-                
-                if (nextActionSection) {
-                    if (!allFullyExplored) {
-                        const nextUnexplored = Object.keys(this.innovations).find(key => {
-                            const inn = this.innovations[key];
-                            return inn.exists ? !this.state.checkedInnovations.includes(key) : !inn.completed;
-                        });
-                        
-                        const remaining = Object.keys(this.innovations).filter(key => {
-                            const inn = this.innovations[key];
-                            return inn.exists ? !this.state.checkedInnovations.includes(key) : !inn.completed;
-                        }).length;
-                        
-                        nextActionSection.innerHTML = `
-                            <h4 style="color: #0284c7;">What's Next?</h4>
-                            <p><strong>${remaining} innovation${remaining > 1 ? 's' : ''} still to explore!</strong></p>
-                            <p style="margin-top: 10px;">Next up: <strong>${this.innovations[nextUnexplored]?.name || 'Continue exploring'}</strong></p>
-                        `;
-                    } else {
-                        nextActionSection.innerHTML = `
-                            <h4 style="color: #0284c7;">Journey Summary</h4>
-                            <div style="text-align: left; color: #059669; line-height: 1.8;">
-                                <p>✅ Self-discovery completed</p>
-                                <p>✅ ICP SME submission successful</p>
-                                <p>✅ Cit Dev Consult completed</p>
-                                ${this.state.currentTeam === 'team4' ? '<p>✅ Incubation marketplace passed</p>' : ''}
-                                <p>✅ Development finished</p>
-                                <p>✅ Leadership approved</p>
-                                <p>✅ Engineering productized</p>
-                                <p>✅ Solution scaled out!</p>
-                            </div>
-                            <p style="margin-top: 15px; text-align: center; color: #0284c7;">
-                                <strong>Ready to submit a real idea?</strong><br>
-                                <a href="https://aka.ms/AIInnovationFrontDoor" target="_blank" style="color: #667eea;">Visit the AI Innovation Front Door</a>
-                            </p>
-                        `;
-                    }
-                }
+                renderFlow('flow-discovery', 1, 7);
+                updateProgress();
+            },
+            checkIdea,
+            tryAnother,
+            proceed,
+            selectTeam,
+            assignTeam,
+            progressIncubation,
+            progressDev,
+            completeEng,
+            exploreMore,
+            closeAchievement,
+            scrollDown,
+            showHelp: () => $('help-modal').classList.add('show'),
+            closeHelp: () => $('help-modal').classList.remove('show'),
+            init: () => {
+                initInnovations();
+                generateJourneyScreens();
+                initScroll();
+                initMobile();
+                updateTracker();
             }
-
-            exploreMore() {
-                this.resetGameState();
-                this.showScreen('selfDiscoveryScreen');
-                this.updateInnovationButtonStates();
-                this.highlightNextUnexplored();
-                this.updateExplorationProgress();
-            }
-
-            // Helpers
-            showHelp() {
-                if (this.elements.helpModal) {
-                    this.elements.helpModal.classList.add('show');
-                }
-            }
-
-            closeHelp() {
-                if (this.elements.helpModal) {
-                    this.elements.helpModal.classList.remove('show');
-                }
-            }
-
-            isEightStepJourney() {
-                return this.state.currentIdea === 'assistant';
-            }
-
-            getTotalSteps() {
-                return this.isEightStepJourney() ? 8 : 7;
-            }
-
-            animateElement(element, animationClass, duration = 500) {
-                element.style.animation = `${animationClass} ${duration}ms`;
-                setTimeout(() => element.style.animation = '', duration);
-            }
-        }
-
-        // Initialize game
-        const game = new CitizenDevelopmentGame();
+        };
+    })();
+    
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', G.init);
     </script>
 </body>
 </html>
